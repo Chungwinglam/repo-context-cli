@@ -12,10 +12,11 @@ export async function detectProject(root: string): Promise<DetectionResult> {
   const packageRead = await readPackageJson(root);
   const packageJson = packageRead.packageJson;
   const hasTsconfig = await exists(join(root, "tsconfig.json"));
-  const packageManager = await detectPackageManager(root, packageJson);
+  const packageManagerDetection = await detectPackageManager(root, packageJson);
+  const packageManager = packageManagerDetection.packageManager;
   const stacks: string[] = [];
   const signals: DetectionSignal[] = [];
-  const warnings: string[] = [...packageRead.warnings];
+  const warnings: string[] = [...packageRead.warnings, ...packageManagerDetection.warnings];
 
   if (packageJson) {
     stacks.push("node");
@@ -94,26 +95,65 @@ function isMissingFileError(error: unknown): boolean {
   );
 }
 
-async function detectPackageManager(root: string, packageJson: PackageJson | null): Promise<PackageManager | null> {
+interface PackageManagerDetection {
+  packageManager: PackageManager | null;
+  warnings: string[];
+}
+
+async function detectPackageManager(root: string, packageJson: PackageJson | null): Promise<PackageManagerDetection> {
   const declared = parseDeclaredPackageManager(packageJson?.packageManager);
+  const lockfileManagers = await detectLockfileManagers(root);
+  const warnings = buildPackageManagerWarnings(declared, lockfileManagers);
+
   if (declared) {
-    return declared;
+    return { packageManager: declared, warnings };
   }
 
+  if (lockfileManagers.length > 0) {
+    return { packageManager: lockfileManagers[0] ?? null, warnings };
+  }
+
+  return { packageManager: packageJson ? "npm" : null, warnings };
+}
+
+async function detectLockfileManagers(root: string): Promise<PackageManager[]> {
+  const managers: PackageManager[] = [];
+
+  if (await exists(join(root, "package-lock.json"))) {
+    managers.push("npm");
+  }
   if (await exists(join(root, "pnpm-lock.yaml"))) {
-    return "pnpm";
+    managers.push("pnpm");
   }
   if (await exists(join(root, "yarn.lock"))) {
-    return "yarn";
+    managers.push("yarn");
   }
   if ((await exists(join(root, "bun.lock"))) || (await exists(join(root, "bun.lockb")))) {
-    return "bun";
-  }
-  if (await exists(join(root, "package-lock.json"))) {
-    return "npm";
+    managers.push("bun");
   }
 
-  return packageJson ? "npm" : null;
+  return managers;
+}
+
+function buildPackageManagerWarnings(
+  declared: PackageManager | null,
+  lockfileManagers: PackageManager[]
+): string[] {
+  const warnings: string[] = [];
+
+  if (declared && lockfileManagers.length > 0 && !lockfileManagers.includes(declared)) {
+    warnings.push(
+      `package.json declares ${declared} but lockfiles suggest ${lockfileManagers.join(", ")}; using declared package manager.`
+    );
+  }
+
+  if (lockfileManagers.length > 1) {
+    warnings.push(
+      `Multiple package-manager lockfiles detected: ${lockfileManagers.join(", ")}. Verify the intended package manager.`
+    );
+  }
+
+  return warnings;
 }
 
 function inferCommands(packageManager: PackageManager | null, packageJson: PackageJson | null): ProjectCommands {

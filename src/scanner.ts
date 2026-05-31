@@ -1,4 +1,5 @@
-import { readdir, stat } from "node:fs/promises";
+import ignore, { type Ignore } from "ignore";
+import { readFile, readdir, stat } from "node:fs/promises";
 import { join, relative, sep } from "node:path";
 import { DEFAULT_IGNORE_DIRS, isIgnoredDirectory } from "./ignore.js";
 import type { FileKind, ScanResult, ScannedFile } from "./model.js";
@@ -12,6 +13,7 @@ export async function scanRepository(root: string, options: ScanOptions): Promis
   const excluded = new Set<string>();
   const warnings: string[] = [];
   const limit = Math.max(0, options.maxFiles) + 1;
+  const gitignore = await loadRootGitignore(root, warnings);
 
   async function walk(directory: string): Promise<void> {
     if (files.length >= limit) {
@@ -34,10 +36,14 @@ export async function scanRepository(root: string, options: ScanOptions): Promis
       }
 
       const absolutePath = join(directory, entry.name);
+      const relativePath = toRelativePath(root, absolutePath);
       if (entry.isDirectory()) {
         if (isIgnoredDirectory(entry.name)) {
           excluded.add(entry.name);
           continue;
+        }
+        if (isGitignored(gitignore, relativePath, true)) {
+          excluded.add(relativePath);
         }
         await walk(absolutePath);
         continue;
@@ -49,7 +55,10 @@ export async function scanRepository(root: string, options: ScanOptions): Promis
 
       try {
         const fileStat = await stat(absolutePath);
-        const path = toRelativePath(root, absolutePath);
+        const path = relativePath;
+        if (isGitignored(gitignore, path, false)) {
+          continue;
+        }
         files.push({
           path,
           kind: classifyFile(path),
@@ -73,6 +82,29 @@ export async function scanRepository(root: string, options: ScanOptions): Promis
     truncated,
     warnings
   };
+}
+
+async function loadRootGitignore(root: string, warnings: string[]): Promise<Ignore | null> {
+  const path = join(root, ".gitignore");
+  try {
+    const content = await readFile(path, "utf8");
+    return ignore().add(content);
+  } catch (error) {
+    if (isMissingFileError(error)) {
+      return null;
+    }
+    warnings.push(`Unable to read .gitignore (${formatError(error)}).`);
+    return null;
+  }
+}
+
+function isGitignored(matcher: Ignore | null, path: string, directory: boolean): boolean {
+  if (!matcher) {
+    return false;
+  }
+
+  const candidate = directory ? `${path}/` : path;
+  return matcher.ignores(candidate);
 }
 
 export { DEFAULT_IGNORE_DIRS };
@@ -131,6 +163,15 @@ function formatError(error: unknown): string {
   }
 
   return error instanceof Error ? error.name : "unknown error";
+}
+
+function isMissingFileError(error: unknown): boolean {
+  return (
+    typeof error === "object" &&
+    error !== null &&
+    "code" in error &&
+    (error as { code?: unknown }).code === "ENOENT"
+  );
 }
 
 function comparePath(left: string, right: string): number {

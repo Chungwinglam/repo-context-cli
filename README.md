@@ -30,6 +30,7 @@ AI coding tools waste time when they start with weak project context. Users repe
 - No LLM calls.
 - No remote service or account required.
 - No business source code edits.
+- Root `.gitignore` patterns are respected alongside built-in noisy-directory ignores.
 - Existing generated files are overwritten only when they were created by Repo Context CLI or when `--force` is passed.
 - Unknown commands and directory purposes are reported as unknown instead of invented.
 
@@ -48,7 +49,7 @@ repo-context pack --force
 
 ## MVP Scope
 
-The first release focuses on JavaScript and TypeScript repositories while still producing a basic map for other local repositories. Later versions can add `.gitignore` parsing, deeper monorepo support, more ecosystems, token estimates, and editor integrations.
+The first release focuses on JavaScript and TypeScript repositories while still producing a basic map for other local repositories. Phase 2 is adding stronger real-world repository support such as `.gitignore` handling, package-manager conflict warnings, deeper monorepo support, more ecosystems, token estimates, and editor integrations.
 
 ## Project Roadmap
 

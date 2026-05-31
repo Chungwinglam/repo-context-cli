@@ -45,4 +45,50 @@ describe("scanRepository", () => {
     expect(result.files.map((file) => file.path)).toEqual(["a.ts", "b.ts"]);
     expect(result.truncated).toBe(true);
   });
+
+  it("respects root gitignore patterns while preserving default ignores", async () => {
+    const root = await createTempRepo();
+    await mkdir(join(root, "src"), { recursive: true });
+    await mkdir(join(root, "tmp"), { recursive: true });
+    await mkdir(join(root, "node_modules", "pkg"), { recursive: true });
+    await writeFile(join(root, ".gitignore"), "tmp/\n*.log\nsrc/generated.ts\n", "utf8");
+    await writeFile(join(root, "src", "index.ts"), "export {};\n", "utf8");
+    await writeFile(join(root, "src", "generated.ts"), "export const generated = true;\n", "utf8");
+    await writeFile(join(root, "debug.log"), "debug\n", "utf8");
+    await writeFile(join(root, "tmp", "scratch.txt"), "scratch\n", "utf8");
+    await writeFile(join(root, "node_modules", "pkg", "index.js"), "", "utf8");
+
+    const result = await scanRepository(root, { maxFiles: 100 });
+
+    expect(result.files.map((file) => file.path)).toEqual([".gitignore", "src/index.ts"]);
+    expect(result.excluded).toEqual(expect.arrayContaining(["node_modules", "tmp"]));
+  });
+
+  it("supports high-risk gitignore semantics through the ignore matcher", async () => {
+    const root = await createTempRepo();
+    await mkdir(join(root, "artifacts"), { recursive: true });
+    await mkdir(join(root, "packages", "app"), { recursive: true });
+    await mkdir(join(root, "src", "generated"), { recursive: true });
+    await writeFile(
+      join(root, ".gitignore"),
+      "# comments and blanks are ignored\n\n*.log\n!keep.log\n/root-only.txt\nartifacts/*\n!artifacts/keep.txt\n**/generated/**\n",
+      "utf8"
+    );
+    await writeFile(join(root, "debug.log"), "debug\n", "utf8");
+    await writeFile(join(root, "keep.log"), "keep\n", "utf8");
+    await writeFile(join(root, "root-only.txt"), "root\n", "utf8");
+    await writeFile(join(root, "artifacts", "drop.txt"), "drop\n", "utf8");
+    await writeFile(join(root, "artifacts", "keep.txt"), "keep\n", "utf8");
+    await writeFile(join(root, "packages", "app", "root-only.txt"), "nested\n", "utf8");
+    await writeFile(join(root, "src", "generated", "client.ts"), "export {};\n", "utf8");
+
+    const result = await scanRepository(root, { maxFiles: 100 });
+
+    expect(result.files.map((file) => file.path)).toEqual([
+      ".gitignore",
+      "artifacts/keep.txt",
+      "keep.log",
+      "packages/app/root-only.txt"
+    ]);
+  });
 });

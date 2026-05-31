@@ -4,7 +4,7 @@ This file is the source of truth for project phase status. Update it whenever a 
 
 ## Current Status
 
-- Current phase: Phase 2 planning
+- Current phase: Phase 2 in progress
 - Last completed milestone: Phase 1 MVP
 - Private repository: `Chungwinglam/repo-context-cli`
 - Default branch: `main`
@@ -35,14 +35,14 @@ Delivered:
 
 ## Phase 2: Trust and Ecosystem Coverage
 
-Status: Next
+Status: In progress
 
 Goal: Make the CLI more trustworthy on real-world repositories without losing the conservative MVP behavior.
 
 Candidate tasks:
 
-- Add `.gitignore` parsing while preserving fixed default ignores.
-- Add pnpm, yarn, bun, and package-manager conflict tests.
+- Add `.gitignore` parsing while preserving fixed default ignores. (Complete)
+- Add pnpm, yarn, bun, and package-manager conflict tests. (Complete)
 - Add Python, Rust, Go, and Java basic detection.
 - Add monorepo baseline detection for npm workspaces, pnpm workspaces, Turbo, Nx, and Vite multi-package layouts.
 - Add token and size summary for generated context packages.
@@ -83,5 +83,8 @@ Candidate tasks:
 - Completed Phase 1 MVP implementation and pushed it to the private GitHub repository.
 - Added repo-local agent workflow rules in `AGENTS.md`.
 - Added the roadmap sync rule and made Phase 2 planning the next project target.
+- Started Phase 2 with root `.gitignore` parsing and package-manager detection hardening.
+- Added pnpm, yarn, bun command inference coverage plus lockfile conflict warnings.
+- Added high-risk boundary coverage for `.gitignore` negation, anchored patterns, globstar ignores, and multi-lockfile package-manager warnings.
 
-Next-stage goal: Start Phase 2 with `.gitignore` parsing and package-manager detection hardening.
+Next-stage goal: Add monorepo baseline detection for npm workspaces, pnpm workspaces, Turbo, and Nx.
