@@ -3,6 +3,7 @@ import type { GeneratedFile, PackOptions, PackResult, RepositoryContext } from "
 import { renderIndexJson } from "./renderers/json.js";
 import { renderAgentsMarkdown, renderProjectMapMarkdown, renderTestingMarkdown } from "./renderers/markdown.js";
 import { scanRepository } from "./scanner.js";
+import { buildContextSummary, emptyContextSummary, summariesEqual } from "./summary.js";
 import { writeGeneratedFiles } from "./writer.js";
 
 export async function createContextPackage(options: PackOptions): Promise<PackResult> {
@@ -14,7 +15,7 @@ export async function createContextPackage(options: PackOptions): Promise<PackRe
     warnings.push(`File index truncated to ${options.maxFiles} files.`);
   }
 
-  const context: RepositoryContext = {
+  const baseContext: RepositoryContext = {
     schemaVersion: 1,
     generatedBy: "Repo Context CLI",
     generatedAt: new Date().toISOString(),
@@ -22,6 +23,7 @@ export async function createContextPackage(options: PackOptions): Promise<PackRe
     target: options.target,
     project: detection.project,
     commands: detection.commands,
+    summary: emptyContextSummary(),
     files: scan.files,
     excluded: scan.excluded,
     truncated: scan.truncated,
@@ -29,7 +31,7 @@ export async function createContextPackage(options: PackOptions): Promise<PackRe
     signals: detection.signals
   };
 
-  const generatedFiles = buildGeneratedFiles(context, options.outputDir);
+  const { context, generatedFiles } = buildContextWithStableSummary(baseContext, options.outputDir);
   const writes = await writeGeneratedFiles(generatedFiles, {
     root: options.root,
     dryRun: options.dryRun,
@@ -45,6 +47,29 @@ export async function createContextPackage(options: PackOptions): Promise<PackRe
     writes,
     warnings: [...warnings, ...skippedWarnings]
   };
+}
+
+function buildContextWithStableSummary(
+  baseContext: RepositoryContext,
+  outputDir: string
+): { context: RepositoryContext; generatedFiles: GeneratedFile[] } {
+  let context = baseContext;
+  let generatedFiles = buildGeneratedFiles(context, outputDir);
+
+  for (let attempt = 0; attempt < 20; attempt += 1) {
+    const nextSummary = buildContextSummary(context.files, generatedFiles);
+    const nextContext = { ...context, summary: nextSummary };
+    const nextGeneratedFiles = buildGeneratedFiles(nextContext, outputDir);
+
+    if (summariesEqual(nextSummary, context.summary)) {
+      return { context: nextContext, generatedFiles: nextGeneratedFiles };
+    }
+
+    context = nextContext;
+    generatedFiles = nextGeneratedFiles;
+  }
+
+  return { context, generatedFiles };
 }
 
 function buildGeneratedFiles(context: RepositoryContext, outputDir: string): GeneratedFile[] {

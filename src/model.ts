@@ -60,11 +60,28 @@ export interface RepositoryContext {
   target: AgentTarget;
   project: ProjectInfo;
   commands: ProjectCommands;
+  summary: ContextSummary;
   files: ScannedFile[];
   excluded: string[];
   truncated: boolean;
   warnings: string[];
   signals: DetectionSignal[];
+}
+
+export interface ContextSummary {
+  scope: "planned-generated-content";
+  indexedFiles: number;
+  indexedBytes: number;
+  generatedFiles: number;
+  generatedBytes: number;
+  estimatedTokens: number;
+  largestFiles: SummaryFile[];
+}
+
+export interface SummaryFile {
+  path: string;
+  kind: FileKind;
+  sizeBytes: number;
 }
 
 export interface PackOptions {

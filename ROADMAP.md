@@ -5,7 +5,7 @@ This file is the source of truth for project phase status. Update it whenever a 
 ## Current Status
 
 - Current phase: Phase 2 in progress
-- Last completed milestone: Phase 2 language baseline detection
+- Last completed milestone: Phase 2 token and size summary
 - Private repository: `Chungwinglam/repo-context-cli`
 - Default branch: `main`
 
@@ -45,7 +45,7 @@ Candidate tasks:
 - Add pnpm, yarn, bun, and package-manager conflict tests. (Complete)
 - Add Python, Rust, Go, and Java basic detection. (Complete)
 - Add monorepo baseline detection for npm workspaces, pnpm workspaces, Turbo, Nx, and common `packages/*` / `apps/*` layouts. (Complete)
-- Add token and size summary for generated context packages.
+- Add token and size summary for generated context packages. (Complete)
 - Add npm package install smoke test in CI.
 
 ## Phase 3: Open Source Launch Quality
@@ -94,5 +94,6 @@ Candidate tasks:
 - Added baseline Python, Rust, Go, and Java detection without command inference.
 - Merged `phase2-language-baseline-detection` into `main`.
 - Deleted the merged `phase2-language-baseline-detection` branch locally and on `origin`.
+- Added deterministic token and size summaries for generated context packages.
 
-Next-stage goal: Add token and size summary for generated context packages.
+Next-stage goal: Add npm package install smoke test in CI.
