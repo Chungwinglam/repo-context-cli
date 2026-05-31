@@ -86,5 +86,6 @@ Candidate tasks:
 - Started Phase 2 with root `.gitignore` parsing and package-manager detection hardening.
 - Added pnpm, yarn, bun command inference coverage plus lockfile conflict warnings.
 - Added high-risk boundary coverage for `.gitignore` negation, anchored patterns, globstar ignores, and multi-lockfile package-manager warnings.
+- Merged `phase2-gitignore-package-manager` into `main`.
 
 Next-stage goal: Add monorepo baseline detection for npm workspaces, pnpm workspaces, Turbo, and Nx.
