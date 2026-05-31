@@ -1,0 +1,51 @@
+# Repo Context CLI
+
+Generate reliable repository context files for AI coding agents.
+
+`repo-context` scans a local repository and writes a compact context package that helps Codex, Claude Code, Cursor, and similar tools answer the first questions correctly: what the project is, where the important files are, how to run it, and what rules an agent should follow before editing.
+
+## Quickstart
+
+```bash
+npx repo-context-cli pack --dry-run
+npx repo-context-cli pack --for codex
+```
+
+Default output:
+
+```text
+AGENTS.md
+PROJECT_MAP.md
+TESTING.md
+.repo-context/
+  index.json
+```
+
+## Why This Exists
+
+AI coding tools waste time when they start with weak project context. Users repeatedly paste directory trees, explain test commands, and warn agents not to edit generated files. Repo Context CLI turns repository facts into standard context files without calling an LLM API.
+
+## Safety Defaults
+
+- No LLM calls.
+- No remote service or account required.
+- No business source code edits.
+- Existing generated files are overwritten only when they were created by Repo Context CLI or when `--force` is passed.
+- Unknown commands and directory purposes are reported as unknown instead of invented.
+
+## Commands
+
+```bash
+repo-context pack
+repo-context pack --for codex
+repo-context pack --for claude
+repo-context pack --for cursor
+repo-context pack --output .repo-context
+repo-context pack --max-files 500
+repo-context pack --dry-run
+repo-context pack --force
+```
+
+## MVP Scope
+
+The first release focuses on JavaScript and TypeScript repositories while still producing a basic map for other local repositories. Later versions can add `.gitignore` parsing, deeper monorepo support, more ecosystems, token estimates, and editor integrations.

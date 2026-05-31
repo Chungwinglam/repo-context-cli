@@ -1,0 +1,6 @@
+node_modules/
+dist/
+coverage/
+.repo-context/
+.DS_Store
+*.log

@@ -1,0 +1,17 @@
+{
+  "name": "typescript-vite-example",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "test": "vitest run",
+    "lint": "eslint ."
+  },
+  "devDependencies": {
+    "typescript": "^5.8.3",
+    "vite": "^6.3.5",
+    "vitest": "^3.2.4"
+  }
+}

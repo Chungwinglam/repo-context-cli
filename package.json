@@ -1,0 +1,46 @@
+{
+  "name": "repo-context-cli",
+  "version": "0.1.0",
+  "description": "Generate reliable repository context files for AI coding agents.",
+  "homepage": "https://github.com/Chungwinglam/repo-context-cli#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Chungwinglam/repo-context-cli.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Chungwinglam/repo-context-cli/issues"
+  },
+  "type": "module",
+  "bin": {
+    "repo-context": "./dist/cli.js"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "lint": "tsc -p tsconfig.json --noEmit",
+    "pretest": "npm run build",
+    "test": "vitest run --pool=threads"
+  },
+  "keywords": [
+    "ai",
+    "codex",
+    "claude",
+    "cursor",
+    "cli",
+    "repository-context"
+  ],
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^24.0.0",
+    "typescript": "^5.8.3",
+    "vitest": "^3.2.4"
+  }
+}
