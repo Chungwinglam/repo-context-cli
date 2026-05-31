@@ -89,5 +89,7 @@ Candidate tasks:
 - Merged `phase2-gitignore-package-manager` into `main`.
 - Deleted the merged `phase2-gitignore-package-manager` branch locally and on `origin`.
 - Added baseline monorepo detection for npm workspaces, pnpm workspaces, Turbo, Nx, and common package roots.
+- Merged `phase2-monorepo-baseline-detection` into `main`.
+- Deleted the merged `phase2-monorepo-baseline-detection` branch locally and on `origin`.
 
 Next-stage goal: Add Python, Rust, Go, and Java basic detection.
