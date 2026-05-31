@@ -4,8 +4,8 @@ This file is the source of truth for project phase status. Update it whenever a 
 
 ## Current Status
 
-- Current phase: Phase 2 in progress
-- Last completed milestone: Phase 2 token and size summary
+- Current phase: Phase 3 planned
+- Last completed milestone: Phase 2 npm package install smoke test
 - Private repository: `Chungwinglam/repo-context-cli`
 - Default branch: `main`
 
@@ -35,7 +35,7 @@ Delivered:
 
 ## Phase 2: Trust and Ecosystem Coverage
 
-Status: In progress
+Status: Complete
 
 Goal: Make the CLI more trustworthy on real-world repositories without losing the conservative MVP behavior.
 
@@ -46,7 +46,7 @@ Candidate tasks:
 - Add Python, Rust, Go, and Java basic detection. (Complete)
 - Add monorepo baseline detection for npm workspaces, pnpm workspaces, Turbo, Nx, and common `packages/*` / `apps/*` layouts. (Complete)
 - Add token and size summary for generated context packages. (Complete)
-- Add npm package install smoke test in CI.
+- Add npm package install smoke test in CI. (Complete)
 
 ## Phase 3: Open Source Launch Quality
 
@@ -97,5 +97,6 @@ Candidate tasks:
 - Added deterministic token and size summaries for generated context packages.
 - Merged `phase2-token-size-summary` into `main`.
 - Deleted the merged `phase2-token-size-summary` branch locally and on `origin`.
+- Added an npm tarball install smoke test to CI.
 
-Next-stage goal: Add npm package install smoke test in CI.
+Next-stage goal: Start Phase 3 with `CONTRIBUTING.md` and detector-extension guidance.

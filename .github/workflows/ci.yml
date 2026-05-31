@@ -18,3 +18,24 @@ jobs:
       - run: npm run build
       - run: npm run lint
       - run: npm test
+
+  package-smoke:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - run: npm run build
+      - run: mkdir -p artifacts
+      - run: npm pack --pack-destination ./artifacts
+      - run: |
+          set -euo pipefail
+          repo_dir="$PWD"
+          smoke_dir="$(mktemp -d)"
+          cd "$smoke_dir"
+          npm init -y
+          npm install "$repo_dir"/artifacts/repo-context-cli-*.tgz
+          ./node_modules/.bin/repo-context pack --dry-run --for codex
