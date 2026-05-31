@@ -68,6 +68,10 @@ See [ROADMAP.md](ROADMAP.md) for current phase status, next-stage goals, and the
 
 See [CHANGELOG.md](CHANGELOG.md) for initial release notes and future release history.
 
+## Release Process
+
+See [docs/release.md](https://github.com/Chungwinglam/repo-context-cli/blob/main/docs/release.md) for the npm trusted publishing workflow, tag rule, and provenance notes.
+
 ## Contributing
 
 See [CONTRIBUTING.md](https://github.com/Chungwinglam/repo-context-cli/blob/main/CONTRIBUTING.md) for local development commands, fixture style, detector-extension guidance, and the pull request checklist.
