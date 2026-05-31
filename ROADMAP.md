@@ -5,7 +5,7 @@ This file is the source of truth for project phase status. Update it whenever a 
 ## Current Status
 
 - Current phase: Phase 3 in progress
-- Last completed milestone: Phase 3 release workflow with npm trusted publishing
+- Last completed milestone: Phase 3 README before/after AI-agent context examples
 - Private repository: `Chungwinglam/repo-context-cli`
 - Default branch: `main`
 
@@ -60,7 +60,7 @@ Candidate tasks:
 - Add `CONTRIBUTING.md` with fixture and detector-extension guidance. (Complete)
 - Add `CHANGELOG.md`. (Complete)
 - Add release workflow with npm trusted publishing / provenance-ready configuration. (Complete)
-- Improve README examples with before/after AI-agent context.
+- Improve README examples with before/after AI-agent context. (Complete)
 
 ## Phase 4: Advanced Integrations
 
@@ -101,5 +101,6 @@ Candidate tasks:
 - Started Phase 3 with `CONTRIBUTING.md`, including local development, fixture style, detector-extension guidance, and PR checklist.
 - Added `CHANGELOG.md` with initial unreleased `0.1.0` release notes.
 - Added a GitHub release workflow for npm trusted publishing plus release documentation with provenance constraints.
+- Improved README adoption examples with before/after AI-agent context.
 
-Next-stage goal: Improve README examples with before/after AI-agent context.
+Next-stage goal: Add demo terminal recording or GIF.
