@@ -21,6 +21,14 @@ export interface ProjectInfo {
   name: string;
   packageManager: PackageManager | null;
   stacks: string[];
+  monorepo: MonorepoInfo;
+}
+
+export interface MonorepoInfo {
+  detected: boolean;
+  tools: string[];
+  workspaceGlobs: string[];
+  packageRoots: string[];
 }
 
 export interface ProjectCommands {

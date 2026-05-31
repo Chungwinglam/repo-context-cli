@@ -31,6 +31,7 @@ AI coding tools waste time when they start with weak project context. Users repe
 - No remote service or account required.
 - No business source code edits.
 - Root `.gitignore` patterns are respected alongside built-in noisy-directory ignores.
+- Baseline monorepo facts are detected from npm workspaces, `pnpm-workspace.yaml`, `turbo.json`, `nx.json`, and common `packages/*` / `apps/*` package roots.
 - Existing generated files are overwritten only when they were created by Repo Context CLI or when `--force` is passed.
 - Unknown commands and directory purposes are reported as unknown instead of invented.
 
@@ -47,9 +48,13 @@ repo-context pack --dry-run
 repo-context pack --force
 ```
 
+## Detected Facts
+
+Generated context includes conservative project facts such as detected stacks, package manager, command scripts, monorepo tools, workspace globs, and shallow package roots. Repo Context CLI does not infer dependency graphs or invent workspace-specific commands.
+
 ## MVP Scope
 
-The first release focuses on JavaScript and TypeScript repositories while still producing a basic map for other local repositories. Phase 2 is adding stronger real-world repository support such as `.gitignore` handling, package-manager conflict warnings, deeper monorepo support, more ecosystems, token estimates, and editor integrations.
+The first release focuses on JavaScript and TypeScript repositories while still producing a basic map for other local repositories. Phase 2 is adding stronger real-world repository support such as `.gitignore` handling, package-manager conflict warnings, baseline monorepo detection, more ecosystems, token estimates, and editor integrations.
 
 ## Project Roadmap
 

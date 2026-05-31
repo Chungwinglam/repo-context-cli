@@ -5,7 +5,7 @@ This file is the source of truth for project phase status. Update it whenever a 
 ## Current Status
 
 - Current phase: Phase 2 in progress
-- Last completed milestone: Phase 1 MVP
+- Last completed milestone: Phase 2 monorepo baseline detection
 - Private repository: `Chungwinglam/repo-context-cli`
 - Default branch: `main`
 
@@ -44,7 +44,7 @@ Candidate tasks:
 - Add `.gitignore` parsing while preserving fixed default ignores. (Complete)
 - Add pnpm, yarn, bun, and package-manager conflict tests. (Complete)
 - Add Python, Rust, Go, and Java basic detection.
-- Add monorepo baseline detection for npm workspaces, pnpm workspaces, Turbo, Nx, and Vite multi-package layouts.
+- Add monorepo baseline detection for npm workspaces, pnpm workspaces, Turbo, Nx, and common `packages/*` / `apps/*` layouts. (Complete)
 - Add token and size summary for generated context packages.
 - Add npm package install smoke test in CI.
 
@@ -88,5 +88,6 @@ Candidate tasks:
 - Added high-risk boundary coverage for `.gitignore` negation, anchored patterns, globstar ignores, and multi-lockfile package-manager warnings.
 - Merged `phase2-gitignore-package-manager` into `main`.
 - Deleted the merged `phase2-gitignore-package-manager` branch locally and on `origin`.
+- Added baseline monorepo detection for npm workspaces, pnpm workspaces, Turbo, Nx, and common package roots.
 
-Next-stage goal: Add monorepo baseline detection for npm workspaces, pnpm workspaces, Turbo, and Nx.
+Next-stage goal: Add Python, Rust, Go, and Java basic detection.

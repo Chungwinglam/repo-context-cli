@@ -57,12 +57,46 @@ describe("createContextPackage", () => {
     expect(index.root).toBe(".");
     expect(index.target).toBe("cursor");
     expect(index.project.name).toBe("write-app");
+    expect(index.project.monorepo).toEqual({
+      detected: false,
+      tools: [],
+      workspaceGlobs: [],
+      packageRoots: []
+    });
     expect(index.commands.test).toBe("npm test");
     expect(index.excluded).toEqual(expect.any(Array));
     expect(index.truncated).toBe(false);
     expect(index.warnings).toEqual(expect.any(Array));
     expect(index.signals).toContainEqual(expect.objectContaining({ source: "package.json" }));
     expect(index.files).toContainEqual(expect.objectContaining({ path: "src/index.ts", kind: "source" }));
+  });
+
+  it("writes monorepo facts into index.json", async () => {
+    const root = await createTempRepo();
+    await mkdir(join(root, "packages", "ui"), { recursive: true });
+    await writeFile(
+      join(root, "package.json"),
+      JSON.stringify({ name: "pack-monorepo", workspaces: ["packages/*"] }),
+      "utf8"
+    );
+    await writeFile(join(root, "packages", "ui", "package.json"), "{\"name\":\"ui\"}", "utf8");
+
+    await createContextPackage({
+      root,
+      target: "codex",
+      outputDir: ".repo-context",
+      maxFiles: 500,
+      dryRun: false,
+      force: false
+    });
+
+    const index = JSON.parse(await readFile(join(root, ".repo-context", "index.json"), "utf8"));
+    expect(index.project.monorepo).toEqual({
+      detected: true,
+      tools: ["npm-workspaces"],
+      workspaceGlobs: ["packages/*"],
+      packageRoots: ["packages/ui"]
+    });
   });
 
   it("does not overwrite user files unless force is enabled", async () => {

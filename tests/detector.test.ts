@@ -193,4 +193,114 @@ describe("detectProject", () => {
       "package.json declares yarn but lockfiles suggest pnpm; using declared package manager."
     );
   });
+
+  it("detects npm workspaces with Turbo and package roots", async () => {
+    const root = await createTempRepo();
+    await mkdir(join(root, "packages", "ui"), { recursive: true });
+    await mkdir(join(root, "apps", "web"), { recursive: true });
+    await writeFile(
+      join(root, "package.json"),
+      JSON.stringify({
+        name: "npm-monorepo",
+        workspaces: ["packages/*", "apps/*"],
+        scripts: { build: "turbo build" }
+      }),
+      "utf8"
+    );
+    await writeFile(join(root, "turbo.json"), "{\"tasks\":{}}\n", "utf8");
+    await writeFile(join(root, "packages", "ui", "package.json"), "{\"name\":\"@acme/ui\"}", "utf8");
+    await writeFile(join(root, "apps", "web", "package.json"), "{\"name\":\"web\"}", "utf8");
+
+    const result = await detectProject(root);
+
+    expect(result.project.monorepo).toEqual({
+      detected: true,
+      tools: ["npm-workspaces", "turbo"],
+      workspaceGlobs: ["packages/*", "apps/*"],
+      packageRoots: ["apps/web", "packages/ui"]
+    });
+    expect(result.signals).toContainEqual({
+      source: "package.json#workspaces",
+      description: "Detected npm workspaces"
+    });
+  });
+
+  it("detects npm workspaces object form", async () => {
+    const root = await createTempRepo();
+    await mkdir(join(root, "packages", "core"), { recursive: true });
+    await writeFile(
+      join(root, "package.json"),
+      JSON.stringify({
+        name: "npm-object-workspaces",
+        workspaces: { packages: ["packages/*"] }
+      }),
+      "utf8"
+    );
+    await writeFile(join(root, "packages", "core", "package.json"), "{\"name\":\"core\"}", "utf8");
+
+    const result = await detectProject(root);
+
+    expect(result.project.monorepo).toEqual({
+      detected: true,
+      tools: ["npm-workspaces"],
+      workspaceGlobs: ["packages/*"],
+      packageRoots: ["packages/core"]
+    });
+  });
+
+  it("detects pnpm workspaces with Nx", async () => {
+    const root = await createTempRepo();
+    await mkdir(join(root, "packages", "api"), { recursive: true });
+    await writeFile(join(root, "package.json"), JSON.stringify({ name: "pnpm-monorepo" }), "utf8");
+    await writeFile(
+      join(root, "pnpm-workspace.yaml"),
+      "packages:\n  - 'packages/*'\n  - \"apps/*\"\n",
+      "utf8"
+    );
+    await writeFile(join(root, "nx.json"), "{\"affected\":{}}\n", "utf8");
+    await writeFile(join(root, "packages", "api", "package.json"), "{\"name\":\"api\"}", "utf8");
+
+    const result = await detectProject(root);
+
+    expect(result.project.monorepo).toEqual({
+      detected: true,
+      tools: ["pnpm-workspace", "nx"],
+      workspaceGlobs: ["packages/*", "apps/*"],
+      packageRoots: ["packages/api"]
+    });
+  });
+
+  it("detects standalone Turbo and Nx configuration", async () => {
+    const root = await createTempRepo();
+    await writeFile(join(root, "package.json"), JSON.stringify({ name: "tooling-monorepo" }), "utf8");
+    await writeFile(join(root, "turbo.json"), "{\"tasks\":{}}\n", "utf8");
+    await writeFile(join(root, "nx.json"), "{\"affected\":{}}\n", "utf8");
+
+    const result = await detectProject(root);
+
+    expect(result.project.monorepo).toEqual({
+      detected: true,
+      tools: ["turbo", "nx"],
+      workspaceGlobs: [],
+      packageRoots: []
+    });
+  });
+
+  it("detects layout-only package roots without inferring workspace tools", async () => {
+    const root = await createTempRepo();
+    await mkdir(join(root, "packages", "core"), { recursive: true });
+    await mkdir(join(root, "apps", "docs"), { recursive: true });
+    await writeFile(join(root, "package.json"), JSON.stringify({ name: "layout-monorepo" }), "utf8");
+    await writeFile(join(root, "packages", "core", "package.json"), "{\"name\":\"core\"}", "utf8");
+    await writeFile(join(root, "apps", "docs", "package.json"), "{\"name\":\"docs\"}", "utf8");
+
+    const result = await detectProject(root);
+
+    expect(result.project.monorepo).toEqual({
+      detected: true,
+      tools: ["package-layout"],
+      workspaceGlobs: [],
+      packageRoots: ["apps/docs", "packages/core"]
+    });
+  });
 });

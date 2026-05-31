@@ -14,6 +14,7 @@ export function renderAgentsMarkdown(context: RepositoryContext): string {
 - Project name: ${context.project.name}
 - Detected stacks: ${formatList(context.project.stacks)}
 - Package manager: ${context.project.packageManager ?? "not detected"}
+- Monorepo: ${renderMonorepoInline(context)}
 - Context target: ${context.target}
 
 ## Operating Rules
@@ -48,6 +49,10 @@ export function renderProjectMapMarkdown(context: RepositoryContext): string {
 - Detected stacks: ${formatList(context.project.stacks)}
 - Indexed files: ${context.files.length}${context.truncated ? " (truncated by --max-files)" : ""}
 - Excluded directories: ${formatList(context.excluded)}
+
+## Monorepo
+
+${renderMonorepoDetails(context)}
 
 ## Files
 
@@ -107,6 +112,28 @@ function renderFileBullets(files: ScannedFile[]): string {
 
 function formatList(values: string[]): string {
   return values.length > 0 ? values.join(", ") : "not detected";
+}
+
+function renderMonorepoInline(context: RepositoryContext): string {
+  if (!context.project.monorepo.detected) {
+    return "not detected";
+  }
+
+  return `detected (${formatList(context.project.monorepo.tools)})`;
+}
+
+function renderMonorepoDetails(context: RepositoryContext): string {
+  const { monorepo } = context.project;
+  if (!monorepo.detected) {
+    return "- Monorepo: not detected";
+  }
+
+  return [
+    "- Monorepo: detected",
+    `- Tools: ${formatList(monorepo.tools)}`,
+    `- Workspace globs: ${formatList(monorepo.workspaceGlobs)}`,
+    `- Package roots: ${formatList(monorepo.packageRoots)}`
+  ].join("\n");
 }
 
 function getTargetGuidance(target: AgentTarget): string {
