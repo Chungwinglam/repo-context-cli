@@ -92,5 +92,7 @@ Candidate tasks:
 - Merged `phase2-monorepo-baseline-detection` into `main`.
 - Deleted the merged `phase2-monorepo-baseline-detection` branch locally and on `origin`.
 - Added baseline Python, Rust, Go, and Java detection without command inference.
+- Merged `phase2-language-baseline-detection` into `main`.
+- Deleted the merged `phase2-language-baseline-detection` branch locally and on `origin`.
 
 Next-stage goal: Add token and size summary for generated context packages.
