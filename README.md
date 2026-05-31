@@ -49,3 +49,7 @@ repo-context pack --force
 ## MVP Scope
 
 The first release focuses on JavaScript and TypeScript repositories while still producing a basic map for other local repositories. Later versions can add `.gitignore` parsing, deeper monorepo support, more ecosystems, token estimates, and editor integrations.
+
+## Project Roadmap
+
+See [ROADMAP.md](ROADMAP.md) for current phase status, next-stage goals, and the rule that every completed small task must update the roadmap.
