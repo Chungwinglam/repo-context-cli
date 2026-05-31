@@ -95,5 +95,7 @@ Candidate tasks:
 - Merged `phase2-language-baseline-detection` into `main`.
 - Deleted the merged `phase2-language-baseline-detection` branch locally and on `origin`.
 - Added deterministic token and size summaries for generated context packages.
+- Merged `phase2-token-size-summary` into `main`.
+- Deleted the merged `phase2-token-size-summary` branch locally and on `origin`.
 
 Next-stage goal: Add npm package install smoke test in CI.
