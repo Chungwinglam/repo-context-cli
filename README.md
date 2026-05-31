@@ -56,10 +56,14 @@ Generated context includes conservative project facts such as detected stacks, p
 
 Token estimates use `ceil(generatedCharacters / 4)` over the planned generated context content. They are intended for quick context-budget awareness, not model-specific tokenizer accounting.
 
-## MVP Scope
+## Scope
 
-The first release focuses on JavaScript and TypeScript repositories while still producing a basic map for other local repositories. Phase 2 is adding stronger real-world repository support such as `.gitignore` handling, package-manager conflict warnings, baseline monorepo detection, baseline language detection, token and size summaries, and editor integrations.
+The first release focuses on JavaScript and TypeScript repositories while still producing a basic map for other local repositories. Phase 2 added stronger real-world repository support such as `.gitignore` handling, package-manager conflict warnings, baseline monorepo detection, baseline Python/Rust/Go/Java detection, token and size summaries, and npm package install smoke coverage. Phase 3 focuses on open-source launch quality. Advanced integrations such as editor integrations remain roadmap items.
 
 ## Project Roadmap
 
 See [ROADMAP.md](ROADMAP.md) for current phase status, next-stage goals, and the rule that every completed small task must update the roadmap.
+
+## Contributing
+
+See [CONTRIBUTING.md](https://github.com/Chungwinglam/repo-context-cli/blob/main/CONTRIBUTING.md) for local development commands, fixture style, detector-extension guidance, and the pull request checklist.
