@@ -41,4 +41,4 @@
 - [x] Run documentation-appropriate verification.
 - [x] Request `DXReviewer-01` and `CodeReviewer-01` because this changes contributor workflow guidance.
 - [x] Fix Critical or Important review findings.
-- [ ] Commit and push the branch.
+- [x] Commit and push the branch.
