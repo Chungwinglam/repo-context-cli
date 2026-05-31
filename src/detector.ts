@@ -19,6 +19,7 @@ export async function detectProject(root: string): Promise<DetectionResult> {
   const signals: DetectionSignal[] = [];
   const warnings: string[] = [...packageRead.warnings, ...packageManagerDetection.warnings];
   const monorepoDetection = await detectMonorepo(root, packageJson);
+  const languageDetection = await detectLanguageStacks(root);
 
   if (packageJson) {
     stacks.push("node");
@@ -36,6 +37,8 @@ export async function detectProject(root: string): Promise<DetectionResult> {
     });
   }
 
+  stacks.push(...languageDetection.stacks.filter((stack) => !stacks.includes(stack)));
+  signals.push(...languageDetection.signals);
   signals.push(...monorepoDetection.signals);
 
   const commands = inferCommands(packageManager, packageJson);
@@ -60,6 +63,102 @@ export async function detectProject(root: string): Promise<DetectionResult> {
 interface MonorepoDetection {
   monorepo: MonorepoInfo;
   signals: DetectionSignal[];
+}
+
+interface StackDetection {
+  stacks: string[];
+  signals: DetectionSignal[];
+}
+
+const LANGUAGE_MARKERS: Array<{ stack: string; files: string[]; description: string }> = [
+  {
+    stack: "python",
+    files: ["pyproject.toml", "requirements.txt", "setup.py"],
+    description: "Detected Python project"
+  },
+  {
+    stack: "rust",
+    files: ["Cargo.toml"],
+    description: "Detected Rust project"
+  },
+  {
+    stack: "go",
+    files: ["go.mod"],
+    description: "Detected Go project"
+  }
+];
+
+async function detectLanguageStacks(root: string): Promise<StackDetection> {
+  const stacks: string[] = [];
+  const signals: DetectionSignal[] = [];
+
+  for (const marker of LANGUAGE_MARKERS) {
+    const matchedFiles: string[] = [];
+    for (const file of marker.files) {
+      if (await fileExists(join(root, file))) {
+        matchedFiles.push(file);
+      }
+    }
+
+    if (matchedFiles.length === 0) {
+      continue;
+    }
+
+    stacks.push(marker.stack);
+    for (const file of matchedFiles) {
+      signals.push({
+        source: file,
+        description: marker.description
+      });
+    }
+  }
+
+  const javaSignals = await detectJavaSignals(root);
+  if (javaSignals.length > 0) {
+    stacks.push("java");
+    signals.push(...javaSignals);
+  }
+
+  return { stacks, signals };
+}
+
+async function detectJavaSignals(root: string): Promise<DetectionSignal[]> {
+  const signals: DetectionSignal[] = [];
+
+  if (await fileExists(join(root, "pom.xml"))) {
+    signals.push({
+      source: "pom.xml",
+      description: "Detected Java project"
+    });
+  }
+
+  for (const file of ["build.gradle", "build.gradle.kts"]) {
+    const filePath = join(root, file);
+    const content = await readTextFileIfPresent(filePath);
+    if (content !== null && hasExplicitGradleJavaPlugin(content)) {
+      signals.push({
+        source: file,
+        description: "Detected Java project"
+      });
+    }
+  }
+
+  return signals;
+}
+
+function hasExplicitGradleJavaPlugin(content: string): boolean {
+  const uncommented = stripGradleComments(content);
+
+  return (
+    /id\s*\(?\s*["']java(?:-library)?["']/.test(uncommented) ||
+    /apply\s+plugin:\s*["']java(?:-library)?["']/.test(uncommented) ||
+    /`java(?:-library)?`/.test(uncommented) ||
+    /plugins\s*\{[^}]*?(?:^|[\s;{])java(?:[\s;}])[^}]*\}/m.test(uncommented)
+  );
+}
+
+function stripGradleComments(content: string): string {
+  return content.replace(/\/\*[\s\S]*?\*\//g, "").replace(/\/\/.*$/gm, "");
 }
 
 async function detectMonorepo(root: string, packageJson: PackageJson | null): Promise<MonorepoDetection> {
@@ -387,6 +486,26 @@ async function exists(path: string): Promise<boolean> {
     return true;
   } catch {
     return false;
+  }
+}
+
+async function fileExists(path: string): Promise<boolean> {
+  try {
+    return (await stat(path)).isFile();
+  } catch {
+    return false;
+  }
+}
+
+async function readTextFileIfPresent(path: string): Promise<string | null> {
+  if (!(await fileExists(path))) {
+    return null;
+  }
+
+  try {
+    return await readFile(path, "utf8");
+  } catch {
+    return null;
   }
 }
 

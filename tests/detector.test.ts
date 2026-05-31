@@ -194,6 +194,180 @@ describe("detectProject", () => {
     );
   });
 
+  it("detects Python markers without inferring commands", async () => {
+    const root = await createTempRepo();
+    await writeFile(join(root, "pyproject.toml"), "[project]\nname = \"python-app\"\n", "utf8");
+    await writeFile(join(root, "requirements.txt"), "pytest\n", "utf8");
+    await writeFile(join(root, "setup.py"), "from setuptools import setup\n", "utf8");
+
+    const result = await detectProject(root);
+
+    expect(result.project.stacks).toEqual(["python"]);
+    expect(result.commands).toEqual({
+      install: null,
+      dev: null,
+      build: null,
+      test: null,
+      lint: null,
+      format: null
+    });
+    expect(result.signals).toContainEqual({
+      source: "pyproject.toml",
+      description: "Detected Python project"
+    });
+  });
+
+  it("detects Python requirements and setup markers independently", async () => {
+    const requirementsRoot = await createTempRepo();
+    await writeFile(join(requirementsRoot, "requirements.txt"), "pytest\n", "utf8");
+
+    const requirementsResult = await detectProject(requirementsRoot);
+    expect(requirementsResult.project.stacks).toEqual(["python"]);
+    expect(requirementsResult.signals).toContainEqual({
+      source: "requirements.txt",
+      description: "Detected Python project"
+    });
+
+    const setupRoot = await createTempRepo();
+    await writeFile(join(setupRoot, "setup.py"), "from setuptools import setup\n", "utf8");
+
+    const setupResult = await detectProject(setupRoot);
+    expect(setupResult.project.stacks).toEqual(["python"]);
+    expect(setupResult.signals).toContainEqual({
+      source: "setup.py",
+      description: "Detected Python project"
+    });
+  });
+
+  it("detects Rust and Go markers without inferring commands", async () => {
+    const rustRoot = await createTempRepo();
+    await writeFile(join(rustRoot, "Cargo.toml"), "[package]\nname = \"rust-app\"\n", "utf8");
+
+    const rustResult = await detectProject(rustRoot);
+    expect(rustResult.project.stacks).toEqual(["rust"]);
+    expect(rustResult.commands.test).toBeNull();
+    expect(rustResult.signals).toContainEqual({
+      source: "Cargo.toml",
+      description: "Detected Rust project"
+    });
+
+    const goRoot = await createTempRepo();
+    await writeFile(join(goRoot, "go.mod"), "module example.com/go-app\n", "utf8");
+
+    const goResult = await detectProject(goRoot);
+    expect(goResult.project.stacks).toEqual(["go"]);
+    expect(goResult.commands.test).toBeNull();
+    expect(goResult.signals).toContainEqual({
+      source: "go.mod",
+      description: "Detected Go project"
+    });
+  });
+
+  it("detects Java Maven and explicit Gradle Java plugin markers once", async () => {
+    const mavenRoot = await createTempRepo();
+    await writeFile(join(mavenRoot, "pom.xml"), "<project />\n", "utf8");
+
+    const mavenResult = await detectProject(mavenRoot);
+    expect(mavenResult.project.stacks).toEqual(["java"]);
+    expect(mavenResult.commands.build).toBeNull();
+    expect(mavenResult.signals).toContainEqual({
+      source: "pom.xml",
+      description: "Detected Java project"
+    });
+
+    const gradleRoot = await createTempRepo();
+    await writeFile(join(gradleRoot, "build.gradle"), "plugins { id 'java' }\n", "utf8");
+    await writeFile(join(gradleRoot, "build.gradle.kts"), "plugins { `java-library` }\n", "utf8");
+
+    const gradleResult = await detectProject(gradleRoot);
+    expect(gradleResult.project.stacks).toEqual(["java"]);
+    expect(gradleResult.signals).toContainEqual({
+      source: "build.gradle",
+      description: "Detected Java project"
+    });
+  });
+
+  it("detects Java Kotlin DSL Gradle plugin markers independently", async () => {
+    const kotlinRoot = await createTempRepo();
+    await writeFile(join(kotlinRoot, "build.gradle.kts"), "plugins { java }\n", "utf8");
+
+    const kotlinResult = await detectProject(kotlinRoot);
+    expect(kotlinResult.project.stacks).toEqual(["java"]);
+    expect(kotlinResult.signals).toContainEqual({
+      source: "build.gradle.kts",
+      description: "Detected Java project"
+    });
+  });
+
+  it("does not treat Gradle settings or non-Java Gradle builds as Java", async () => {
+    const settingsRoot = await createTempRepo();
+    await writeFile(join(settingsRoot, "settings.gradle"), "rootProject.name = 'settings-app'\n", "utf8");
+
+    const settingsResult = await detectProject(settingsRoot);
+    expect(settingsResult.project.stacks).toEqual([]);
+    expect(settingsResult.signals).not.toContainEqual({
+      source: "settings.gradle",
+      description: "Detected Java project"
+    });
+
+    const settingsKtsRoot = await createTempRepo();
+    await writeFile(join(settingsKtsRoot, "settings.gradle.kts"), "rootProject.name = \"settings-app\"\n", "utf8");
+
+    const settingsKtsResult = await detectProject(settingsKtsRoot);
+    expect(settingsKtsResult.project.stacks).toEqual([]);
+    expect(settingsKtsResult.signals).not.toContainEqual({
+      source: "settings.gradle.kts",
+      description: "Detected Java project"
+    });
+
+    const kotlinOnlyRoot = await createTempRepo();
+    await writeFile(join(kotlinOnlyRoot, "build.gradle"), "plugins { id 'org.jetbrains.kotlin.jvm' }\n", "utf8");
+
+    const kotlinOnlyResult = await detectProject(kotlinOnlyRoot);
+    expect(kotlinOnlyResult.project.stacks).toEqual([]);
+    expect(kotlinOnlyResult.signals).not.toContainEqual({
+      source: "build.gradle",
+      description: "Detected Java project"
+    });
+  });
+
+  it("does not detect commented Gradle Java plugins", async () => {
+    const root = await createTempRepo();
+    await writeFile(
+      join(root, "build.gradle"),
+      "plugins {\n  // id 'java'\n  id 'org.jetbrains.kotlin.jvm' // java\n}\n// apply plugin: 'java'\n",
+      "utf8"
+    );
+
+    const result = await detectProject(root);
+
+    expect(result.project.stacks).toEqual([]);
+    expect(result.signals).not.toContainEqual({
+      source: "build.gradle",
+      description: "Detected Java project"
+    });
+
+    const inlineRoot = await createTempRepo();
+    await writeFile(join(inlineRoot, "build.gradle.kts"), "plugins { // java\n}\n", "utf8");
+
+    const inlineResult = await detectProject(inlineRoot);
+    expect(inlineResult.project.stacks).toEqual([]);
+    expect(inlineResult.signals).not.toContainEqual({
+      source: "build.gradle.kts",
+      description: "Detected Java project"
+    });
+  });
+
+  it("ignores language marker directories", async () => {
+    const root = await createTempRepo();
+    await mkdir(join(root, "go.mod"));
+    await mkdir(join(root, "requirements.txt"));
+
+    const result = await detectProject(root);
+
+    expect(result.project.stacks).toEqual([]);
+  });
+
   it("detects npm workspaces with Turbo and package roots", async () => {
     const root = await createTempRepo();
     await mkdir(join(root, "packages", "ui"), { recursive: true });

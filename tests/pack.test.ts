@@ -99,6 +99,50 @@ describe("createContextPackage", () => {
     });
   });
 
+  it("writes non-JavaScript language stacks without invented commands", async () => {
+    const root = await createTempRepo();
+    await writeFile(join(root, "pyproject.toml"), "[project]\nname = \"python-app\"\n", "utf8");
+    await writeFile(join(root, "Cargo.toml"), "[package]\nname = \"rust-app\"\n", "utf8");
+    await writeFile(join(root, "go.mod"), "module example.com/go-app\n", "utf8");
+    await writeFile(join(root, "pom.xml"), "<project />\n", "utf8");
+
+    await createContextPackage({
+      root,
+      target: "codex",
+      outputDir: ".repo-context",
+      maxFiles: 500,
+      dryRun: false,
+      force: false
+    });
+
+    const index = JSON.parse(await readFile(join(root, ".repo-context", "index.json"), "utf8"));
+    expect(index.project.stacks).toEqual(["python", "rust", "go", "java"]);
+    expect(index.commands).toEqual({
+      install: null,
+      dev: null,
+      build: null,
+      test: null,
+      lint: null,
+      format: null
+    });
+    expect(index.signals).toContainEqual({
+      source: "pyproject.toml",
+      description: "Detected Python project"
+    });
+    expect(index.signals).toContainEqual({
+      source: "Cargo.toml",
+      description: "Detected Rust project"
+    });
+    expect(index.signals).toContainEqual({
+      source: "go.mod",
+      description: "Detected Go project"
+    });
+    expect(index.signals).toContainEqual({
+      source: "pom.xml",
+      description: "Detected Java project"
+    });
+  });
+
   it("does not overwrite user files unless force is enabled", async () => {
     const root = await createTempRepo();
     await writeFile(join(root, "package.json"), "{\"name\":\"safe-app\"}", "utf8");
