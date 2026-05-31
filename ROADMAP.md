@@ -4,8 +4,8 @@ This file is the source of truth for project phase status. Update it whenever a 
 
 ## Current Status
 
-- Current phase: Phase 3 in progress
-- Last completed milestone: Phase 3 README before/after AI-agent context examples
+- Current phase: Phase 4 planned
+- Last completed milestone: Phase 3 demo terminal SVG
 - Private repository: `Chungwinglam/repo-context-cli`
 - Default branch: `main`
 
@@ -50,13 +50,13 @@ Candidate tasks:
 
 ## Phase 3: Open Source Launch Quality
 
-Status: In progress
+Status: Complete
 
 Goal: Improve adoption readiness for a public launch.
 
 Candidate tasks:
 
-- Add demo terminal recording or GIF.
+- Add demo terminal recording or GIF. (Complete)
 - Add `CONTRIBUTING.md` with fixture and detector-extension guidance. (Complete)
 - Add `CHANGELOG.md`. (Complete)
 - Add release workflow with npm trusted publishing / provenance-ready configuration. (Complete)
@@ -70,8 +70,8 @@ Goal: Add optional integrations only after the CLI remains stable.
 
 Candidate tasks:
 
-- HTML report output.
 - Secret redaction.
+- HTML report output.
 - MCP server mode.
 - Editor integrations.
 - GitHub Action for keeping context files updated.
@@ -102,5 +102,6 @@ Candidate tasks:
 - Added `CHANGELOG.md` with initial unreleased `0.1.0` release notes.
 - Added a GitHub release workflow for npm trusted publishing plus release documentation with provenance constraints.
 - Improved README adoption examples with before/after AI-agent context.
+- Added a README terminal demo SVG and completed Phase 3 launch-quality tasks.
 
-Next-stage goal: Add demo terminal recording or GIF.
+Next-stage goal: Start Phase 4 with secret redaction.

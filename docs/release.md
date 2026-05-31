@@ -78,6 +78,7 @@ Before publishing a GitHub Release:
 - Confirm `main` is green in CI.
 - Confirm `package.json` has the intended version.
 - Confirm `CHANGELOG.md` has release notes for that version.
+- Make the GitHub repository public so npm users can load README assets served from GitHub raw URLs.
 - Create and publish a GitHub Release tagged as `v<package.json version>`.
 - Confirm the release workflow completed successfully.
 - Confirm the npm package page shows the new version.

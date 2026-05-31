@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="520" viewBox="0 0 960 520" role="img" aria-labelledby="title desc">
+  <title id="title">Repo Context CLI terminal demo</title>
+  <desc id="desc">A terminal-style demo showing repo-context dry-run output for AGENTS.md, PROJECT_MAP.md, TESTING.md, and .repo-context/index.json.</desc>
+  <defs>
+    <linearGradient id="terminal-bg" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0" stop-color="#111827"/>
+      <stop offset="1" stop-color="#0f172a"/>
+    </linearGradient>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="14" stdDeviation="18" flood-color="#0f172a" flood-opacity="0.24"/>
+    </filter>
+  </defs>
+
+  <rect width="960" height="520" fill="#f8fafc"/>
+  <rect x="48" y="42" width="864" height="436" rx="14" fill="url(#terminal-bg)" filter="url(#shadow)"/>
+  <rect x="48" y="42" width="864" height="44" rx="14" fill="#1f2937"/>
+  <rect x="48" y="72" width="864" height="14" fill="#1f2937"/>
+  <circle cx="78" cy="64" r="7" fill="#ef4444"/>
+  <circle cx="102" cy="64" r="7" fill="#f59e0b"/>
+  <circle cx="126" cy="64" r="7" fill="#22c55e"/>
+  <text x="480" y="69" text-anchor="middle" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="13" fill="#cbd5e1">repo-context-cli</text>
+
+  <g font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="18">
+    <text x="82" y="126" fill="#22c55e">$</text>
+    <text x="110" y="126" fill="#e5e7eb">npx repo-context-cli pack --dry-run --for codex</text>
+
+    <text x="82" y="172" fill="#93c5fd">Planned context package:</text>
+    <text x="112" y="210" fill="#e5e7eb">- planned: AGENTS.md</text>
+    <text x="112" y="244" fill="#e5e7eb">- planned: PROJECT_MAP.md</text>
+    <text x="112" y="278" fill="#e5e7eb">- planned: TESTING.md</text>
+    <text x="112" y="312" fill="#e5e7eb">- planned: .repo-context/index.json</text>
+
+    <text x="82" y="380" fill="#94a3b8">Run without --dry-run to write safe files.</text>
+    <text x="82" y="414" fill="#94a3b8">Use --force for existing user-authored files.</text>
+  </g>
+
+  <g transform="translate(574 166)">
+    <rect width="274" height="210" rx="10" fill="#f8fafc" opacity="0.96"/>
+    <text x="24" y="40" font-family="Arial, sans-serif" font-size="16" font-weight="700" fill="#111827">Generated package</text>
+    <g font-family="Arial, sans-serif" font-size="14" fill="#334155">
+      <text x="24" y="76">Rules before editing</text>
+      <text x="24" y="108">Project map and file kinds</text>
+      <text x="24" y="140">Verification commands</text>
+      <text x="24" y="172">Rough context size</text>
+    </g>
+    <g stroke="#16a34a" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M224 70l8 8 16-18"/>
+      <path d="M224 102l8 8 16-18"/>
+      <path d="M224 134l8 8 16-18"/>
+      <path d="M224 166l8 8 16-18"/>
+    </g>
+  </g>
+</svg>

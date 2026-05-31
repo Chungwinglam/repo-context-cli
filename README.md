@@ -21,6 +21,12 @@ TESTING.md
   index.json
 ```
 
+## Demo
+
+![Repo Context CLI terminal demo](https://raw.githubusercontent.com/Chungwinglam/repo-context-cli/main/docs/demo.svg)
+
+The demo shows the dry-run flow: Repo Context CLI plans the context files first, then writes safe files when you run without `--dry-run`. Existing user-authored files are skipped unless `--force` is passed.
+
 ## Why This Exists
 
 AI coding tools waste time when they start with weak project context. Users repeatedly paste directory trees, explain test commands, and warn agents not to edit generated files. Repo Context CLI turns repository facts into standard context files without calling an LLM API.
