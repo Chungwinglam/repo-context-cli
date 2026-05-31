@@ -5,7 +5,7 @@ This file is the source of truth for project phase status. Update it whenever a 
 ## Current Status
 
 - Current phase: Phase 3 in progress
-- Last completed milestone: Phase 3 contributing guide and detector-extension guidance
+- Last completed milestone: Phase 3 initial changelog
 - Private repository: `Chungwinglam/repo-context-cli`
 - Default branch: `main`
 
@@ -58,7 +58,7 @@ Candidate tasks:
 
 - Add demo terminal recording or GIF.
 - Add `CONTRIBUTING.md` with fixture and detector-extension guidance. (Complete)
-- Add `CHANGELOG.md`.
+- Add `CHANGELOG.md`. (Complete)
 - Add release workflow with npm provenance.
 - Improve README examples with before/after AI-agent context.
 
@@ -99,5 +99,6 @@ Candidate tasks:
 - Deleted the merged `phase2-token-size-summary` branch locally and on `origin`.
 - Added an npm tarball install smoke test to CI.
 - Started Phase 3 with `CONTRIBUTING.md`, including local development, fixture style, detector-extension guidance, and PR checklist.
+- Added `CHANGELOG.md` with initial unreleased `0.1.0` release notes.
 
-Next-stage goal: Add `CHANGELOG.md` with initial release notes.
+Next-stage goal: Add release workflow with npm provenance.
