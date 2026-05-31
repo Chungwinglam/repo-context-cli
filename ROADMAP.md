@@ -87,5 +87,6 @@ Candidate tasks:
 - Added pnpm, yarn, bun command inference coverage plus lockfile conflict warnings.
 - Added high-risk boundary coverage for `.gitignore` negation, anchored patterns, globstar ignores, and multi-lockfile package-manager warnings.
 - Merged `phase2-gitignore-package-manager` into `main`.
+- Deleted the merged `phase2-gitignore-package-manager` branch locally and on `origin`.
 
 Next-stage goal: Add monorepo baseline detection for npm workspaces, pnpm workspaces, Turbo, and Nx.
