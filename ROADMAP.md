@@ -103,5 +103,7 @@ Candidate tasks:
 - Added a GitHub release workflow for npm trusted publishing plus release documentation with provenance constraints.
 - Improved README adoption examples with before/after AI-agent context.
 - Added a README terminal demo SVG and completed Phase 3 launch-quality tasks.
+- Merged `phase3-demo-terminal-svg` into `main`.
+- Deleted the merged `phase3-demo-terminal-svg` branch locally and on `origin`.
 
 Next-stage goal: Start Phase 4 with secret redaction.
