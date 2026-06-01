@@ -1,0 +1,41 @@
+name: Feature request
+description: Suggest a focused Repo Context CLI improvement.
+title: "[Feature]: "
+labels: [enhancement, needs-triage]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Feature requests should preserve Repo Context CLI's trust boundary: deterministic local repository context without LLM calls or business source edits.
+  - type: textarea
+    id: problem
+    attributes:
+      label: What problem would this solve?
+      description: Describe the user workflow or maintainer pain point.
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed behavior
+      description: Describe the smallest useful change.
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+      description: Mention manual workarounds or narrower versions of the request.
+    validations:
+      required: false
+  - type: checkboxes
+    id: boundaries
+    attributes:
+      label: Scope and trust boundary
+      options:
+        - label: This request can be implemented without LLM calls.
+          required: true
+        - label: This request can be implemented without editing business source code.
+          required: true
+        - label: This request can preserve safe overwrite behavior.
+          required: true

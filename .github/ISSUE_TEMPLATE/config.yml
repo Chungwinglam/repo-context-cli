@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Contact options
+    url: https://github.com/Chungwinglam/repo-context-cli/blob/main/SUPPORT.md
+    about: Read support boundaries before opening an issue.

@@ -1,0 +1,77 @@
+name: Bug report
+description: Report a reproducible Repo Context CLI bug.
+title: "[Bug]: "
+labels: [bug, needs-triage]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to report a bug. No secrets, tokens, or private source snippets should be pasted into this issue.
+  - type: input
+    id: version
+    attributes:
+      label: Repo Context CLI version
+      description: Check `package.json`, `npm list repo-context-cli`, or the npm package version you installed.
+      placeholder: "0.1.0"
+    validations:
+      required: true
+  - type: input
+    id: node-version
+    attributes:
+      label: Node.js version
+      description: Run `node --version`.
+      placeholder: "v24.0.0"
+    validations:
+      required: true
+  - type: input
+    id: operating-system
+    attributes:
+      label: Operating system and shell
+      description: Include OS version and shell, such as Windows 11 PowerShell, macOS zsh, or Ubuntu bash.
+      placeholder: "Windows 11 PowerShell"
+    validations:
+      required: true
+  - type: dropdown
+    id: command
+    attributes:
+      label: Command
+      options:
+        - repo-context pack
+        - repo-context mcp
+        - GitHub Actions workflow
+        - npm package install
+        - Other
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Reproduction steps
+      description: Include a minimal safe repository shape or commands. Start with `repo-context pack --dry-run` when possible.
+      placeholder: |
+        1. Create a repository with ...
+        2. Run `repo-context pack --dry-run --for codex`
+        3. See ...
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+      description: What should Repo Context CLI have done?
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior
+      description: Include CLI output or errors. Redact secrets and private paths.
+    validations:
+      required: true
+  - type: checkboxes
+    id: safety
+    attributes:
+      label: Safety check
+      options:
+        - label: I removed or redacted secrets, tokens, private source snippets, and private repository paths.
+          required: true

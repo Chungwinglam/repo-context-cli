@@ -13,7 +13,7 @@ Scope:
 
 Repo Context CLI is close to first-release ready from a repository and package-contents perspective. The local package builds, the CLI help works from `dist/cli.js`, the release workflow has a version-tag guard, CI includes an installed-package smoke test, and `npm pack --dry-run` lists the expected package contents.
 
-The project is not yet fully release-ready because two gates remain outside the codebase: the GitHub repository is still private, and npm Trusted Publishing must be configured on npm before publishing through GitHub Actions.
+The project is not yet fully release-ready because external release gates remain and the adoption guide is still pending: the GitHub repository is still private, npm Trusted Publishing must be configured on npm before publishing through GitHub Actions, and maintainers still need public adoption guidance before broad promotion.
 
 Overall status: Release candidate after external release gates and checklist hardening.
 
@@ -89,7 +89,7 @@ Recommended action: mark the spec as the original MVP spec or move current produ
 
 The repo has a contributing guide and license, but public launch quality would improve with issue templates and a small support/security policy.
 
-Recommended action: add GitHub issue templates for bug reports and feature requests before broad promotion.
+Status: Complete. The repository now includes GitHub issue forms for bug reports and feature requests, plus `SECURITY.md` and `SUPPORT.md`.
 
 ### F6. Add an adoption guide
 
@@ -118,5 +118,4 @@ Remaining before public release:
 
 1. Resolve external gates: public repository and npm trusted publisher setup.
 2. Recheck package name availability immediately before first publish.
-3. Add issue templates and lightweight project health files.
-4. Add adoption guidance before broad promotion.
+3. Add adoption guidance before broad promotion.

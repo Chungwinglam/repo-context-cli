@@ -5,7 +5,7 @@ This file is the source of truth for project phase status. Update it whenever a 
 ## Current Status
 
 - Current phase: Phase 5 in progress
-- Last completed milestone: Phase 5 maintainer release checklist
+- Last completed milestone: Phase 5 issue templates and project health files
 - Private repository: `Chungwinglam/repo-context-cli`
 - Default branch: `main`
 
@@ -86,7 +86,7 @@ Candidate tasks:
 
 - Run a release readiness audit for package metadata, docs, workflows, and generated artifacts. (Complete)
 - Add a maintainer release checklist for npm publish and post-release verification. (Complete)
-- Add GitHub issue templates and lightweight project health files.
+- Add GitHub issue templates and lightweight project health files. (Complete)
 - Add an adoption guide showing how to introduce Repo Context CLI into an existing repository.
 
 ## Activity Log
@@ -145,5 +145,6 @@ Candidate tasks:
 - Merged `phase5-release-readiness-audit` into `main` and deleted the merged branch locally and on `origin`; Phase 5 remains in progress.
 - Added a maintainer release checklist to `docs/release.md`, CI verification for Node.js 20 and 24, and release workflow tarball install smoke before `npm publish`; Phase 5 remains in progress.
 - Merged `phase5-maintainer-release-checklist` into `main` and deleted the merged branch locally and on `origin`; Phase 5 remains in progress.
+- Added GitHub issue forms for bug reports and feature requests, plus lightweight `SECURITY.md` and `SUPPORT.md` project health files; Phase 5 remains in progress.
 
-Next-stage goal: Add GitHub issue templates and lightweight project health files.
+Next-stage goal: Add an adoption guide showing how to introduce Repo Context CLI into an existing repository.

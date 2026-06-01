@@ -103,6 +103,12 @@ Before opening or merging a contribution:
 - Update `ROADMAP.md` when a small task is completed, including the next-stage goal.
 - Do not commit generated context output unless the task explicitly asks for it.
 
+## Issues, Support, and Security
+
+Use `.github/ISSUE_TEMPLATE/bug_report.yml` for reproducible bugs and `.github/ISSUE_TEMPLATE/feature_request.yml` for focused feature requests. Keep reports small, factual, and free of secrets or private source snippets.
+
+See `SUPPORT.md` for support boundaries. See `SECURITY.md` for vulnerability reporting; suspected vulnerabilities should not be opened as public issues.
+
 ## Roadmap Sync
 
 `ROADMAP.md` is the project source of truth for phase status. Every completed small task must record what changed, whether the current phase status changed, and the next-stage goal.

@@ -25,6 +25,7 @@ This project follows a simple changelog format inspired by Keep a Changelog. The
 - Added deterministic context size totals, indexed byte totals, largest indexed files, and rough token estimates.
 - Added small example repositories for JavaScript and TypeScript usage.
 - Added contributor guidance for local development, fixture style, detector extensions, and roadmap sync.
+- Added GitHub issue templates for bug reports and feature requests.
 
 ### Safety
 
@@ -48,4 +49,5 @@ This project follows a simple changelog format inspired by Keep a Changelog. The
 - Added project roadmap tracking phase status, completed milestones, activity log entries, and next-stage goals.
 - Added a release readiness audit covering package contents, workflows, docs, and public-launch gates.
 - Added a maintainer release checklist covering npm publish, Node support policy, release smoke, and post-release verification.
+- Added lightweight `SECURITY.md` and `SUPPORT.md` project health files.
 - Added MIT license.

@@ -179,3 +179,7 @@ See [docs/release-readiness-audit.md](https://github.com/Chungwinglam/repo-conte
 ## Contributing
 
 See [CONTRIBUTING.md](https://github.com/Chungwinglam/repo-context-cli/blob/main/CONTRIBUTING.md) for local development commands, fixture style, detector-extension guidance, and the pull request checklist.
+
+## Support and Security
+
+Use GitHub issue templates for reproducible bugs and focused feature requests. See [SUPPORT.md](https://github.com/Chungwinglam/repo-context-cli/blob/main/SUPPORT.md) for support boundaries and [SECURITY.md](https://github.com/Chungwinglam/repo-context-cli/blob/main/SECURITY.md) for vulnerability reporting.
