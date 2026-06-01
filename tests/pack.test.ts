@@ -262,6 +262,126 @@ describe("createContextPackage", () => {
     );
   });
 
+  it("plans optional editor config output during dry-run without writing files", async () => {
+    const root = await createTempRepo();
+    await writeFile(join(root, "package.json"), "{\"name\":\"dry-editor-app\"}", "utf8");
+
+    const result = await createContextPackage(
+      packOptions({
+        root,
+        editorConfig: true,
+        dryRun: true
+      })
+    );
+
+    expect(result.writes.find((write) => write.path === ".repo-context/editors/README.md")?.status).toBe("planned");
+    expect(result.writes.find((write) => write.path === ".repo-context/editors/cursor.md")?.status).toBe("planned");
+    expect(result.writes.find((write) => write.path === ".repo-context/editors/vscode.md")?.status).toBe("planned");
+    expect(existsSync(join(root, ".repo-context", "editors", "README.md"))).toBe(false);
+    expect(existsSync(join(root, ".repo-context", "editors", "cursor.md"))).toBe(false);
+    expect(existsSync(join(root, ".repo-context", "editors", "vscode.md"))).toBe(false);
+  });
+
+  it("writes optional editor config output under the selected output directory", async () => {
+    const root = await createTempRepo();
+    await writeFile(join(root, "package.json"), "{\"name\":\"custom-editor-app\"}", "utf8");
+
+    const result = await createContextPackage(
+      packOptions({
+        root,
+        outputDir: ".ai-context",
+        editorConfig: true
+      })
+    );
+
+    expect(result.writes.find((write) => write.path === ".ai-context/editors/README.md")?.status).toBe("written");
+    expect(result.writes.find((write) => write.path === ".ai-context/editors/cursor.md")?.status).toBe("written");
+    expect(result.writes.find((write) => write.path === ".ai-context/editors/vscode.md")?.status).toBe("written");
+
+    const cursorGuide = await readFile(join(root, ".ai-context", "editors", "cursor.md"), "utf8");
+    expect(cursorGuide).toContain(".ai-context/index.json");
+    expect(cursorGuide).not.toContain(".repo-context/index.json");
+    expect(cursorGuide).toContain("repo-context pack --for codex --output .ai-context --editor-config");
+
+    const editorReadme = await readFile(join(root, ".ai-context", "editors", "README.md"), "utf8");
+    expect(editorReadme).toContain("npx repo-context-cli pack --for codex --output .ai-context --editor-config");
+  });
+
+  it("does not overwrite user-authored editor config output unless force is enabled", async () => {
+    const root = await createTempRepo();
+    await mkdir(join(root, ".repo-context", "editors"), { recursive: true });
+    await writeFile(join(root, "package.json"), "{\"name\":\"safe-editor-app\"}", "utf8");
+    await writeFile(join(root, ".repo-context", "editors", "README.md"), "# Hand written editor notes\n", "utf8");
+
+    const result = await createContextPackage(
+      packOptions({
+        root,
+        editorConfig: true
+      })
+    );
+
+    expect(result.writes.find((write) => write.path === ".repo-context/editors/README.md")?.status).toBe("skipped");
+    expect(await readFile(join(root, ".repo-context", "editors", "README.md"), "utf8")).toBe(
+      "# Hand written editor notes\n"
+    );
+  });
+
+  it("refreshes generated editor config output on later runs", async () => {
+    const root = await createTempRepo();
+    await writeFile(join(root, "package.json"), "{\"name\":\"refresh-editor-app\"}", "utf8");
+
+    await createContextPackage(
+      packOptions({
+        root,
+        editorConfig: true
+      })
+    );
+
+    const result = await createContextPackage(
+      packOptions({
+        root,
+        editorConfig: true
+      })
+    );
+
+    expect(result.writes.find((write) => write.path === ".repo-context/editors/README.md")?.status).toBe(
+      "overwritten"
+    );
+    expect(result.writes.find((write) => write.path === ".repo-context/editors/cursor.md")?.status).toBe(
+      "overwritten"
+    );
+    expect(result.writes.find((write) => write.path === ".repo-context/editors/vscode.md")?.status).toBe(
+      "overwritten"
+    );
+
+    const readme = await readFile(join(root, ".repo-context", "editors", "README.md"), "utf8");
+    expect(readme).toContain("repo-context-cli:generated");
+  });
+
+  it("keeps editor config output conservative and static", async () => {
+    const root = await createTempRepo();
+    await writeFile(join(root, "package.json"), "{\"name\":\"conservative-editor-app\"}", "utf8");
+
+    await createContextPackage(
+      packOptions({
+        root,
+        editorConfig: true
+      })
+    );
+
+    const guides = await Promise.all(
+      ["README.md", "cursor.md", "vscode.md"].map((file) =>
+        readFile(join(root, ".repo-context", "editors", file), "utf8")
+      )
+    );
+
+    for (const guide of guides) {
+      expect(guide).toContain("does not modify editor settings automatically");
+      expect(guide).not.toContain("Generated `.vscode/settings.json`");
+      expect(guide).not.toContain("Generated `.cursor/rules`");
+    }
+  });
+
   it("escapes repository data in the optional HTML report", async () => {
     const root = await createTempRepo();
     await writeFile(
@@ -532,3 +652,18 @@ describe("createContextPackage", () => {
     expect(projectMap).toContain("- Secret-like paths redacted: 3");
   });
 });
+
+function packOptions(
+  overrides: Partial<Parameters<typeof createContextPackage>[0]> & { root: string; editorConfig?: boolean }
+): Parameters<typeof createContextPackage>[0] & { editorConfig?: boolean } {
+  return {
+    root: overrides.root,
+    target: overrides.target ?? "codex",
+    outputDir: overrides.outputDir ?? ".repo-context",
+    maxFiles: overrides.maxFiles ?? 500,
+    dryRun: overrides.dryRun ?? false,
+    force: overrides.force ?? false,
+    htmlReport: overrides.htmlReport,
+    editorConfig: overrides.editorConfig
+  };
+}

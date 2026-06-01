@@ -5,7 +5,7 @@ This file is the source of truth for project phase status. Update it whenever a 
 ## Current Status
 
 - Current phase: Phase 4 in progress
-- Last completed milestone: Phase 4 editor integration planning
+- Last completed milestone: Phase 4 optional editor config output
 - Private repository: `Chungwinglam/repo-context-cli`
 - Default branch: `main`
 
@@ -73,7 +73,7 @@ Candidate tasks:
 - Secret redaction. (Complete)
 - HTML report output. (Complete)
 - MCP server mode. (Complete)
-- Editor integrations. (Planning complete)
+- Editor integrations. (Static editor config output complete)
 - GitHub Action for keeping context files updated.
 
 ## Activity Log
@@ -123,5 +123,6 @@ Candidate tasks:
 - Completed editor integration planning with an approved design spec and implementation plan for optional static editor config output; Phase 4 remains in progress.
 - Merged `phase4-editor-integration-planning` into `main`.
 - Deleted the merged `phase4-editor-integration-planning` branch locally and on `origin`.
+- Added optional `--editor-config` output for static Cursor, VS Code, and generic AI-editor guides under the selected output directory; Phase 4 remains in progress.
 
-Next-stage goal: Add optional editor config output for Cursor, VS Code, and generic AI-editor workflows.
+Next-stage goal: Add GitHub Action for keeping context files updated.

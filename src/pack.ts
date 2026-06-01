@@ -1,5 +1,6 @@
 import { detectProject } from "./detector.js";
 import type { GeneratedFile, PackOptions, PackResult, RepositoryContext } from "./model.js";
+import { renderCursorGuide, renderEditorReadme, renderVsCodeGuide } from "./renderers/editors.js";
 import { renderIndexJson } from "./renderers/json.js";
 import { renderHtmlReport } from "./renderers/html.js";
 import { renderAgentsMarkdown, renderProjectMapMarkdown, renderTestingMarkdown } from "./renderers/markdown.js";
@@ -64,7 +65,8 @@ export async function createContextPackage(options: PackOptions): Promise<PackRe
   const { context, generatedFiles } = buildContextWithStableSummary(
     baseContext,
     options.outputDir,
-    options.htmlReport === true
+    options.htmlReport === true,
+    options.editorConfig === true
   );
   const writes = await writeGeneratedFiles(generatedFiles, {
     root: options.root,
@@ -86,15 +88,16 @@ export async function createContextPackage(options: PackOptions): Promise<PackRe
 function buildContextWithStableSummary(
   baseContext: RepositoryContext,
   outputDir: string,
-  htmlReport: boolean
+  htmlReport: boolean,
+  editorConfig: boolean
 ): { context: RepositoryContext; generatedFiles: GeneratedFile[] } {
   let context = baseContext;
-  let generatedFiles = buildGeneratedFiles(context, outputDir, htmlReport);
+  let generatedFiles = buildGeneratedFiles(context, outputDir, htmlReport, editorConfig);
 
   for (let attempt = 0; attempt < 20; attempt += 1) {
     const nextSummary = buildContextSummary(context.files, generatedFiles);
     const nextContext = { ...context, summary: nextSummary };
-    const nextGeneratedFiles = buildGeneratedFiles(nextContext, outputDir, htmlReport);
+    const nextGeneratedFiles = buildGeneratedFiles(nextContext, outputDir, htmlReport, editorConfig);
 
     if (summariesEqual(nextSummary, context.summary)) {
       return { context: nextContext, generatedFiles: nextGeneratedFiles };
@@ -107,7 +110,12 @@ function buildContextWithStableSummary(
   return { context, generatedFiles };
 }
 
-function buildGeneratedFiles(context: RepositoryContext, outputDir: string, htmlReport: boolean): GeneratedFile[] {
+function buildGeneratedFiles(
+  context: RepositoryContext,
+  outputDir: string,
+  htmlReport: boolean,
+  editorConfig: boolean
+): GeneratedFile[] {
   const normalizedOutput = normalizeOutputDir(outputDir);
 
   const files: GeneratedFile[] = [
@@ -134,6 +142,23 @@ function buildGeneratedFiles(context: RepositoryContext, outputDir: string, html
       path: `${normalizedOutput}/report.html`,
       content: renderHtmlReport(context)
     });
+  }
+
+  if (editorConfig) {
+    files.push(
+      {
+        path: `${normalizedOutput}/editors/README.md`,
+        content: renderEditorReadme(context, { outputDir: normalizedOutput })
+      },
+      {
+        path: `${normalizedOutput}/editors/cursor.md`,
+        content: renderCursorGuide(context, { outputDir: normalizedOutput })
+      },
+      {
+        path: `${normalizedOutput}/editors/vscode.md`,
+        content: renderVsCodeGuide(context, { outputDir: normalizedOutput })
+      }
+    );
   }
 
   return files;

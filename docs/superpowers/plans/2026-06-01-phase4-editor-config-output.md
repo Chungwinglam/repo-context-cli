@@ -16,11 +16,11 @@
 - Modify: `tests/cli.test.ts`
 - Modify: `tests/pack.test.ts`
 
-- [ ] **Step 1: Add CLI help and invalid MCP flag tests**
+- [x] **Step 1: Add CLI help and invalid MCP flag tests**
 
 Add assertions that top-level help includes `--editor-config`, and that `repo-context mcp --editor-config` exits non-zero with `Unknown flag for mcp: --editor-config`.
 
-- [ ] **Step 2: Add dry-run editor output test**
+- [x] **Step 2: Add dry-run editor output test**
 
 In `tests/pack.test.ts`, create a temp package repo and call `createContextPackage` with `editorConfig: true` and `dryRun: true`.
 
@@ -34,7 +34,7 @@ Expected planned paths:
 
 Expected filesystem state: none of those files exists after dry-run.
 
-- [ ] **Step 3: Add selected output directory test**
+- [x] **Step 3: Add selected output directory test**
 
 Call `createContextPackage` with `outputDir: ".ai-context"` and `editorConfig: true`.
 
@@ -48,23 +48,23 @@ Expected written paths:
 
 Expected content: `.ai-context/editors/cursor.md` references `.ai-context/index.json` and does not reference `.repo-context/index.json`.
 
-- [ ] **Step 4: Add overwrite safety test**
+- [x] **Step 4: Add overwrite safety test**
 
 Pre-create `.repo-context/editors/README.md` with user-authored content, then run `createContextPackage` with `editorConfig: true`, `dryRun: false`, and `force: false`.
 
 Expected result: the README write is skipped with the existing user-authored-file reason.
 
-- [ ] **Step 5: Add generated refresh test**
+- [x] **Step 5: Add generated refresh test**
 
 Run `createContextPackage` twice with `editorConfig: true`, `dryRun: false`, and `force: false`.
 
 Expected result: the second run returns `overwritten` for generated editor docs because they include the standard generated header.
 
-- [ ] **Step 6: Add conservative content test**
+- [x] **Step 6: Add conservative content test**
 
 Assert generated editor docs include wording that editor settings are not modified automatically and do not claim `.vscode/settings.json` or `.cursor/rules` was generated.
 
-- [ ] **Step 7: Verify RED**
+- [x] **Step 7: Verify RED**
 
 Run:
 
@@ -81,7 +81,7 @@ Expected: failures because `editorConfig`, `--editor-config`, and the editor ren
 - Modify: `src/model.ts`
 - Modify: `src/pack.ts`
 
-- [ ] **Step 1: Extend `PackOptions`**
+- [x] **Step 1: Extend `PackOptions`**
 
 Add an optional boolean property:
 
@@ -89,7 +89,7 @@ Add an optional boolean property:
 editorConfig?: boolean;
 ```
 
-- [ ] **Step 2: Create editor renderer functions**
+- [x] **Step 2: Create editor renderer functions**
 
 Create `src/renderers/editors.ts` with functions that accept `RepositoryContext` plus the normalized output directory and return strings:
 
@@ -105,7 +105,7 @@ export function renderVsCodeGuide(context: RepositoryContext, options: EditorRen
 
 Each output must include the generated header, project name, target, context file list, refresh command, selected index path, and a conservative note that no editor settings are modified automatically.
 
-- [ ] **Step 3: Append editor files from pack**
+- [x] **Step 3: Append editor files from pack**
 
 In `buildGeneratedFiles`, when `editorConfig` is true, append:
 
@@ -119,7 +119,7 @@ Reuse normalized output directory handling.
 
 Pass the same normalized output directory to the editor renderer so generated content references the correct index path.
 
-- [ ] **Step 4: Verify pack tests**
+- [x] **Step 4: Verify pack tests**
 
 Run:
 
@@ -137,13 +137,13 @@ Expected: editor output tests pass.
 - Modify: `CHANGELOG.md`
 - Modify: `ROADMAP.md`
 
-- [ ] **Step 1: Parse `--editor-config` for pack**
+- [x] **Step 1: Parse `--editor-config` for pack**
 
 Add the flag to pack parsing and pass `editorConfig: parsed.editorConfig` into `createContextPackage`.
 
 Do not accept the flag for `mcp`.
 
-- [ ] **Step 2: Update CLI help**
+- [x] **Step 2: Update CLI help**
 
 Show:
 
@@ -151,7 +151,7 @@ Show:
 repo-context pack ... [--editor-config]
 ```
 
-- [ ] **Step 3: Document editor output**
+- [x] **Step 3: Document editor output**
 
 Update README with:
 
@@ -161,7 +161,7 @@ npx repo-context-cli pack --editor-config
 
 Describe the generated `.repo-context/editors/` files and make clear they are static guides, not automatic editor mutation.
 
-- [ ] **Step 4: Update changelog and roadmap**
+- [x] **Step 4: Update changelog and roadmap**
 
 Add an unreleased changelog bullet and mark the editor integration output task complete in `ROADMAP.md`.
 
@@ -171,7 +171,7 @@ Set next-stage goal to:
 Add GitHub Action for keeping context files updated.
 ```
 
-- [ ] **Step 5: Verify GREEN**
+- [x] **Step 5: Verify GREEN**
 
 Run:
 

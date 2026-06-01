@@ -29,6 +29,14 @@ npx repo-context-cli pack --html-report
 
 This also writes `.repo-context/report.html` by default, or `<output>/report.html` when `--output` is set. The report is a static single-file document with embedded CSS and no JavaScript.
 
+Optional editor config guides:
+
+```bash
+npx repo-context-cli pack --editor-config
+```
+
+This also writes static guide files under `.repo-context/editors/` by default, or `<output>/editors/` when `--output` is set. The guides help Cursor, VS Code, and generic AI-editor workflows consume the generated context files; they do not modify editor settings automatically.
+
 Optional MCP server:
 
 ```bash
@@ -86,6 +94,9 @@ TESTING.md
 .repo-context/report.html (optional)
 - Browser-readable summary of project facts, commands, redaction counts, monorepo facts, largest files, and file categories
 
+.repo-context/editors/ (optional)
+- Static Cursor, VS Code, and generic AI-editor guides for consuming the generated context package
+
 repo-context mcp (optional)
 - Read-only stdio MCP server exposing get_repo_context for MCP-compatible clients
 ```
@@ -105,6 +116,7 @@ The result is not an LLM-generated project summary. It is a deterministic contex
 - Generated context packages include deterministic size totals and a rough token estimate.
 - Existing generated files are overwritten only when they were created by Repo Context CLI or when `--force` is passed.
 - Optional HTML reports are static single-file documents with embedded CSS and no JavaScript.
+- Optional editor config guides are static Markdown files under the selected output directory and do not create `.vscode/settings.json`, `.cursor/rules`, or other editor-owned files.
 - MCP server mode is stdio-only and read-only; `get_repo_context` always uses dry-run context generation and does not expose `--force`.
 - Unknown commands and directory purposes are reported as unknown instead of invented.
 
@@ -120,6 +132,7 @@ repo-context pack --max-files 500
 repo-context pack --dry-run
 repo-context pack --force
 repo-context pack --html-report
+repo-context pack --editor-config
 repo-context mcp
 repo-context mcp --root .
 repo-context mcp --max-files 500
@@ -131,13 +144,15 @@ Generated context includes conservative project facts such as detected stacks, p
 
 When `--html-report` is passed, the same redacted context is rendered to `.repo-context/report.html` by default, or `<output>/report.html` when `--output` is set, for quick browser inspection.
 
+When `--editor-config` is passed, Repo Context CLI writes `.repo-context/editors/README.md`, `.repo-context/editors/cursor.md`, and `.repo-context/editors/vscode.md` by default, or the same files under `<output>/editors/` when `--output` is set. These files are static setup guides only; they do not automatically change editor settings.
+
 When `repo-context mcp` is used, MCP clients can call `get_repo_context` to receive structured context, planned writes, warnings, summaries, and redaction counts without creating or overwriting files.
 
 Token estimates use `ceil(generatedCharacters / 4)` over the planned generated context content. They are intended for quick context-budget awareness, not model-specific tokenizer accounting.
 
 ## Scope
 
-The first release focuses on JavaScript and TypeScript repositories while still producing a basic map for other local repositories. Phase 2 added stronger real-world repository support such as `.gitignore` handling, package-manager conflict warnings, baseline monorepo detection, baseline Python/Rust/Go/Java detection, token and size summaries, and npm package install smoke coverage. Phase 3 focuses on open-source launch quality. Phase 4 starts with conservative secret redaction, optional HTML reporting, and read-only stdio MCP support before broader advanced integrations such as editor integrations.
+The first release focuses on JavaScript and TypeScript repositories while still producing a basic map for other local repositories. Phase 2 added stronger real-world repository support such as `.gitignore` handling, package-manager conflict warnings, baseline monorepo detection, baseline Python/Rust/Go/Java detection, token and size summaries, and npm package install smoke coverage. Phase 3 focuses on open-source launch quality. Phase 4 starts with conservative secret redaction, optional HTML reporting, read-only stdio MCP support, and static editor config guides before broader advanced integrations such as automated GitHub context refreshes.
 
 ## Project Roadmap
 

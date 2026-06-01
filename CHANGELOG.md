@@ -13,6 +13,7 @@ This project follows a simple changelog format inspired by Keep a Changelog. The
 - Added output controls for target selection, output directory, maximum indexed files, dry-run mode, and force overwrite mode.
 - Added generated `AGENTS.md`, `PROJECT_MAP.md`, `TESTING.md`, and `.repo-context/index.json` outputs.
 - Added optional `--html-report` output for a static, no-JavaScript `.repo-context/report.html` summary.
+- Added optional `--editor-config` output for static Cursor, VS Code, and generic AI-editor guide files.
 - Added read-only `repo-context mcp` stdio server mode with a `get_repo_context` tool.
 - Added conservative repository scanning with deterministic path ordering and common file-kind classification.
 - Added root `.gitignore` parsing while preserving fixed noisy-directory ignores.

@@ -36,6 +36,7 @@ describe("repo-context CLI", () => {
     });
 
     expect(result.stdout).toContain("mcp     Start a read-only stdio MCP server");
+    expect(result.stdout).toContain("--editor-config");
   });
 
   it("honors output directory and max-files flags through the real CLI", async () => {
@@ -67,6 +68,24 @@ describe("repo-context CLI", () => {
     expect(result.stdout).toContain("written: .ai-context/report.html");
     expect(existsSync(join(root, ".ai-context", "report.html"))).toBe(true);
     expect(existsSync(join(root, ".repo-context", "report.html"))).toBe(false);
+  });
+
+  it("writes optional editor config guides through the real CLI", async () => {
+    const root = await createTempRepo();
+    await writeFile(join(root, "package.json"), "{\"name\":\"cli-editor-app\"}", "utf8");
+
+    const result = await execFileAsync(
+      process.execPath,
+      [cliPath, "pack", "--output", ".ai-context", "--editor-config"],
+      { cwd: root }
+    );
+
+    expect(result.stdout).toContain("written: .ai-context/editors/README.md");
+    expect(result.stdout).toContain("written: .ai-context/editors/cursor.md");
+    expect(result.stdout).toContain("written: .ai-context/editors/vscode.md");
+    expect(existsSync(join(root, ".ai-context", "editors", "README.md"))).toBe(true);
+    expect(existsSync(join(root, ".ai-context", "editors", "cursor.md"))).toBe(true);
+    expect(existsSync(join(root, ".ai-context", "editors", "vscode.md"))).toBe(true);
   });
 
   it("supports optional HTML report output through the real CLI", async () => {
@@ -120,6 +139,13 @@ describe("repo-context CLI", () => {
     await expect(execFileAsync(process.execPath, [cliPath, "mcp", "--force"], { cwd: root })).rejects.toMatchObject({
       code: 1,
       stderr: expect.stringContaining("Unknown flag for mcp: --force")
+    });
+
+    await expect(
+      execFileAsync(process.execPath, [cliPath, "mcp", "--editor-config"], { cwd: root })
+    ).rejects.toMatchObject({
+      code: 1,
+      stderr: expect.stringContaining("Unknown flag for mcp: --editor-config")
     });
   });
 });

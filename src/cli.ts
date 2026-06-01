@@ -12,6 +12,7 @@ interface ParsedArgs {
   dryRun: boolean;
   force: boolean;
   htmlReport: boolean;
+  editorConfig: boolean;
   root: string;
   helpTopic: "main" | "mcp";
 }
@@ -43,7 +44,8 @@ async function main(): Promise<void> {
     maxFiles: parsed.maxFiles,
     dryRun: parsed.dryRun,
     force: parsed.force,
-    htmlReport: parsed.htmlReport
+    htmlReport: parsed.htmlReport,
+    editorConfig: parsed.editorConfig
   };
 
   const result = await createContextPackage(options);
@@ -91,6 +93,9 @@ function parseArgs(args: string[]): ParsedArgs {
       case "--html-report":
         parsed.htmlReport = true;
         break;
+      case "--editor-config":
+        parsed.editorConfig = true;
+        break;
       default:
         throw new Error(`Unknown flag: ${flag}`);
     }
@@ -137,6 +142,7 @@ function defaultArgs(command: "pack" | "mcp" | "help"): ParsedArgs {
     dryRun: false,
     force: false,
     htmlReport: false,
+    editorConfig: false,
     root: cwd(),
     helpTopic: "main"
   };
@@ -185,7 +191,7 @@ function printSummary(writes: WriteResult[], warnings: string[], dryRun: boolean
 
 function printHelp(): void {
   console.log(`Usage:
-  repo-context pack [--for codex|claude|cursor] [--output .repo-context] [--max-files 500] [--dry-run] [--force] [--html-report]
+  repo-context pack [--for codex|claude|cursor] [--output .repo-context] [--max-files 500] [--dry-run] [--force] [--html-report] [--editor-config]
   repo-context mcp [--root .] [--max-files 500]
 
 Commands:

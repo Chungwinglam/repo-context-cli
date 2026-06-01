@@ -99,6 +99,7 @@ export interface PackOptions {
   dryRun: boolean;
   force: boolean;
   htmlReport?: boolean;
+  editorConfig?: boolean;
 }
 
 export type WriteStatus = "planned" | "written" | "overwritten" | "skipped";
