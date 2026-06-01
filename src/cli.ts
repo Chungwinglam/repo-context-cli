@@ -1,23 +1,38 @@
 #!/usr/bin/env node
 import { cwd, exit } from "node:process";
 import type { AgentTarget, PackOptions, WriteResult } from "./model.js";
+import { runMcpServer } from "./mcp.js";
 import { createContextPackage } from "./pack.js";
 
 interface ParsedArgs {
-  command: "pack" | "help";
+  command: "pack" | "mcp" | "help";
   target: AgentTarget;
   outputDir: string;
   maxFiles: number;
   dryRun: boolean;
   force: boolean;
   htmlReport: boolean;
+  root: string;
+  helpTopic: "main" | "mcp";
 }
 
 async function main(): Promise<void> {
   const parsed = parseArgs(process.argv.slice(2));
 
   if (parsed.command === "help") {
-    printHelp();
+    if (parsed.helpTopic === "mcp") {
+      printMcpHelp();
+    } else {
+      printHelp();
+    }
+    return;
+  }
+
+  if (parsed.command === "mcp") {
+    await runMcpServer({
+      root: parsed.root,
+      maxFiles: parsed.maxFiles
+    });
     return;
   }
 
@@ -41,6 +56,10 @@ function parseArgs(args: string[]): ParsedArgs {
   }
 
   const [command, ...flags] = args;
+  if (command === "mcp") {
+    return parseMcpArgs(flags);
+  }
+
   if (command !== "pack") {
     throw new Error(`Unknown command: ${command}`);
   }
@@ -80,7 +99,36 @@ function parseArgs(args: string[]): ParsedArgs {
   return parsed;
 }
 
-function defaultArgs(command: "pack" | "help"): ParsedArgs {
+function parseMcpArgs(flags: string[]): ParsedArgs {
+  if (flags.includes("--help") || flags.includes("-h")) {
+    const parsed = defaultArgs("help");
+    parsed.helpTopic = "mcp";
+    return parsed;
+  }
+
+  const parsed = defaultArgs("mcp");
+
+  for (let index = 0; index < flags.length; index += 1) {
+    const flag = flags[index];
+
+    switch (flag) {
+      case "--root":
+        parsed.root = readFlagValue(flags, index, flag);
+        index += 1;
+        break;
+      case "--max-files":
+        parsed.maxFiles = parseMaxFiles(readFlagValue(flags, index, flag));
+        index += 1;
+        break;
+      default:
+        throw new Error(`Unknown flag for mcp: ${flag}`);
+    }
+  }
+
+  return parsed;
+}
+
+function defaultArgs(command: "pack" | "mcp" | "help"): ParsedArgs {
   return {
     command,
     target: "codex",
@@ -88,7 +136,9 @@ function defaultArgs(command: "pack" | "help"): ParsedArgs {
     maxFiles: 500,
     dryRun: false,
     force: false,
-    htmlReport: false
+    htmlReport: false,
+    root: cwd(),
+    helpTopic: "main"
   };
 }
 
@@ -136,9 +186,24 @@ function printSummary(writes: WriteResult[], warnings: string[], dryRun: boolean
 function printHelp(): void {
   console.log(`Usage:
   repo-context pack [--for codex|claude|cursor] [--output .repo-context] [--max-files 500] [--dry-run] [--force] [--html-report]
+  repo-context mcp [--root .] [--max-files 500]
 
 Commands:
   pack    Generate repository context files
+  mcp     Start a read-only stdio MCP server
+`);
+}
+
+function printMcpHelp(): void {
+  console.log(`Usage:
+  repo-context mcp [--root .] [--max-files 500]
+
+Options:
+  --root       Repository root for this MCP server session. Defaults to the current directory.
+  --max-files  Maximum number of indexed files returned by get_repo_context. Defaults to 500.
+
+Tools:
+  get_repo_context  Return redacted repository context without writing files.
 `);
 }
 

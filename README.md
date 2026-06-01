@@ -29,6 +29,14 @@ npx repo-context-cli pack --html-report
 
 This also writes `.repo-context/report.html` by default, or `<output>/report.html` when `--output` is set. The report is a static single-file document with embedded CSS and no JavaScript.
 
+Optional MCP server:
+
+```bash
+npx repo-context-cli mcp
+```
+
+This starts a read-only stdio MCP server with one `get_repo_context` tool. The tool returns the same redacted repository context as a dry run and does not write generated files.
+
 ## Demo
 
 ![Repo Context CLI terminal demo](https://raw.githubusercontent.com/Chungwinglam/repo-context-cli/main/docs/demo.svg)
@@ -77,6 +85,9 @@ TESTING.md
 
 .repo-context/report.html (optional)
 - Browser-readable summary of project facts, commands, redaction counts, monorepo facts, largest files, and file categories
+
+repo-context mcp (optional)
+- Read-only stdio MCP server exposing get_repo_context for MCP-compatible clients
 ```
 
 The result is not an LLM-generated project summary. It is a deterministic context package built from repository files, so future AI-agent sessions start from the same facts instead of a fresh guess.
@@ -94,6 +105,7 @@ The result is not an LLM-generated project summary. It is a deterministic contex
 - Generated context packages include deterministic size totals and a rough token estimate.
 - Existing generated files are overwritten only when they were created by Repo Context CLI or when `--force` is passed.
 - Optional HTML reports are static single-file documents with embedded CSS and no JavaScript.
+- MCP server mode is stdio-only and read-only; `get_repo_context` always uses dry-run context generation and does not expose `--force`.
 - Unknown commands and directory purposes are reported as unknown instead of invented.
 
 ## Commands
@@ -108,6 +120,9 @@ repo-context pack --max-files 500
 repo-context pack --dry-run
 repo-context pack --force
 repo-context pack --html-report
+repo-context mcp
+repo-context mcp --root .
+repo-context mcp --max-files 500
 ```
 
 ## Detected Facts
@@ -116,11 +131,13 @@ Generated context includes conservative project facts such as detected stacks, p
 
 When `--html-report` is passed, the same redacted context is rendered to `.repo-context/report.html` by default, or `<output>/report.html` when `--output` is set, for quick browser inspection.
 
+When `repo-context mcp` is used, MCP clients can call `get_repo_context` to receive structured context, planned writes, warnings, summaries, and redaction counts without creating or overwriting files.
+
 Token estimates use `ceil(generatedCharacters / 4)` over the planned generated context content. They are intended for quick context-budget awareness, not model-specific tokenizer accounting.
 
 ## Scope
 
-The first release focuses on JavaScript and TypeScript repositories while still producing a basic map for other local repositories. Phase 2 added stronger real-world repository support such as `.gitignore` handling, package-manager conflict warnings, baseline monorepo detection, baseline Python/Rust/Go/Java detection, token and size summaries, and npm package install smoke coverage. Phase 3 focuses on open-source launch quality. Phase 4 starts with conservative secret redaction before broader advanced integrations such as editor integrations.
+The first release focuses on JavaScript and TypeScript repositories while still producing a basic map for other local repositories. Phase 2 added stronger real-world repository support such as `.gitignore` handling, package-manager conflict warnings, baseline monorepo detection, baseline Python/Rust/Go/Java detection, token and size summaries, and npm package install smoke coverage. Phase 3 focuses on open-source launch quality. Phase 4 starts with conservative secret redaction, optional HTML reporting, and read-only stdio MCP support before broader advanced integrations such as editor integrations.
 
 ## Project Roadmap
 

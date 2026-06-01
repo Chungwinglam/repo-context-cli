@@ -5,7 +5,7 @@ This file is the source of truth for project phase status. Update it whenever a 
 ## Current Status
 
 - Current phase: Phase 4 in progress
-- Last completed milestone: Phase 4 HTML report output
+- Last completed milestone: Phase 4 MCP server mode
 - Private repository: `Chungwinglam/repo-context-cli`
 - Default branch: `main`
 
@@ -72,7 +72,7 @@ Candidate tasks:
 
 - Secret redaction. (Complete)
 - HTML report output. (Complete)
-- MCP server mode.
+- MCP server mode. (Complete)
 - Editor integrations.
 - GitHub Action for keeping context files updated.
 
@@ -115,5 +115,8 @@ Candidate tasks:
 - Added optional `--html-report` output for a static no-JavaScript `.repo-context/report.html`; Phase 4 remains in progress.
 - Merged `phase4-html-report-output` into `main`.
 - Deleted the merged `phase4-html-report-output` branch locally and on `origin`.
+- Added read-only stdio MCP server mode with a `get_repo_context` tool; Phase 4 remains in progress.
+- Hardened MCP server mode with fixed protocol negotiation, JSON-RPC batch/id validation, tool read-only annotations, and JSON text content for tool results; Phase 4 remains in progress.
+- Addressed `CodeReviewer-01` MCP compatibility feedback by returning standard JSON-RPC batch arrays and parse-error responses; Phase 4 remains in progress.
 
-Next-stage goal: Start MCP server mode.
+Next-stage goal: Start editor integration planning.

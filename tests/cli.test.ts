@@ -28,6 +28,16 @@ describe("repo-context CLI", () => {
     expect(existsSync(join(root, "AGENTS.md"))).toBe(false);
   });
 
+  it("lists MCP server mode in top-level help", async () => {
+    const root = await createTempRepo();
+
+    const result = await execFileAsync(process.execPath, [cliPath, "--help"], {
+      cwd: root
+    });
+
+    expect(result.stdout).toContain("mcp     Start a read-only stdio MCP server");
+  });
+
   it("honors output directory and max-files flags through the real CLI", async () => {
     const root = await createTempRepo();
     await mkdir(join(root, "src"), { recursive: true });
@@ -71,6 +81,29 @@ describe("repo-context CLI", () => {
     expect(existsSync(join(root, ".repo-context", "report.html"))).toBe(true);
   });
 
+  it("prints MCP help without starting the server", async () => {
+    const root = await createTempRepo();
+
+    const result = await execFileAsync(process.execPath, [cliPath, "mcp", "--help"], {
+      cwd: root
+    });
+
+    expect(result.stdout).toContain("repo-context mcp");
+    expect(result.stdout).toContain("--max-files");
+  });
+
+  it("rejects invalid MCP root before starting the server", async () => {
+    const root = await createTempRepo();
+    const missingRoot = join(root, "missing");
+
+    await expect(
+      execFileAsync(process.execPath, [cliPath, "mcp", "--root", missingRoot], { cwd: root })
+    ).rejects.toMatchObject({
+      code: 1,
+      stderr: expect.stringContaining("--root must point to an existing directory")
+    });
+  });
+
   it("exits non-zero for invalid flags", async () => {
     const root = await createTempRepo();
 
@@ -82,6 +115,11 @@ describe("repo-context CLI", () => {
     await expect(execFileAsync(process.execPath, [cliPath, "pack", "--max-files", "-1"], { cwd: root })).rejects.toMatchObject({
       code: 1,
       stderr: expect.stringContaining("--max-files must be a non-negative integer")
+    });
+
+    await expect(execFileAsync(process.execPath, [cliPath, "mcp", "--force"], { cwd: root })).rejects.toMatchObject({
+      code: 1,
+      stderr: expect.stringContaining("Unknown flag for mcp: --force")
     });
   });
 });
