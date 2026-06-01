@@ -113,5 +113,7 @@ Candidate tasks:
 
 - Diagnosed the visual companion localhost failure as a Windows/Codex launcher issue: the first manual launch passed a short-lived owner PID, so the server exited with `owner process exited`; the stable workaround starts `server.cjs` without `BRAINSTORM_OWNER_PID` and verifies HTTP before sharing a URL.
 - Added optional `--html-report` output for a static no-JavaScript `.repo-context/report.html`; Phase 4 remains in progress.
+- Merged `phase4-html-report-output` into `main`.
+- Deleted the merged `phase4-html-report-output` branch locally and on `origin`.
 
 Next-stage goal: Start MCP server mode.
