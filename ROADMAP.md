@@ -106,5 +106,7 @@ Candidate tasks:
 - Merged `phase3-demo-terminal-svg` into `main`.
 - Deleted the merged `phase3-demo-terminal-svg` branch locally and on `origin`.
 - Started Phase 4 with conservative secret-like path exclusion and command-value redaction.
+- Merged `phase4-secret-redaction` into `main`.
+- Deleted the merged `phase4-secret-redaction` branch locally and on `origin`.
 
 Next-stage goal: Add HTML report output.
