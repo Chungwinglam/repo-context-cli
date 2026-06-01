@@ -44,6 +44,33 @@ describe("repo-context CLI", () => {
     expect(existsSync(join(root, ".ai-context", "index.json"))).toBe(true);
   });
 
+  it("places the optional HTML report under the selected output directory", async () => {
+    const root = await createTempRepo();
+    await writeFile(join(root, "package.json"), "{\"name\":\"cli-output-report-app\"}", "utf8");
+
+    const result = await execFileAsync(
+      process.execPath,
+      [cliPath, "pack", "--output", ".ai-context", "--html-report"],
+      { cwd: root }
+    );
+
+    expect(result.stdout).toContain("written: .ai-context/report.html");
+    expect(existsSync(join(root, ".ai-context", "report.html"))).toBe(true);
+    expect(existsSync(join(root, ".repo-context", "report.html"))).toBe(false);
+  });
+
+  it("supports optional HTML report output through the real CLI", async () => {
+    const root = await createTempRepo();
+    await writeFile(join(root, "package.json"), "{\"name\":\"cli-report-app\"}", "utf8");
+
+    const result = await execFileAsync(process.execPath, [cliPath, "pack", "--html-report"], {
+      cwd: root
+    });
+
+    expect(result.stdout).toContain("written: .repo-context/report.html");
+    expect(existsSync(join(root, ".repo-context", "report.html"))).toBe(true);
+  });
+
   it("exits non-zero for invalid flags", async () => {
     const root = await createTempRepo();
 

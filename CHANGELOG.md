@@ -12,6 +12,7 @@ This project follows a simple changelog format inspired by Keep a Changelog. The
 - Added agent target support for `codex`, `claude`, and `cursor`.
 - Added output controls for target selection, output directory, maximum indexed files, dry-run mode, and force overwrite mode.
 - Added generated `AGENTS.md`, `PROJECT_MAP.md`, `TESTING.md`, and `.repo-context/index.json` outputs.
+- Added optional `--html-report` output for a static, no-JavaScript `.repo-context/report.html` summary.
 - Added conservative repository scanning with deterministic path ordering and common file-kind classification.
 - Added root `.gitignore` parsing while preserving fixed noisy-directory ignores.
 - Added package-manager detection for npm, pnpm, yarn, and bun, including lockfile conflict warnings.

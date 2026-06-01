@@ -5,7 +5,7 @@ This file is the source of truth for project phase status. Update it whenever a 
 ## Current Status
 
 - Current phase: Phase 4 in progress
-- Last completed milestone: Phase 4 secret redaction
+- Last completed milestone: Phase 4 HTML report output
 - Private repository: `Chungwinglam/repo-context-cli`
 - Default branch: `main`
 
@@ -71,7 +71,7 @@ Goal: Add optional integrations only after the CLI remains stable.
 Candidate tasks:
 
 - Secret redaction. (Complete)
-- HTML report output.
+- HTML report output. (Complete)
 - MCP server mode.
 - Editor integrations.
 - GitHub Action for keeping context files updated.
@@ -109,4 +109,9 @@ Candidate tasks:
 - Merged `phase4-secret-redaction` into `main`.
 - Deleted the merged `phase4-secret-redaction` branch locally and on `origin`.
 
-Next-stage goal: Add HTML report output.
+### 2026-06-01
+
+- Diagnosed the visual companion localhost failure as a Windows/Codex launcher issue: the first manual launch passed a short-lived owner PID, so the server exited with `owner process exited`; the stable workaround starts `server.cjs` without `BRAINSTORM_OWNER_PID` and verifies HTTP before sharing a URL.
+- Added optional `--html-report` output for a static no-JavaScript `.repo-context/report.html`; Phase 4 remains in progress.
+
+Next-stage goal: Start MCP server mode.

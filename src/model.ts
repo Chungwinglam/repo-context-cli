@@ -98,6 +98,7 @@ export interface PackOptions {
   maxFiles: number;
   dryRun: boolean;
   force: boolean;
+  htmlReport?: boolean;
 }
 
 export type WriteStatus = "planned" | "written" | "overwritten" | "skipped";

@@ -10,6 +10,7 @@ interface ParsedArgs {
   maxFiles: number;
   dryRun: boolean;
   force: boolean;
+  htmlReport: boolean;
 }
 
 async function main(): Promise<void> {
@@ -26,7 +27,8 @@ async function main(): Promise<void> {
     outputDir: parsed.outputDir,
     maxFiles: parsed.maxFiles,
     dryRun: parsed.dryRun,
-    force: parsed.force
+    force: parsed.force,
+    htmlReport: parsed.htmlReport
   };
 
   const result = await createContextPackage(options);
@@ -67,6 +69,9 @@ function parseArgs(args: string[]): ParsedArgs {
       case "--force":
         parsed.force = true;
         break;
+      case "--html-report":
+        parsed.htmlReport = true;
+        break;
       default:
         throw new Error(`Unknown flag: ${flag}`);
     }
@@ -82,7 +87,8 @@ function defaultArgs(command: "pack" | "help"): ParsedArgs {
     outputDir: ".repo-context",
     maxFiles: 500,
     dryRun: false,
-    force: false
+    force: false,
+    htmlReport: false
   };
 }
 
@@ -129,7 +135,7 @@ function printSummary(writes: WriteResult[], warnings: string[], dryRun: boolean
 
 function printHelp(): void {
   console.log(`Usage:
-  repo-context pack [--for codex|claude|cursor] [--output .repo-context] [--max-files 500] [--dry-run] [--force]
+  repo-context pack [--for codex|claude|cursor] [--output .repo-context] [--max-files 500] [--dry-run] [--force] [--html-report]
 
 Commands:
   pack    Generate repository context files

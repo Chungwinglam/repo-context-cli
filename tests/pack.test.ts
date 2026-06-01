@@ -27,6 +27,7 @@ describe("createContextPackage", () => {
     expect(result.writes.every((write) => write.status === "planned")).toBe(true);
     expect(existsSync(join(root, "AGENTS.md"))).toBe(false);
     expect(existsSync(join(root, ".repo-context", "index.json"))).toBe(false);
+    expect(existsSync(join(root, ".repo-context", "report.html"))).toBe(false);
   });
 
   it("writes markdown and JSON outputs with relative paths", async () => {
@@ -166,6 +167,132 @@ describe("createContextPackage", () => {
     expect(result.writes.find((write) => write.path === "AGENTS.md")?.status).toBe("skipped");
     expect(index.summary.scope).toBe("planned-generated-content");
     expect(index.summary.generatedFiles).toBe(4);
+  });
+
+  it("writes an optional static HTML report when requested", async () => {
+    const root = await createTempRepo();
+    await mkdir(join(root, "packages", "api"), { recursive: true });
+    await mkdir(join(root, "src"), { recursive: true });
+    await writeFile(
+      join(root, "package.json"),
+      JSON.stringify({
+        name: "html-report-app",
+        workspaces: ["packages/*"],
+        scripts: {
+          build: "vite build",
+          test: "vitest run"
+        }
+      }),
+      "utf8"
+    );
+    await writeFile(join(root, "src", "index.ts"), "export const app = true;\n", "utf8");
+    await writeFile(join(root, "README.md"), "# HTML report app\n", "utf8");
+    await writeFile(join(root, "packages", "api", "package.json"), "{\"name\":\"api\"}", "utf8");
+    await writeFile(join(root, ".env"), "TOKEN=secret\n", "utf8");
+
+    const options = {
+      root,
+      target: "codex" as const,
+      outputDir: ".repo-context",
+      maxFiles: 500,
+      dryRun: false,
+      force: false,
+      htmlReport: true
+    };
+
+    const result = await createContextPackage(options);
+
+    expect(result.writes.map((write) => write.path)).toContain(".repo-context/report.html");
+    const report = await readFile(join(root, ".repo-context", "report.html"), "utf8");
+    const index = JSON.parse(await readFile(join(root, ".repo-context", "index.json"), "utf8"));
+
+    expect(report).toContain("repo-context-cli:generated");
+    expect(report).toContain("<title>Repo Context Report - html-report-app</title>");
+    expect(report).toContain("Project Summary");
+    expect(report).toContain("html-report-app");
+    expect(report).toContain("npm run build");
+    expect(report).toContain("npm test");
+    expect(report).toContain("Secret-like paths redacted");
+    expect(report).toContain("Monorepo");
+    expect(report).toContain("npm-workspaces");
+    expect(report).toContain("Largest Files");
+    expect(report).toContain("File Categories");
+    expect(report).not.toContain("<script");
+    expect(report).not.toContain(".env");
+    expect(index.summary.generatedFiles).toBe(5);
+  });
+
+  it("plans the optional HTML report during dry-run without writing it", async () => {
+    const root = await createTempRepo();
+    await writeFile(join(root, "package.json"), "{\"name\":\"dry-report-app\"}", "utf8");
+
+    const result = await createContextPackage({
+      root,
+      target: "codex",
+      outputDir: ".repo-context",
+      maxFiles: 500,
+      dryRun: true,
+      force: false,
+      htmlReport: true
+    });
+
+    expect(result.writes.find((write) => write.path === ".repo-context/report.html")?.status).toBe("planned");
+    expect(existsSync(join(root, ".repo-context", "report.html"))).toBe(false);
+  });
+
+  it("does not overwrite a user-authored HTML report unless force is enabled", async () => {
+    const root = await createTempRepo();
+    await mkdir(join(root, ".repo-context"), { recursive: true });
+    await writeFile(join(root, "package.json"), "{\"name\":\"safe-report-app\"}", "utf8");
+    await writeFile(join(root, ".repo-context", "report.html"), "<!doctype html><p>hand written</p>\n", "utf8");
+
+    const result = await createContextPackage({
+      root,
+      target: "codex",
+      outputDir: ".repo-context",
+      maxFiles: 500,
+      dryRun: false,
+      force: false,
+      htmlReport: true
+    });
+
+    expect(result.writes.find((write) => write.path === ".repo-context/report.html")?.status).toBe("skipped");
+    expect(await readFile(join(root, ".repo-context", "report.html"), "utf8")).toBe(
+      "<!doctype html><p>hand written</p>\n"
+    );
+  });
+
+  it("escapes repository data in the optional HTML report", async () => {
+    const root = await createTempRepo();
+    await writeFile(
+      join(root, "package.json"),
+      JSON.stringify({
+        name: "<script>alert('x')</script>",
+        workspaces: ["packages/<img src=x onerror=alert(1)>"],
+        scripts: {
+          test: "echo \"<img src=x onerror=alert(1)>\""
+        }
+      }),
+      "utf8"
+    );
+
+    const options = {
+      root,
+      target: "codex" as const,
+      outputDir: ".repo-context",
+      maxFiles: 500,
+      dryRun: false,
+      force: false,
+      htmlReport: true
+    };
+
+    await createContextPackage(options);
+
+    const report = await readFile(join(root, ".repo-context", "report.html"), "utf8");
+    expect(report).toContain("&lt;script&gt;alert(&#39;x&#39;)&lt;/script&gt;");
+    expect(report).toContain("&lt;img src=x onerror=alert(1)&gt;");
+    expect(report).not.toContain("<script>");
+    expect(report).not.toContain("<img src=x");
   });
 
   it("writes monorepo facts into index.json", async () => {

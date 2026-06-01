@@ -1,6 +1,7 @@
 import { detectProject } from "./detector.js";
 import type { GeneratedFile, PackOptions, PackResult, RepositoryContext } from "./model.js";
 import { renderIndexJson } from "./renderers/json.js";
+import { renderHtmlReport } from "./renderers/html.js";
 import { renderAgentsMarkdown, renderProjectMapMarkdown, renderTestingMarkdown } from "./renderers/markdown.js";
 import { scanRepository } from "./scanner.js";
 import { redactMonorepoInfo, redactProjectCommands } from "./redaction.js";
@@ -60,7 +61,11 @@ export async function createContextPackage(options: PackOptions): Promise<PackRe
     }
   };
 
-  const { context, generatedFiles } = buildContextWithStableSummary(baseContext, options.outputDir);
+  const { context, generatedFiles } = buildContextWithStableSummary(
+    baseContext,
+    options.outputDir,
+    options.htmlReport === true
+  );
   const writes = await writeGeneratedFiles(generatedFiles, {
     root: options.root,
     dryRun: options.dryRun,
@@ -80,15 +85,16 @@ export async function createContextPackage(options: PackOptions): Promise<PackRe
 
 function buildContextWithStableSummary(
   baseContext: RepositoryContext,
-  outputDir: string
+  outputDir: string,
+  htmlReport: boolean
 ): { context: RepositoryContext; generatedFiles: GeneratedFile[] } {
   let context = baseContext;
-  let generatedFiles = buildGeneratedFiles(context, outputDir);
+  let generatedFiles = buildGeneratedFiles(context, outputDir, htmlReport);
 
   for (let attempt = 0; attempt < 20; attempt += 1) {
     const nextSummary = buildContextSummary(context.files, generatedFiles);
     const nextContext = { ...context, summary: nextSummary };
-    const nextGeneratedFiles = buildGeneratedFiles(nextContext, outputDir);
+    const nextGeneratedFiles = buildGeneratedFiles(nextContext, outputDir, htmlReport);
 
     if (summariesEqual(nextSummary, context.summary)) {
       return { context: nextContext, generatedFiles: nextGeneratedFiles };
@@ -101,10 +107,10 @@ function buildContextWithStableSummary(
   return { context, generatedFiles };
 }
 
-function buildGeneratedFiles(context: RepositoryContext, outputDir: string): GeneratedFile[] {
+function buildGeneratedFiles(context: RepositoryContext, outputDir: string, htmlReport: boolean): GeneratedFile[] {
   const normalizedOutput = normalizeOutputDir(outputDir);
 
-  return [
+  const files: GeneratedFile[] = [
     {
       path: "AGENTS.md",
       content: renderAgentsMarkdown(context)
@@ -122,6 +128,15 @@ function buildGeneratedFiles(context: RepositoryContext, outputDir: string): Gen
       content: renderIndexJson(context)
     }
   ];
+
+  if (htmlReport) {
+    files.push({
+      path: `${normalizedOutput}/report.html`,
+      content: renderHtmlReport(context)
+    });
+  }
+
+  return files;
 }
 
 function normalizeOutputDir(outputDir: string): string {
