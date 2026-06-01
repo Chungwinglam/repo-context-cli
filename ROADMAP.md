@@ -124,5 +124,7 @@ Candidate tasks:
 - Merged `phase4-editor-integration-planning` into `main`.
 - Deleted the merged `phase4-editor-integration-planning` branch locally and on `origin`.
 - Added optional `--editor-config` output for static Cursor, VS Code, and generic AI-editor guides under the selected output directory; Phase 4 remains in progress.
+- Merged `phase4-editor-config-output` into `main`.
+- Deleted the merged `phase4-editor-config-output` branch locally and on `origin`.
 
 Next-stage goal: Add GitHub Action for keeping context files updated.
