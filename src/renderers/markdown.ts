@@ -54,6 +54,10 @@ export function renderProjectMapMarkdown(context: RepositoryContext): string {
 
 ${renderContextSummary(context)}
 
+## Redactions
+
+${renderRedactions(context)}
+
 ## Monorepo
 
 ${renderMonorepoDetails(context)}
@@ -125,6 +129,13 @@ function renderContextSummary(context: RepositoryContext): string {
     `- Estimated tokens (planned): ${summary.estimatedTokens} (rough estimate, 4 characters per token)`,
     "- Largest indexed files:",
     renderFileBullets(summary.largestFiles)
+  ].join("\n");
+}
+
+function renderRedactions(context: RepositoryContext): string {
+  return [
+    `- Secret-like paths redacted: ${context.redactions.secretLikePaths}`,
+    `- Command values redacted: ${context.redactions.commandValues}`
   ].join("\n");
 }
 

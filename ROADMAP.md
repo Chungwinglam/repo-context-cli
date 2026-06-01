@@ -4,8 +4,8 @@ This file is the source of truth for project phase status. Update it whenever a 
 
 ## Current Status
 
-- Current phase: Phase 4 planned
-- Last completed milestone: Phase 3 demo terminal SVG
+- Current phase: Phase 4 in progress
+- Last completed milestone: Phase 4 secret redaction
 - Private repository: `Chungwinglam/repo-context-cli`
 - Default branch: `main`
 
@@ -64,13 +64,13 @@ Candidate tasks:
 
 ## Phase 4: Advanced Integrations
 
-Status: Planned
+Status: In progress
 
 Goal: Add optional integrations only after the CLI remains stable.
 
 Candidate tasks:
 
-- Secret redaction.
+- Secret redaction. (Complete)
 - HTML report output.
 - MCP server mode.
 - Editor integrations.
@@ -105,5 +105,6 @@ Candidate tasks:
 - Added a README terminal demo SVG and completed Phase 3 launch-quality tasks.
 - Merged `phase3-demo-terminal-svg` into `main`.
 - Deleted the merged `phase3-demo-terminal-svg` branch locally and on `origin`.
+- Started Phase 4 with conservative secret-like path exclusion and command-value redaction.
 
-Next-stage goal: Start Phase 4 with secret redaction.
+Next-stage goal: Add HTML report output.

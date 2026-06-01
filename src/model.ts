@@ -15,6 +15,7 @@ export interface ScanResult {
   excluded: string[];
   truncated: boolean;
   warnings: string[];
+  redactions: RedactionSummary;
 }
 
 export interface ProjectInfo {
@@ -66,6 +67,12 @@ export interface RepositoryContext {
   truncated: boolean;
   warnings: string[];
   signals: DetectionSignal[];
+  redactions: RedactionSummary;
+}
+
+export interface RedactionSummary {
+  secretLikePaths: number;
+  commandValues: number;
 }
 
 export interface ContextSummary {

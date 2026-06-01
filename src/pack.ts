@@ -3,16 +3,38 @@ import type { GeneratedFile, PackOptions, PackResult, RepositoryContext } from "
 import { renderIndexJson } from "./renderers/json.js";
 import { renderAgentsMarkdown, renderProjectMapMarkdown, renderTestingMarkdown } from "./renderers/markdown.js";
 import { scanRepository } from "./scanner.js";
+import { redactMonorepoInfo, redactProjectCommands } from "./redaction.js";
 import { buildContextSummary, emptyContextSummary, summariesEqual } from "./summary.js";
 import { writeGeneratedFiles } from "./writer.js";
 
 export async function createContextPackage(options: PackOptions): Promise<PackResult> {
   const scan = await scanRepository(options.root, { maxFiles: options.maxFiles });
   const detection = await detectProject(options.root);
+  const commandRedaction = redactProjectCommands(detection.commands);
+  const monorepoRedaction = redactMonorepoInfo(detection.project.monorepo);
+  const secretLikePathRedactions = scan.redactions.secretLikePaths + monorepoRedaction.redactedPaths;
   const warnings = [...scan.warnings, ...detection.warnings];
 
   if (scan.truncated) {
     warnings.push(`File index truncated to ${options.maxFiles} files.`);
+  }
+
+  if (secretLikePathRedactions > 0) {
+    warnings.push(
+      `Redacted ${secretLikePathRedactions} secret-like ${pluralize(
+        "path",
+        secretLikePathRedactions
+      )} from the context package.`
+    );
+  }
+
+  if (commandRedaction.redactedValues > 0) {
+    warnings.push(
+      `Redacted ${commandRedaction.redactedValues} detected command ${pluralize(
+        "value",
+        commandRedaction.redactedValues
+      )} from the context package.`
+    );
   }
 
   const baseContext: RepositoryContext = {
@@ -21,14 +43,21 @@ export async function createContextPackage(options: PackOptions): Promise<PackRe
     generatedAt: new Date().toISOString(),
     root: ".",
     target: options.target,
-    project: detection.project,
-    commands: detection.commands,
+    project: {
+      ...detection.project,
+      monorepo: monorepoRedaction.monorepo
+    },
+    commands: commandRedaction.commands,
     summary: emptyContextSummary(),
     files: scan.files,
     excluded: scan.excluded,
     truncated: scan.truncated,
     warnings,
-    signals: detection.signals
+    signals: detection.signals,
+    redactions: {
+      secretLikePaths: secretLikePathRedactions,
+      commandValues: commandRedaction.redactedValues
+    }
   };
 
   const { context, generatedFiles } = buildContextWithStableSummary(baseContext, options.outputDir);
@@ -107,4 +136,8 @@ function normalizeOutputDir(outputDir: string): string {
   }
 
   return segments.join("/") || ".repo-context";
+}
+
+function pluralize(word: string, count: number): string {
+  return count === 1 ? word : `${word}s`;
 }

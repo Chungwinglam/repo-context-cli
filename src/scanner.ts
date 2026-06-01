@@ -3,6 +3,7 @@ import { readFile, readdir, stat } from "node:fs/promises";
 import { join, relative, sep } from "node:path";
 import { DEFAULT_IGNORE_DIRS, isIgnoredDirectory } from "./ignore.js";
 import type { FileKind, ScanResult, ScannedFile } from "./model.js";
+import { emptyRedactionSummary, isSecretLikePath } from "./redaction.js";
 
 export interface ScanOptions {
   maxFiles: number;
@@ -12,6 +13,7 @@ export async function scanRepository(root: string, options: ScanOptions): Promis
   const files: ScannedFile[] = [];
   const excluded = new Set<string>();
   const warnings: string[] = [];
+  const redactions = emptyRedactionSummary();
   const limit = Math.max(0, options.maxFiles) + 1;
   const gitignore = await loadRootGitignore(root, warnings);
 
@@ -38,6 +40,10 @@ export async function scanRepository(root: string, options: ScanOptions): Promis
       const absolutePath = join(directory, entry.name);
       const relativePath = toRelativePath(root, absolutePath);
       if (entry.isDirectory()) {
+        if (isSecretLikePath(relativePath)) {
+          redactions.secretLikePaths += 1;
+          continue;
+        }
         if (isIgnoredDirectory(entry.name)) {
           excluded.add(entry.name);
           continue;
@@ -53,9 +59,14 @@ export async function scanRepository(root: string, options: ScanOptions): Promis
         continue;
       }
 
+      const path = relativePath;
+      if (isSecretLikePath(path)) {
+        redactions.secretLikePaths += 1;
+        continue;
+      }
+
       try {
         const fileStat = await stat(absolutePath);
-        const path = relativePath;
         if (isGitignored(gitignore, path, false)) {
           continue;
         }
@@ -80,7 +91,8 @@ export async function scanRepository(root: string, options: ScanOptions): Promis
     files: truncated ? files.slice(0, maxFiles) : files,
     excluded: Array.from(excluded).sort((a, b) => comparePath(a, b)),
     truncated,
-    warnings
+    warnings,
+    redactions
   };
 }
 

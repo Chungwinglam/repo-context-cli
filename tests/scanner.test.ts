@@ -91,4 +91,24 @@ describe("scanRepository", () => {
       "packages/app/root-only.txt"
     ]);
   });
+
+  it("redacts secret-like paths without listing them in the context", async () => {
+    const root = await createTempRepo();
+    await mkdir(join(root, ".ssh"), { recursive: true });
+    await mkdir(join(root, "src"), { recursive: true });
+    await writeFile(join(root, ".env"), "API_KEY=secret\n", "utf8");
+    await writeFile(join(root, ".env.local"), "TOKEN=secret\n", "utf8");
+    await writeFile(join(root, ".npmrc"), "//registry.npmjs.org/:_authToken=secret\n", "utf8");
+    await writeFile(join(root, ".ssh", "id_rsa"), "PRIVATE KEY\n", "utf8");
+    await writeFile(join(root, "src", "index.ts"), "export {};\n", "utf8");
+
+    const result = await scanRepository(root, { maxFiles: 100 });
+
+    expect(result.files.map((file) => file.path)).toEqual(["src/index.ts"]);
+    expect(result.excluded).not.toContain(".env");
+    expect(result.excluded).not.toContain(".env.local");
+    expect(result.excluded).not.toContain(".npmrc");
+    expect(result.excluded).not.toContain(".ssh");
+    expect(result.redactions.secretLikePaths).toBe(4);
+  });
 });

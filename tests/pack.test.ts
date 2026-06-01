@@ -69,6 +69,10 @@ describe("createContextPackage", () => {
     expect(index.warnings).toEqual(expect.any(Array));
     expect(index.signals).toContainEqual(expect.objectContaining({ source: "package.json" }));
     expect(index.files).toContainEqual(expect.objectContaining({ path: "src/index.ts", kind: "source" }));
+    expect(index.redactions).toEqual({
+      secretLikePaths: 0,
+      commandValues: 0
+    });
   });
 
   it("writes final context summary into index.json", async () => {
@@ -139,6 +143,9 @@ describe("createContextPackage", () => {
     expect(projectMap).toContain(`- Estimated tokens (planned): ${index.summary.estimatedTokens}`);
     expect(projectMap).toContain("- Largest indexed files:");
     expect(projectMap).toContain("- `README.md` (documentation, 10 bytes)");
+    expect(projectMap).toContain("## Redactions");
+    expect(projectMap).toContain("- Secret-like paths redacted: 0");
+    expect(projectMap).toContain("- Command values redacted: 0");
   });
 
   it("labels summary generated counts as planned when user-authored files are skipped", async () => {
@@ -325,5 +332,76 @@ describe("createContextPackage", () => {
     expect(result.context.commands.test).toBeNull();
     expect(result.context.files).toContainEqual(expect.objectContaining({ path: "README.md" }));
     expect(result.warnings).toContain("No package.json detected; command inference is limited.");
+  });
+
+  it("redacts secret-like paths from generated context", async () => {
+    const root = await createTempRepo();
+    await writeFile(
+      join(root, "package.json"),
+      JSON.stringify({
+        name: "redaction-app",
+        scripts: {
+          build: "vite build",
+          test: "vitest run"
+        }
+      }),
+      "utf8"
+    );
+    await writeFile(join(root, ".env"), "API_KEY=super-secret\n", "utf8");
+
+    const result = await createContextPackage({
+      root,
+      target: "codex",
+      outputDir: ".repo-context",
+      maxFiles: 500,
+      dryRun: true,
+      force: false
+    });
+
+    expect(result.context.files.map((file) => file.path)).toEqual(["package.json"]);
+    expect(result.context.commands.build).toBe("npm run build");
+    expect(result.context.commands.test).toBe("npm test");
+    expect(result.context.redactions).toEqual({
+      secretLikePaths: 1,
+      commandValues: 0
+    });
+    expect(result.warnings).toContain("Redacted 1 secret-like path from the context package.");
+    expect(result.warnings).not.toContain("Redacted 2 detected command values from the context package.");
+  });
+
+  it("redacts secret-like monorepo path fields from generated context", async () => {
+    const root = await createTempRepo();
+    await mkdir(join(root, "packages", ".ssh"), { recursive: true });
+    await writeFile(
+      join(root, "package.json"),
+      JSON.stringify({
+        name: "monorepo-redaction-app",
+        workspaces: ["packages/*", ".env.local/*"]
+      }),
+      "utf8"
+    );
+    await writeFile(join(root, "packages", ".ssh", "package.json"), "{\"name\":\"secret-root\"}", "utf8");
+
+    await createContextPackage({
+      root,
+      target: "codex",
+      outputDir: ".repo-context",
+      maxFiles: 500,
+      dryRun: false,
+      force: false
+    });
+
+    const indexText = await readFile(join(root, ".repo-context", "index.json"), "utf8");
+    const projectMap = await readFile(join(root, "PROJECT_MAP.md"), "utf8");
+    const index = JSON.parse(indexText);
+
+    expect(index.project.monorepo.workspaceGlobs).toEqual(["packages/*"]);
+    expect(index.project.monorepo.packageRoots).toEqual([]);
+    expect(index.redactions.secretLikePaths).toBe(3);
+    expect(indexText).not.toContain(".env.local");
+    expect(indexText).not.toContain("packages/.ssh");
+    expect(projectMap).not.toContain(".env.local");
+    expect(projectMap).not.toContain("packages/.ssh");
+    expect(projectMap).toContain("- Secret-like paths redacted: 3");
   });
 });
