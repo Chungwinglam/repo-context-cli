@@ -148,5 +148,6 @@ Candidate tasks:
 - Added GitHub issue forms for bug reports and feature requests, plus lightweight `SECURITY.md` and `SUPPORT.md` project health files; Phase 5 remains in progress.
 - Merged `phase5-issue-templates-health-files` into `main` and deleted the merged branch locally and on `origin`; Phase 5 remains in progress.
 - Added `docs/adoption.md` with a safe branch-based rollout for existing repositories, linked it from README, and marked adoption guidance complete in the release readiness audit; Phase 5 remains in progress until external public-release gates are resolved.
+- Merged `phase5-adoption-guide` into `main` and deleted the merged branch locally and on `origin`; Phase 5 remains in progress until external public-release gates are resolved.
 
 Next-stage goal: Resolve external public-release gates: make the repository public, configure npm Trusted Publishing, and recheck package name availability before first publish.
