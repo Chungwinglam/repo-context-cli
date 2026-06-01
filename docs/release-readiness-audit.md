@@ -13,9 +13,9 @@ Scope:
 
 Repo Context CLI is close to first-release ready from a repository and package-contents perspective. The local package builds, the CLI help works from `dist/cli.js`, the release workflow has a version-tag guard, CI includes an installed-package smoke test, and `npm pack --dry-run` lists the expected package contents.
 
-The project is not yet fully release-ready because external release gates remain and the adoption guide is still pending: the GitHub repository is still private, npm Trusted Publishing must be configured on npm before publishing through GitHub Actions, and maintainers still need public adoption guidance before broad promotion.
+The project is not yet fully release-ready because external release gates remain: the GitHub repository is still private, npm Trusted Publishing must be configured on npm before publishing through GitHub Actions, and the package name should be rechecked immediately before first publish.
 
-Overall status: Release candidate after external release gates and checklist hardening.
+Overall status: Release candidate after external release gates.
 
 ## Evidence
 
@@ -97,6 +97,8 @@ The README explains what the tool does, but a focused adoption guide would help 
 
 Recommended action: document a safe adoption flow using `--dry-run`, generated-file review, and optional context drift checks.
 
+Status: Complete. `docs/adoption.md` now documents a safe branch-based rollout using `--dry-run`, generated-file review, force-overwrite caution, optional HTML/editor outputs, and optional check-only context drift automation.
+
 ## Acceptable Risks
 
 - The release workflow publishes only from GitHub Releases, not tags pushed directly. This is intentional and documented.
@@ -113,9 +115,9 @@ Completed since this audit was opened:
 - Maintainer release checklist.
 - Node.js 20 and Node.js 24 CI verification.
 - Release tarball install smoke before `npm publish`.
+- Adoption guide for existing repositories.
 
 Remaining before public release:
 
 1. Resolve external gates: public repository and npm trusted publisher setup.
 2. Recheck package name availability immediately before first publish.
-3. Add adoption guidance before broad promotion.

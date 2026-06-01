@@ -46,6 +46,7 @@ This project follows a simple changelog format inspired by Keep a Changelog. The
 ### Documentation
 
 - Added README quickstart, safety defaults, command reference, detected-facts summary, scope notes, roadmap link, and contributing link.
+- Added an adoption guide for introducing Repo Context CLI into existing repositories with `--dry-run`, generated-file review, and optional context drift checks.
 - Added project roadmap tracking phase status, completed milestones, activity log entries, and next-stage goals.
 - Added a release readiness audit covering package contents, workflows, docs, and public-launch gates.
 - Added a maintainer release checklist covering npm publish, Node support policy, release smoke, and post-release verification.

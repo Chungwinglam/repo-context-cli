@@ -46,4 +46,23 @@ describe("project health files", () => {
     expect(contributing).toContain(".github/ISSUE_TEMPLATE");
     expect(contributing).toContain("SECURITY.md");
   });
+
+  it("documents a safe adoption path for existing repositories", async () => {
+    const adoption = await readProjectFile("docs/adoption.md");
+    const readme = await readProjectFile("README.md");
+    const audit = await readProjectFile("docs/release-readiness-audit.md");
+
+    expect(adoption).toContain("# Adoption Guide");
+    expect(adoption).toContain("npx repo-context-cli pack --dry-run --for codex");
+    expect(adoption).toContain("Review the planned writes");
+    expect(adoption).toContain("Dry run shows planned outputs and scan warnings");
+    expect(adoption).toContain("Do not use `--force`");
+    expect(adoption).toContain("npx repo-context-cli pack --for codex --html-report --editor-config");
+    expect(adoption).toContain("--generated-at 1970-01-01T00:00:00.000Z");
+    expect(adoption).toContain("regenerate and recommit");
+    expect(adoption).toContain("context-refresh.yml");
+    expect(adoption).toContain("No secrets, tokens, or private source snippets");
+    expect(readme).toContain("docs/adoption.md");
+    expect(audit).toContain("Status: Complete. `docs/adoption.md`");
+  });
 });

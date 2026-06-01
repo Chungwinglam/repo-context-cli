@@ -166,6 +166,10 @@ The first release focuses on JavaScript and TypeScript repositories while still 
 
 See [ROADMAP.md](ROADMAP.md) for current phase status, next-stage goals, and the rule that every completed small task must update the roadmap.
 
+## Adoption Guide
+
+See [docs/adoption.md](https://github.com/Chungwinglam/repo-context-cli/blob/main/docs/adoption.md) for a safe rollout path that starts with `--dry-run`, preserves hand-authored context files, and adds optional drift checks only after review.
+
 ## Changelog
 
 See [CHANGELOG.md](CHANGELOG.md) for initial release notes and future release history.
