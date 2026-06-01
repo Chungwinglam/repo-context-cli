@@ -5,7 +5,7 @@ This file is the source of truth for project phase status. Update it whenever a 
 ## Current Status
 
 - Current phase: Phase 4 in progress
-- Last completed milestone: Phase 4 MCP server mode
+- Last completed milestone: Phase 4 editor integration planning
 - Private repository: `Chungwinglam/repo-context-cli`
 - Default branch: `main`
 
@@ -73,7 +73,7 @@ Candidate tasks:
 - Secret redaction. (Complete)
 - HTML report output. (Complete)
 - MCP server mode. (Complete)
-- Editor integrations.
+- Editor integrations. (Planning complete)
 - GitHub Action for keeping context files updated.
 
 ## Activity Log
@@ -120,5 +120,6 @@ Candidate tasks:
 - Addressed `CodeReviewer-01` MCP compatibility feedback by returning standard JSON-RPC batch arrays and parse-error responses; Phase 4 remains in progress.
 - Merged `phase4-mcp-server-mode` into `main`.
 - Deleted the merged `phase4-mcp-server-mode` branch locally and on `origin`.
+- Completed editor integration planning with an approved design spec and implementation plan for optional static editor config output; Phase 4 remains in progress.
 
-Next-stage goal: Start editor integration planning.
+Next-stage goal: Add optional editor config output for Cursor, VS Code, and generic AI-editor workflows.
