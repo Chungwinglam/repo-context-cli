@@ -68,4 +68,4 @@
 - [x] Run `npm pack --dry-run`.
 - [x] Request `CodeReviewer-01` and `SecurityReviewer-01` because this changes trust-boundary behavior.
 - [x] Fix Critical or Important review findings.
-- [ ] Commit and push the branch.
+- [x] Commit and push the branch.
