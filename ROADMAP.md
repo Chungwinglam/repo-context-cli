@@ -5,8 +5,8 @@ This file is the source of truth for project phase status. Update it whenever a 
 ## Current Status
 
 - Current phase: Phase 5 in progress
-- Last completed milestone: Phase 5 adoption guide for existing repositories
-- Private repository: `Chungwinglam/repo-context-cli`
+- Last completed milestone: Phase 5 public repository gate
+- Public repository: `Chungwinglam/repo-context-cli`
 - Default branch: `main`
 
 ## Operating Rule
@@ -88,6 +88,7 @@ Candidate tasks:
 - Add a maintainer release checklist for npm publish and post-release verification. (Complete)
 - Add GitHub issue templates and lightweight project health files. (Complete)
 - Add an adoption guide showing how to introduce Repo Context CLI into an existing repository. (Complete)
+- Resolve external public-release gates. (In progress: GitHub repository is public and package name was rechecked; npm Trusted Publishing remains blocked until the package exists on npm.)
 
 ## Activity Log
 
@@ -149,5 +150,7 @@ Candidate tasks:
 - Merged `phase5-issue-templates-health-files` into `main` and deleted the merged branch locally and on `origin`; Phase 5 remains in progress.
 - Added `docs/adoption.md` with a safe branch-based rollout for existing repositories, linked it from README, and marked adoption guidance complete in the release readiness audit; Phase 5 remains in progress until external public-release gates are resolved.
 - Merged `phase5-adoption-guide` into `main` and deleted the merged branch locally and on `origin`; Phase 5 remains in progress until external public-release gates are resolved.
+- Made `Chungwinglam/repo-context-cli` public, verified the README demo raw asset returns HTTP 200, and rechecked `repo-context-cli` on npm with `E404`; npm Trusted Publishing remains pending because the package is not yet present on npm and the local npm CLI does not include `npm trust`.
+- Clarified the first-package bootstrap sequence: do not trigger `v0.1.0` through the unconfigured release workflow; manually publish `0.1.0` only if npm still requires an existing package, then configure Trusted Publishing for `0.1.1` or the next patch.
 
-Next-stage goal: Resolve external public-release gates: make the repository public, configure npm Trusted Publishing, and recheck package name availability before first publish.
+Next-stage goal: Execute the npm bootstrap path for `0.1.0` if still required, configure Trusted Publishing, then use the GitHub Release workflow for `0.1.1` or the next patch.

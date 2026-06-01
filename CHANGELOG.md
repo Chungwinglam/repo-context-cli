@@ -51,4 +51,5 @@ This project follows a simple changelog format inspired by Keep a Changelog. The
 - Added a release readiness audit covering package contents, workflows, docs, and public-launch gates.
 - Added a maintainer release checklist covering npm publish, Node support policy, release smoke, and post-release verification.
 - Added lightweight `SECURITY.md` and `SUPPORT.md` project health files.
+- Recorded public repository release-gate status, npm package name recheck, and npm Trusted Publishing setup constraints.
 - Added MIT license.

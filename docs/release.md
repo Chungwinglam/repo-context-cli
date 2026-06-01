@@ -26,6 +26,20 @@ If the tag and package version do not match, the workflow exits before `npm publ
 
 Configure npm Trusted Publishing for the package before publishing from GitHub Actions.
 
+Current npm CLI constraints:
+
+- The package must already exist on npm before `npm trust github` can configure a trusted publisher.
+- The `npm trust` command requires npm CLI 11.10.0 or newer.
+- The local npm CLI on 2026-06-01 was 11.9.0 and did not include `npm trust`.
+- `npm view repo-context-cli version --json` returned `E404` on 2026-06-01, so the package was not visible on the public registry at that time.
+
+First-package bootstrap rule:
+
+- Bootstrap `0.1.0` with a manual npm publish only if the package still does not exist and npm still requires an existing package before trusted publisher setup.
+- Run the full release checklist locally before that bootstrap publish.
+- After the package exists, configure Trusted Publishing and use the GitHub Release workflow for `0.1.1` or the next patch.
+- Do not create the `v0.1.0` GitHub Release expecting Trusted Publishing to work before the trusted publisher is configured.
+
 On npmjs.com, configure the package trusted publisher with:
 
 - Provider: GitHub Actions
@@ -33,6 +47,13 @@ On npmjs.com, configure the package trusted publisher with:
 - Repository: `repo-context-cli`
 - Workflow filename: `release.yml`
 - Allowed actions: `npm publish`
+
+If configuring through the npm CLI after the package exists, use npm 11.10.0 or newer:
+
+```bash
+npm trust github repo-context-cli --file release.yml --repo Chungwinglam/repo-context-cli --allow-publish
+npm trust list repo-context-cli
+```
 
 The workflow grants:
 
@@ -65,11 +86,11 @@ npm publish
 
 ## Provenance Status
 
-npm trusted publishing automatically generates provenance attestations when all npm requirements are met. The current repository is still private, so npm provenance is not expected to be generated yet even if the package itself is public.
+npm trusted publishing automatically generates provenance attestations when all npm requirements are met. The GitHub repository is now public, but provenance still requires a public npm package and a configured trusted publisher.
 
 To get npm provenance for future releases:
 
-- Make the GitHub repository public.
+- Keep the GitHub repository public.
 - Publish a public npm package.
 - Keep publishing through the trusted GitHub Actions workflow.
 - Keep `package.json#repository.url` matched to the GitHub repository.
@@ -90,9 +111,11 @@ Use this checklist for every npm release.
 
 ### External Gates
 
-- Make the GitHub repository public before the public npm release.
+- Confirm the GitHub repository is public.
+- If `npm view repo-context-cli version --json` still returns `E404`, decide whether to bootstrap `0.1.0` with a manual npm publish before Trusted Publishing can be configured.
 - Configure npm Trusted Publishing for `Chungwinglam/repo-context-cli`.
 - Confirm the trusted publisher uses workflow filename `release.yml` and allows `npm publish`.
+- Confirm `npm trust list repo-context-cli` or npm package settings show the trusted publisher.
 - Confirm no long-lived `NPM_TOKEN` is required by the release workflow.
 
 ### Release

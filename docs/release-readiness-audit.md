@@ -11,9 +11,9 @@ Scope:
 
 ## Summary
 
-Repo Context CLI is close to first-release ready from a repository and package-contents perspective. The local package builds, the CLI help works from `dist/cli.js`, the release workflow has a version-tag guard, CI includes an installed-package smoke test, and `npm pack --dry-run` lists the expected package contents.
+Repo Context CLI is close to first-release ready from a repository and package-contents perspective. The local package builds, the CLI help works from `dist/cli.js`, the GitHub repository is public, the release workflow has a version-tag guard, CI includes an installed-package smoke test, and `npm pack --dry-run` lists the expected package contents.
 
-The project is not yet fully release-ready because external release gates remain: the GitHub repository is still private, npm Trusted Publishing must be configured on npm before publishing through GitHub Actions, and the package name should be rechecked immediately before first publish.
+The project is not yet fully release-ready because npm-side release gates remain: the package is not yet visible on npm, npm Trusted Publishing is not configured, and the trusted-publisher CLI path requires an existing package record.
 
 Overall status: Release candidate after external release gates.
 
@@ -25,6 +25,9 @@ Overall status: Release candidate after external release gates.
 - Dry-run package size: 35.4 kB packed, 148.3 kB unpacked.
 - Dry-run package contents: 46 files, including `dist`, `README.md`, `CHANGELOG.md`, `LICENSE`, and `package.json`.
 - `npm view repo-context-cli version --json` returned npm `E404` on 2026-06-01, so the package name appears unclaimed or inaccessible at audit time. Recheck immediately before publishing because registry state can change.
+- `npm view repo-context-cli version --json` returned npm `E404` again on 2026-06-01 after the repository was made public.
+- `gh repo view Chungwinglam/repo-context-cli --json visibility` returned `PUBLIC` on 2026-06-01.
+- The README demo SVG raw URL returned HTTP 200 on 2026-06-01.
 
 ## Ready
 
@@ -36,28 +39,31 @@ Overall status: Release candidate after external release gates.
 - The README covers quickstart, generated outputs, safety defaults, optional integrations, command reference, detected facts, roadmap, changelog, release, and contributing links.
 - The changelog contains unreleased `0.1.0` notes that describe the current feature set.
 - The license is present and included in the package.
+- The GitHub repository is public, so README links and raw GitHub assets can be accessed without private repository credentials.
 
 ## Release Blockers
 
 ### B1. Public launch requires making the GitHub repository public
 
-The repository is still recorded as private in `ROADMAP.md`. That is acceptable for development but blocks a credible public npm launch and can prevent npm users from viewing README-linked GitHub assets.
+Status: Complete. The GitHub repository is now public, and the README demo SVG raw asset returned HTTP 200 on 2026-06-01.
 
-Before public release:
-
-- Make `Chungwinglam/repo-context-cli` public.
-- Confirm README links and the demo SVG render from the public repository.
-- Confirm the repository URL in `package.json` still matches the public repository.
+Before public release, keep `package.json#repository.url` matched to `https://github.com/Chungwinglam/repo-context-cli`.
 
 ### B2. npm Trusted Publishing setup must be completed outside the repo
 
-The workflow is ready for trusted publishing, but npm-side trusted publisher configuration cannot be verified from the repository.
+The workflow is ready for trusted publishing, but npm-side trusted publisher configuration cannot be completed from the repository alone.
+
+Blocked until the package exists on npm. The official `npm trust` CLI path requires npm CLI 11.10.0 or newer and an existing package on the npm registry. On 2026-06-01, the local npm CLI was 11.9.0 and did not include `npm trust`, while `npm view repo-context-cli version --json` returned `E404`.
+
+Bootstrap publish `0.1.0` manually only if npm still requires an existing package before Trusted Publishing can be configured. Do not trigger the `v0.1.0` GitHub Release expecting Trusted Publishing to work while the package is still absent from npm. After the package exists and Trusted Publishing is configured, use the GitHub Release workflow for `0.1.1` or the next patch after Trusted Publishing is configured.
 
 Before public release:
 
+- Complete the npm package existence step for `repo-context-cli`.
 - Configure npm Trusted Publishing for `Chungwinglam/repo-context-cli`.
 - Use workflow filename `release.yml`.
-- Confirm the package name is still available immediately before first publish.
+- Allow `npm publish`.
+- Confirm the package name is still available immediately before the first package creation or publish step.
 
 ## Important Follow-Ups
 
@@ -116,8 +122,12 @@ Completed since this audit was opened:
 - Node.js 20 and Node.js 24 CI verification.
 - Release tarball install smoke before `npm publish`.
 - Adoption guide for existing repositories.
+- Public GitHub repository gate.
+- npm package name recheck after making the repository public.
 
 Remaining before public release:
 
-1. Resolve external gates: public repository and npm trusted publisher setup.
-2. Recheck package name availability immediately before first publish.
+1. Decide and execute the npm bootstrap path: if `repo-context-cli` still does not exist, manually publish `0.1.0` after the full release checklist instead of triggering `v0.1.0` through the unconfigured release workflow.
+2. Configure npm Trusted Publishing for GitHub Actions workflow `release.yml` with `npm publish` allowed.
+3. Confirm `npm trust list repo-context-cli` or npm package settings show the trusted publisher.
+4. Use the GitHub Release workflow for `0.1.1` or the next patch after Trusted Publishing is configured.

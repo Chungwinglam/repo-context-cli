@@ -65,4 +65,21 @@ describe("project health files", () => {
     expect(readme).toContain("docs/adoption.md");
     expect(audit).toContain("Status: Complete. `docs/adoption.md`");
   });
+
+  it("tracks external public-release gate status", async () => {
+    const roadmap = await readProjectFile("ROADMAP.md");
+    const audit = await readProjectFile("docs/release-readiness-audit.md");
+    const release = await readProjectFile("docs/release.md");
+
+    expect(roadmap).toContain("Public repository: `Chungwinglam/repo-context-cli`");
+    expect(audit).toContain("Status: Complete. The GitHub repository is now public");
+    expect(audit).toContain("`npm view repo-context-cli version --json` returned npm `E404` again on 2026-06-01");
+    expect(audit).toContain("Blocked until the package exists on npm");
+    expect(audit).toContain("Bootstrap publish `0.1.0` manually only if npm still requires an existing package");
+    expect(audit).toContain("Use the GitHub Release workflow for `0.1.1` or the next patch after Trusted Publishing is configured");
+    expect(release).toContain("The package must already exist on npm before `npm trust github` can configure a trusted publisher");
+    expect(release).toContain("Bootstrap `0.1.0` with a manual npm publish only if the package still does not exist");
+    expect(release).toContain("Do not create the `v0.1.0` GitHub Release expecting Trusted Publishing to work before the trusted publisher is configured");
+    expect(release).toContain("npm CLI 11.10.0 or newer");
+  });
 });
