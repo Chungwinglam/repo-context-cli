@@ -154,5 +154,6 @@ Candidate tasks:
 - Clarified the first-package bootstrap sequence: do not trigger `v0.1.0` through the unconfigured release workflow; manually publish `0.1.0` only if npm still requires an existing package, then configure Trusted Publishing for `0.1.1` or the next patch.
 - Merged `phase5-public-release-gates` into `main` and deleted the merged branch locally and on `origin`; Phase 5 remains in progress until the npm bootstrap and Trusted Publishing sequence is completed.
 - Prepared `0.1.0` bootstrap release metadata by dating the changelog and normalizing the npm `bin` path so `npm publish --dry-run` no longer needs package metadata correction.
+- Merged `release-v0.1.0-bootstrap-prep` into `main` and deleted the merged branch locally and on `origin`; manual npm bootstrap publish is still waiting for npm 2FA completion.
 
 Next-stage goal: Execute the npm bootstrap path for `0.1.0` if still required, configure Trusted Publishing, then use the GitHub Release workflow for `0.1.1` or the next patch.
