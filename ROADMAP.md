@@ -144,5 +144,6 @@ Candidate tasks:
 - Started Phase 5 with `docs/release-readiness-audit.md`, covering package metadata, npm package dry-run contents, release workflow readiness, Node support verification gaps, documentation state, and remaining public-launch gates; Phase 5 is in progress.
 - Merged `phase5-release-readiness-audit` into `main` and deleted the merged branch locally and on `origin`; Phase 5 remains in progress.
 - Added a maintainer release checklist to `docs/release.md`, CI verification for Node.js 20 and 24, and release workflow tarball install smoke before `npm publish`; Phase 5 remains in progress.
+- Merged `phase5-maintainer-release-checklist` into `main` and deleted the merged branch locally and on `origin`; Phase 5 remains in progress.
 
 Next-stage goal: Add GitHub issue templates and lightweight project health files.
