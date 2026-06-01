@@ -100,6 +100,7 @@ export interface PackOptions {
   force: boolean;
   htmlReport?: boolean;
   editorConfig?: boolean;
+  generatedAt?: string;
 }
 
 export type WriteStatus = "planned" | "written" | "overwritten" | "skipped";

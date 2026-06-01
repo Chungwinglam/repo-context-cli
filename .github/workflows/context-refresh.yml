@@ -1,0 +1,39 @@
+name: Context Refresh
+
+on:
+  workflow_dispatch:
+  pull_request:
+  push:
+    branches: [main, master]
+  schedule:
+    - cron: "17 3 * * 1"
+
+permissions:
+  contents: read
+
+jobs:
+  context-drift:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+
+      - run: npm ci
+      - run: npm run build
+
+      - name: Generate context package
+        run: node dist/cli.js pack --for codex --html-report --editor-config --generated-at 1970-01-01T00:00:00.000Z
+
+      - name: Check tracked context files
+        run: |
+          set -euo pipefail
+          if ! git diff --exit-code -- AGENTS.md PROJECT_MAP.md TESTING.md .repo-context; then
+            echo "Tracked Repo Context CLI outputs are stale."
+            echo "Run: npx repo-context-cli pack --for codex --html-report --editor-config --generated-at 1970-01-01T00:00:00.000Z"
+            echo "Then commit the updated tracked context files."
+            exit 1
+          fi

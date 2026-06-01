@@ -4,9 +4,12 @@ import { join, relative, sep } from "node:path";
 import { DEFAULT_IGNORE_DIRS, isIgnoredDirectory } from "./ignore.js";
 import type { FileKind, ScanResult, ScannedFile } from "./model.js";
 import { emptyRedactionSummary, isSecretLikePath } from "./redaction.js";
+import { GENERATED_HEADER_PREFIX } from "./renderers/markdown.js";
 
 export interface ScanOptions {
   maxFiles: number;
+  generatedFilePaths?: string[];
+  generatedOutputDirs?: string[];
 }
 
 export async function scanRepository(root: string, options: ScanOptions): Promise<ScanResult> {
@@ -16,6 +19,8 @@ export async function scanRepository(root: string, options: ScanOptions): Promis
   const redactions = emptyRedactionSummary();
   const limit = Math.max(0, options.maxFiles) + 1;
   const gitignore = await loadRootGitignore(root, warnings);
+  const generatedFilePaths = new Set(options.generatedFilePaths ?? []);
+  const generatedOutputDirs = new Set(options.generatedOutputDirs ?? []);
 
   async function walk(directory: string): Promise<void> {
     if (files.length >= limit) {
@@ -45,7 +50,9 @@ export async function scanRepository(root: string, options: ScanOptions): Promis
           continue;
         }
         if (isIgnoredDirectory(entry.name)) {
-          excluded.add(entry.name);
+          if (!generatedOutputDirs.has(relativePath)) {
+            excluded.add(entry.name);
+          }
           continue;
         }
         if (isGitignored(gitignore, relativePath, true)) {
@@ -68,6 +75,9 @@ export async function scanRepository(root: string, options: ScanOptions): Promis
       try {
         const fileStat = await stat(absolutePath);
         if (isGitignored(gitignore, path, false)) {
+          continue;
+        }
+        if (await isMarkedGeneratedContextFile(path, absolutePath, generatedFilePaths)) {
           continue;
         }
         files.push({
@@ -120,6 +130,32 @@ function isGitignored(matcher: Ignore | null, path: string, directory: boolean):
 }
 
 export { DEFAULT_IGNORE_DIRS };
+
+async function isMarkedGeneratedContextFile(
+  path: string,
+  absolutePath: string,
+  generatedFilePaths: Set<string>
+): Promise<boolean> {
+  if (!generatedFilePaths.has(path)) {
+    return false;
+  }
+
+  try {
+    const content = await readFile(absolutePath, "utf8");
+    if (content.startsWith(GENERATED_HEADER_PREFIX)) {
+      return true;
+    }
+
+    if (!path.endsWith(".json")) {
+      return false;
+    }
+
+    const parsed = JSON.parse(content) as { generatedBy?: unknown; schemaVersion?: unknown };
+    return parsed.generatedBy === "Repo Context CLI" && parsed.schemaVersion === 1;
+  } catch {
+    return false;
+  }
+}
 
 function classifyFile(path: string): FileKind {
   const lowerPath = path.toLowerCase();

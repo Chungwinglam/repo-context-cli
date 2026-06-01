@@ -10,7 +10,12 @@ import { buildContextSummary, emptyContextSummary, summariesEqual } from "./summ
 import { writeGeneratedFiles } from "./writer.js";
 
 export async function createContextPackage(options: PackOptions): Promise<PackResult> {
-  const scan = await scanRepository(options.root, { maxFiles: options.maxFiles });
+  const normalizedOutputDir = normalizeOutputDir(options.outputDir);
+  const scan = await scanRepository(options.root, {
+    maxFiles: options.maxFiles,
+    generatedFilePaths: generatedContextPaths(normalizedOutputDir),
+    generatedOutputDirs: [normalizedOutputDir]
+  });
   const detection = await detectProject(options.root);
   const commandRedaction = redactProjectCommands(detection.commands);
   const monorepoRedaction = redactMonorepoInfo(detection.project.monorepo);
@@ -42,7 +47,7 @@ export async function createContextPackage(options: PackOptions): Promise<PackRe
   const baseContext: RepositoryContext = {
     schemaVersion: 1,
     generatedBy: "Repo Context CLI",
-    generatedAt: new Date().toISOString(),
+    generatedAt: options.generatedAt ?? new Date().toISOString(),
     root: ".",
     target: options.target,
     project: {
@@ -64,7 +69,7 @@ export async function createContextPackage(options: PackOptions): Promise<PackRe
 
   const { context, generatedFiles } = buildContextWithStableSummary(
     baseContext,
-    options.outputDir,
+    normalizedOutputDir,
     options.htmlReport === true,
     options.editorConfig === true
   );
@@ -176,6 +181,19 @@ function normalizeOutputDir(outputDir: string): string {
   }
 
   return segments.join("/") || ".repo-context";
+}
+
+function generatedContextPaths(outputDir: string): string[] {
+  return [
+    "AGENTS.md",
+    "PROJECT_MAP.md",
+    "TESTING.md",
+    `${outputDir}/index.json`,
+    `${outputDir}/report.html`,
+    `${outputDir}/editors/README.md`,
+    `${outputDir}/editors/cursor.md`,
+    `${outputDir}/editors/vscode.md`
+  ];
 }
 
 function pluralize(word: string, count: number): string {

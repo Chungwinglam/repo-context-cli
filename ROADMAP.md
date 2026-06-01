@@ -4,8 +4,8 @@ This file is the source of truth for project phase status. Update it whenever a 
 
 ## Current Status
 
-- Current phase: Phase 4 in progress
-- Last completed milestone: Phase 4 optional editor config output
+- Current phase: Phase 4 complete
+- Last completed milestone: Phase 4 GitHub context refresh workflow
 - Private repository: `Chungwinglam/repo-context-cli`
 - Default branch: `main`
 
@@ -64,7 +64,7 @@ Candidate tasks:
 
 ## Phase 4: Advanced Integrations
 
-Status: In progress
+Status: Complete
 
 Goal: Add optional integrations only after the CLI remains stable.
 
@@ -74,7 +74,20 @@ Candidate tasks:
 - HTML report output. (Complete)
 - MCP server mode. (Complete)
 - Editor integrations. (Static editor config output complete)
-- GitHub Action for keeping context files updated.
+- GitHub Action for keeping context files updated. (Check-only tracked context drift workflow complete)
+
+## Phase 5: Release and Adoption Readiness
+
+Status: Planned
+
+Goal: Prepare the first public release path and improve the odds that new users can evaluate the tool quickly.
+
+Candidate tasks:
+
+- Run a release readiness audit for package metadata, docs, workflows, and generated artifacts.
+- Add a maintainer release checklist for npm publish and post-release verification.
+- Add GitHub issue templates and lightweight project health files.
+- Add an adoption guide showing how to introduce Repo Context CLI into an existing repository.
 
 ## Activity Log
 
@@ -126,5 +139,6 @@ Candidate tasks:
 - Added optional `--editor-config` output for static Cursor, VS Code, and generic AI-editor guides under the selected output directory; Phase 4 remains in progress.
 - Merged `phase4-editor-config-output` into `main`.
 - Deleted the merged `phase4-editor-config-output` branch locally and on `origin`.
+- Added `--generated-at` plus a check-only GitHub Action for deterministic tracked context file drift detection without `--force`, bot commits, or push permissions; Phase 4 is complete.
 
-Next-stage goal: Add GitHub Action for keeping context files updated.
+Next-stage goal: Start Phase 5 with a release readiness audit.

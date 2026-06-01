@@ -45,6 +45,10 @@ npx repo-context-cli mcp
 
 This starts a read-only stdio MCP server with one `get_repo_context` tool. The tool returns the same redacted repository context as a dry run and does not write generated files.
 
+GitHub context refresh check:
+
+This repository includes `.github/workflows/context-refresh.yml` as a conservative check-only workflow. It runs on pull requests, pushes to the default branch, a weekly schedule, and manual dispatch. The workflow builds the local CLI, runs `node dist/cli.js pack --for codex --html-report --editor-config --generated-at 1970-01-01T00:00:00.000Z` without `--force`, then fails only when tracked context files have drifted from the generated output. The fixed `--generated-at` value keeps tracked generated files stable across repeated checks. The workflow does not commit or push changes.
+
 ## Demo
 
 ![Repo Context CLI terminal demo](https://raw.githubusercontent.com/Chungwinglam/repo-context-cli/main/docs/demo.svg)
@@ -118,6 +122,7 @@ The result is not an LLM-generated project summary. It is a deterministic contex
 - Optional HTML reports are static single-file documents with embedded CSS and no JavaScript.
 - Optional editor config guides are static Markdown files under the selected output directory and do not create `.vscode/settings.json`, `.cursor/rules`, or other editor-owned files.
 - MCP server mode is stdio-only and read-only; `get_repo_context` always uses dry-run context generation and does not expose `--force`.
+- The GitHub context refresh workflow is check-only, uses read-only repository contents permission, and does not run `--force`, commit, or push.
 - Unknown commands and directory purposes are reported as unknown instead of invented.
 
 ## Commands
@@ -133,6 +138,7 @@ repo-context pack --dry-run
 repo-context pack --force
 repo-context pack --html-report
 repo-context pack --editor-config
+repo-context pack --generated-at 1970-01-01T00:00:00.000Z
 repo-context mcp
 repo-context mcp --root .
 repo-context mcp --max-files 500
@@ -148,11 +154,13 @@ When `--editor-config` is passed, Repo Context CLI writes `.repo-context/editors
 
 When `repo-context mcp` is used, MCP clients can call `get_repo_context` to receive structured context, planned writes, warnings, summaries, and redaction counts without creating or overwriting files.
 
+The included GitHub context refresh workflow checks tracked generated context files for drift. It uses `--generated-at 1970-01-01T00:00:00.000Z` so repeated checks do not fail only because the generation timestamp changed. If a repository ignores `.repo-context/`, ignored untracked files are still generated during the Action run but are not enforced by the drift check; commit the generated files you want the workflow to enforce.
+
 Token estimates use `ceil(generatedCharacters / 4)` over the planned generated context content. They are intended for quick context-budget awareness, not model-specific tokenizer accounting.
 
 ## Scope
 
-The first release focuses on JavaScript and TypeScript repositories while still producing a basic map for other local repositories. Phase 2 added stronger real-world repository support such as `.gitignore` handling, package-manager conflict warnings, baseline monorepo detection, baseline Python/Rust/Go/Java detection, token and size summaries, and npm package install smoke coverage. Phase 3 focuses on open-source launch quality. Phase 4 starts with conservative secret redaction, optional HTML reporting, read-only stdio MCP support, and static editor config guides before broader advanced integrations such as automated GitHub context refreshes.
+The first release focuses on JavaScript and TypeScript repositories while still producing a basic map for other local repositories. Phase 2 added stronger real-world repository support such as `.gitignore` handling, package-manager conflict warnings, baseline monorepo detection, baseline Python/Rust/Go/Java detection, token and size summaries, and npm package install smoke coverage. Phase 3 focuses on open-source launch quality. Phase 4 adds conservative secret redaction, optional HTML reporting, read-only stdio MCP support, static editor config guides, and a check-only GitHub context refresh workflow.
 
 ## Project Roadmap
 

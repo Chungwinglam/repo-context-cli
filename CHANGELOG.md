@@ -14,6 +14,7 @@ This project follows a simple changelog format inspired by Keep a Changelog. The
 - Added generated `AGENTS.md`, `PROJECT_MAP.md`, `TESTING.md`, and `.repo-context/index.json` outputs.
 - Added optional `--html-report` output for a static, no-JavaScript `.repo-context/report.html` summary.
 - Added optional `--editor-config` output for static Cursor, VS Code, and generic AI-editor guide files.
+- Added `--generated-at` for deterministic generated timestamps in CI drift checks.
 - Added read-only `repo-context mcp` stdio server mode with a `get_repo_context` tool.
 - Added conservative repository scanning with deterministic path ordering and common file-kind classification.
 - Added root `.gitignore` parsing while preserving fixed noisy-directory ignores.
@@ -31,11 +32,13 @@ This project follows a simple changelog format inspired by Keep a Changelog. The
 - Added overwrite protection so user-authored generated-target files are skipped unless `--force` is used.
 - Added generated-file markers so the CLI can distinguish its own prior outputs from user-authored files.
 - Added conservative behavior for unknown commands and directory purposes instead of inventing unsupported facts.
+- Added a check-only GitHub context refresh workflow that uses a deterministic generated timestamp and does not use `--force`, commit changes, or push changes.
 
 ### CI
 
 - Added GitHub Actions CI for build, lint, and test verification on Node.js 24.
 - Added npm tarball install smoke coverage that packs the package, installs it in a fresh npm project, and runs the installed CLI binary.
+- Added a GitHub Actions context drift check for tracked generated context files on pull requests, default-branch pushes, weekly schedule, and manual dispatch.
 
 ### Documentation
 

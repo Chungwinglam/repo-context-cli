@@ -1,5 +1,5 @@
 import { execFile } from "node:child_process";
-import { mkdir, writeFile } from "node:fs/promises";
+import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { existsSync } from "node:fs";
 import { join } from "node:path";
 import { tmpdir } from "node:os";
@@ -37,6 +37,7 @@ describe("repo-context CLI", () => {
 
     expect(result.stdout).toContain("mcp     Start a read-only stdio MCP server");
     expect(result.stdout).toContain("--editor-config");
+    expect(result.stdout).toContain("--generated-at");
   });
 
   it("honors output directory and max-files flags through the real CLI", async () => {
@@ -100,6 +101,23 @@ describe("repo-context CLI", () => {
     expect(existsSync(join(root, ".repo-context", "report.html"))).toBe(true);
   });
 
+  it("supports deterministic generated timestamps through the real CLI", async () => {
+    const root = await createTempRepo();
+    await writeFile(join(root, "package.json"), "{\"name\":\"cli-timestamp-app\"}", "utf8");
+
+    await execFileAsync(
+      process.execPath,
+      [cliPath, "pack", "--generated-at", "1970-01-01T00:00:00.000Z"],
+      { cwd: root }
+    );
+
+    const index = JSON.parse(await readFile(join(root, ".repo-context", "index.json"), "utf8"));
+    const agents = await readFile(join(root, "AGENTS.md"), "utf8");
+
+    expect(index.generatedAt).toBe("1970-01-01T00:00:00.000Z");
+    expect(agents).toContain("Generated at: 1970-01-01T00:00:00.000Z");
+  });
+
   it("prints MCP help without starting the server", async () => {
     const root = await createTempRepo();
 
@@ -134,6 +152,13 @@ describe("repo-context CLI", () => {
     await expect(execFileAsync(process.execPath, [cliPath, "pack", "--max-files", "-1"], { cwd: root })).rejects.toMatchObject({
       code: 1,
       stderr: expect.stringContaining("--max-files must be a non-negative integer")
+    });
+
+    await expect(
+      execFileAsync(process.execPath, [cliPath, "pack", "--generated-at", "not-a-date"], { cwd: root })
+    ).rejects.toMatchObject({
+      code: 1,
+      stderr: expect.stringContaining("--generated-at must be a valid date/time value")
     });
 
     await expect(execFileAsync(process.execPath, [cliPath, "mcp", "--force"], { cwd: root })).rejects.toMatchObject({

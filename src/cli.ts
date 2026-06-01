@@ -13,6 +13,7 @@ interface ParsedArgs {
   force: boolean;
   htmlReport: boolean;
   editorConfig: boolean;
+  generatedAt: string | undefined;
   root: string;
   helpTopic: "main" | "mcp";
 }
@@ -45,7 +46,8 @@ async function main(): Promise<void> {
     dryRun: parsed.dryRun,
     force: parsed.force,
     htmlReport: parsed.htmlReport,
-    editorConfig: parsed.editorConfig
+    editorConfig: parsed.editorConfig,
+    generatedAt: parsed.generatedAt
   };
 
   const result = await createContextPackage(options);
@@ -96,6 +98,10 @@ function parseArgs(args: string[]): ParsedArgs {
       case "--editor-config":
         parsed.editorConfig = true;
         break;
+      case "--generated-at":
+        parsed.generatedAt = parseGeneratedAt(readFlagValue(flags, index, flag));
+        index += 1;
+        break;
       default:
         throw new Error(`Unknown flag: ${flag}`);
     }
@@ -143,6 +149,7 @@ function defaultArgs(command: "pack" | "mcp" | "help"): ParsedArgs {
     force: false,
     htmlReport: false,
     editorConfig: false,
+    generatedAt: undefined,
     root: cwd(),
     helpTopic: "main"
   };
@@ -172,6 +179,15 @@ function parseMaxFiles(value: string): number {
   return parsed;
 }
 
+function parseGeneratedAt(value: string): string {
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) {
+    throw new Error("--generated-at must be a valid date/time value");
+  }
+
+  return date.toISOString();
+}
+
 function printSummary(writes: WriteResult[], warnings: string[], dryRun: boolean): void {
   const label = dryRun ? "Planned context package:" : "Context package result:";
   console.log(label);
@@ -191,7 +207,7 @@ function printSummary(writes: WriteResult[], warnings: string[], dryRun: boolean
 
 function printHelp(): void {
   console.log(`Usage:
-  repo-context pack [--for codex|claude|cursor] [--output .repo-context] [--max-files 500] [--dry-run] [--force] [--html-report] [--editor-config]
+  repo-context pack [--for codex|claude|cursor] [--output .repo-context] [--max-files 500] [--dry-run] [--force] [--html-report] [--editor-config] [--generated-at 1970-01-01T00:00:00.000Z]
   repo-context mcp [--root .] [--max-files 500]
 
 Commands:
