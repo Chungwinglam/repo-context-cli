@@ -142,5 +142,6 @@ Candidate tasks:
 - Added `--generated-at` plus a check-only GitHub Action for deterministic tracked context file drift detection without `--force`, bot commits, or push permissions; Phase 4 is complete.
 - Fast-forward merged `phase4-context-refresh-action` into `main`, fixed workflow test line-ending tolerance after Windows checkout, and cleaned up the merged branch locally and on `origin`; Phase 5 remains planned.
 - Started Phase 5 with `docs/release-readiness-audit.md`, covering package metadata, npm package dry-run contents, release workflow readiness, Node support verification gaps, documentation state, and remaining public-launch gates; Phase 5 is in progress.
+- Merged `phase5-release-readiness-audit` into `main` and deleted the merged branch locally and on `origin`; Phase 5 remains in progress.
 
 Next-stage goal: Add a maintainer release checklist covering npm publish, Node support policy, release smoke, and post-release verification.
