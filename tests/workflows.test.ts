@@ -17,7 +17,7 @@ async function createTempRepo(): Promise<string> {
 
 describe("GitHub Actions workflows", () => {
   it("keeps the context refresh workflow conservative and check-only", async () => {
-    const workflow = await readFile(contextRefreshWorkflow, "utf8");
+    const workflow = normalizeLineEndings(await readFile(contextRefreshWorkflow, "utf8"));
 
     expect(workflow).toContain("name: Context Refresh");
     expect(workflow).toContain("workflow_dispatch:");
@@ -66,4 +66,8 @@ function workflowPackArgs(): string[] {
     "--generated-at",
     stableGeneratedAt
   ];
+}
+
+function normalizeLineEndings(value: string): string {
+  return value.replace(/\r\n/g, "\n");
 }
