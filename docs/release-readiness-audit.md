@@ -37,7 +37,7 @@ Overall status: Release candidate after external release gates.
 - The release workflow runs build, lint, tests, tag/version validation, `npm pack --dry-run`, and `npm publish`.
 - Release documentation explains GitHub Release triggering, tag naming, npm Trusted Publishing setup, and provenance expectations.
 - The README covers quickstart, generated outputs, safety defaults, optional integrations, command reference, detected facts, roadmap, changelog, release, and contributing links.
-- The changelog contains unreleased `0.1.0` notes that describe the current feature set.
+- The changelog contains dated `0.1.0` release notes that describe the current feature set.
 - The license is present and included in the package.
 - The GitHub repository is public, so README links and raw GitHub assets can be accessed without private repository credentials.
 

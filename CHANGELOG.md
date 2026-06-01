@@ -2,9 +2,9 @@
 
 All notable changes to Repo Context CLI are recorded in this file.
 
-This project follows a simple changelog format inspired by Keep a Changelog. The current package version is `0.1.0`; this entry remains unreleased until an npm release workflow or manual release publishes it.
+This project follows a simple changelog format inspired by Keep a Changelog. The current package version is `0.1.0`.
 
-## 0.1.0 - Unreleased
+## 0.1.0 - 2026-06-01
 
 ### Added
 

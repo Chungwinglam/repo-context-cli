@@ -82,4 +82,18 @@ describe("project health files", () => {
     expect(release).toContain("Do not create the `v0.1.0` GitHub Release expecting Trusted Publishing to work before the trusted publisher is configured");
     expect(release).toContain("npm CLI 11.10.0 or newer");
   });
+
+  it("keeps npm bootstrap release metadata publish-ready", async () => {
+    const packageJson = JSON.parse(await readProjectFile("package.json")) as {
+      bin?: Record<string, string>;
+    };
+    const changelog = await readProjectFile("CHANGELOG.md");
+    const audit = await readProjectFile("docs/release-readiness-audit.md");
+
+    expect(packageJson.bin?.["repo-context"]).toBe("dist/cli.js");
+    expect(changelog).toContain("## 0.1.0 - 2026-06-01");
+    expect(changelog).not.toContain("## 0.1.0 - Unreleased");
+    expect(changelog).not.toContain("entry remains unreleased");
+    expect(audit).toContain("The changelog contains dated `0.1.0` release notes");
+  });
 });
