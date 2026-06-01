@@ -44,4 +44,5 @@ This project follows a simple changelog format inspired by Keep a Changelog. The
 
 - Added README quickstart, safety defaults, command reference, detected-facts summary, scope notes, roadmap link, and contributing link.
 - Added project roadmap tracking phase status, completed milestones, activity log entries, and next-stage goals.
+- Added a release readiness audit covering package contents, workflows, docs, and public-launch gates.
 - Added MIT license.

@@ -4,8 +4,8 @@ This file is the source of truth for project phase status. Update it whenever a 
 
 ## Current Status
 
-- Current phase: Phase 4 complete
-- Last completed milestone: Phase 4 GitHub context refresh workflow
+- Current phase: Phase 5 in progress
+- Last completed milestone: Phase 5 release readiness audit
 - Private repository: `Chungwinglam/repo-context-cli`
 - Default branch: `main`
 
@@ -84,7 +84,7 @@ Goal: Prepare the first public release path and improve the odds that new users 
 
 Candidate tasks:
 
-- Run a release readiness audit for package metadata, docs, workflows, and generated artifacts.
+- Run a release readiness audit for package metadata, docs, workflows, and generated artifacts. (Complete)
 - Add a maintainer release checklist for npm publish and post-release verification.
 - Add GitHub issue templates and lightweight project health files.
 - Add an adoption guide showing how to introduce Repo Context CLI into an existing repository.
@@ -141,5 +141,6 @@ Candidate tasks:
 - Deleted the merged `phase4-editor-config-output` branch locally and on `origin`.
 - Added `--generated-at` plus a check-only GitHub Action for deterministic tracked context file drift detection without `--force`, bot commits, or push permissions; Phase 4 is complete.
 - Fast-forward merged `phase4-context-refresh-action` into `main`, fixed workflow test line-ending tolerance after Windows checkout, and cleaned up the merged branch locally and on `origin`; Phase 5 remains planned.
+- Started Phase 5 with `docs/release-readiness-audit.md`, covering package metadata, npm package dry-run contents, release workflow readiness, Node support verification gaps, documentation state, and remaining public-launch gates; Phase 5 is in progress.
 
-Next-stage goal: Start Phase 5 with a release readiness audit.
+Next-stage goal: Add a maintainer release checklist covering npm publish, Node support policy, release smoke, and post-release verification.

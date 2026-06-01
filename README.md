@@ -174,6 +174,8 @@ See [CHANGELOG.md](CHANGELOG.md) for initial release notes and future release hi
 
 See [docs/release.md](https://github.com/Chungwinglam/repo-context-cli/blob/main/docs/release.md) for the npm trusted publishing workflow, tag rule, and provenance notes.
 
+See [docs/release-readiness-audit.md](https://github.com/Chungwinglam/repo-context-cli/blob/main/docs/release-readiness-audit.md) for the current first-release readiness audit and remaining public-launch gates.
+
 ## Contributing
 
 See [CONTRIBUTING.md](https://github.com/Chungwinglam/repo-context-cli/blob/main/CONTRIBUTING.md) for local development commands, fixture style, detector-extension guidance, and the pull request checklist.
