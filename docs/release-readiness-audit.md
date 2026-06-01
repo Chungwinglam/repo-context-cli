@@ -57,6 +57,15 @@ Blocked until the package exists on npm. The official `npm trust` CLI path requi
 
 Bootstrap publish `0.1.0` manually only if npm still requires an existing package before Trusted Publishing can be configured. Do not trigger the `v0.1.0` GitHub Release expecting Trusted Publishing to work while the package is still absent from npm. After the package exists and Trusted Publishing is configured, use the GitHub Release workflow for `0.1.1` or the next patch after Trusted Publishing is configured.
 
+Manual bootstrap attempt record:
+
+- On 2026-06-01, `npm whoami` succeeded as `ryanlin23`, confirming the local npm login was active.
+- A first visible PowerShell token helper failed before publishing because the npmrc auth line was not preserved as a string in the encoded command, so PowerShell tried to execute `//registry.npmjs.org/:_authToken=...` as a command.
+- A corrected temporary-npmrc helper reached `npm publish --access public`, but npm returned `E403`: publishing requires two-factor authentication or a granular access token with bypass 2FA enabled.
+- `npm view repo-context-cli version --json` still returned `E404` after the failed publish attempts, confirming `repo-context-cli@0.1.0` was not created on npm.
+
+Resume path: publish manually from the clean `main` branch using the active npm login plus a fresh 2FA OTP, or use a granular npm token explicitly configured to bypass 2FA for publishing. After publish, verify `npm view repo-context-cli version --json` returns `0.1.0` before configuring Trusted Publishing.
+
 Before public release:
 
 - Complete the npm package existence step for `repo-context-cli`.
@@ -127,7 +136,7 @@ Completed since this audit was opened:
 
 Remaining before public release:
 
-1. Decide and execute the npm bootstrap path: if `repo-context-cli` still does not exist, manually publish `0.1.0` after the full release checklist instead of triggering `v0.1.0` through the unconfigured release workflow.
+1. Resume and complete the npm bootstrap path: `repo-context-cli` still does not exist after the 2026-06-01 failed publish attempts, so manually publish `0.1.0` with a valid npm 2FA OTP or bypass-2FA granular token instead of triggering `v0.1.0` through the unconfigured release workflow.
 2. Configure npm Trusted Publishing for GitHub Actions workflow `release.yml` with `npm publish` allowed.
 3. Confirm `npm trust list repo-context-cli` or npm package settings show the trusted publisher.
 4. Use the GitHub Release workflow for `0.1.1` or the next patch after Trusted Publishing is configured.

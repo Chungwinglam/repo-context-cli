@@ -5,7 +5,7 @@ This file is the source of truth for project phase status. Update it whenever a 
 ## Current Status
 
 - Current phase: Phase 5 in progress
-- Last completed milestone: Phase 5 public repository gate
+- Last completed milestone: Phase 5 0.1.0 bootstrap prep
 - Public repository: `Chungwinglam/repo-context-cli`
 - Default branch: `main`
 
@@ -88,7 +88,7 @@ Candidate tasks:
 - Add a maintainer release checklist for npm publish and post-release verification. (Complete)
 - Add GitHub issue templates and lightweight project health files. (Complete)
 - Add an adoption guide showing how to introduce Repo Context CLI into an existing repository. (Complete)
-- Resolve external public-release gates. (In progress: GitHub repository is public and package name was rechecked; npm Trusted Publishing remains blocked until the package exists on npm.)
+- Resolve external public-release gates. (In progress: GitHub repository is public, package name was rechecked, and 0.1.0 release metadata is prepared; manual npm publish is blocked by npm 2FA/token requirements, and npm Trusted Publishing remains blocked until the package exists on npm.)
 
 ## Activity Log
 
@@ -155,5 +155,8 @@ Candidate tasks:
 - Merged `phase5-public-release-gates` into `main` and deleted the merged branch locally and on `origin`; Phase 5 remains in progress until the npm bootstrap and Trusted Publishing sequence is completed.
 - Prepared `0.1.0` bootstrap release metadata by dating the changelog and normalizing the npm `bin` path so `npm publish --dry-run` no longer needs package metadata correction.
 - Merged `release-v0.1.0-bootstrap-prep` into `main` and deleted the merged branch locally and on `origin`; manual npm bootstrap publish is still waiting for npm 2FA completion.
+- Attempted the manual `0.1.0` npm bootstrap publish from the clean `main` branch. The first visible PowerShell helper failed before publishing because the npmrc auth line lost its quotes and PowerShell treated `//registry.npmjs.org/:_authToken=...` as a command.
+- Retried with a corrected temporary-npmrc helper: `npm whoami` succeeded as `ryanlin23`, but `npm publish --access public` returned npm `E403` because publishing requires two-factor authentication or a granular access token with bypass 2FA enabled.
+- Paused the npm bootstrap publish without changing package contents. The repository remains clean on `main`; resume by publishing with a fresh npm 2FA OTP from the logged-in session or a correctly configured granular automation token, then verify `repo-context-cli@0.1.0` on npm.
 
-Next-stage goal: Execute the npm bootstrap path for `0.1.0` if still required, configure Trusted Publishing, then use the GitHub Release workflow for `0.1.1` or the next patch.
+Next-stage goal: Resume the manual npm bootstrap publish for `0.1.0` with a valid 2FA OTP or bypass-2FA granular token, then configure Trusted Publishing for the GitHub Release workflow.
