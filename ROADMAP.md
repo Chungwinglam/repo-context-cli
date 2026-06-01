@@ -121,5 +121,7 @@ Candidate tasks:
 - Merged `phase4-mcp-server-mode` into `main`.
 - Deleted the merged `phase4-mcp-server-mode` branch locally and on `origin`.
 - Completed editor integration planning with an approved design spec and implementation plan for optional static editor config output; Phase 4 remains in progress.
+- Merged `phase4-editor-integration-planning` into `main`.
+- Deleted the merged `phase4-editor-integration-planning` branch locally and on `origin`.
 
 Next-stage goal: Add optional editor config output for Cursor, VS Code, and generic AI-editor workflows.
