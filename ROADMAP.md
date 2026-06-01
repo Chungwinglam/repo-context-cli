@@ -118,5 +118,7 @@ Candidate tasks:
 - Added read-only stdio MCP server mode with a `get_repo_context` tool; Phase 4 remains in progress.
 - Hardened MCP server mode with fixed protocol negotiation, JSON-RPC batch/id validation, tool read-only annotations, and JSON text content for tool results; Phase 4 remains in progress.
 - Addressed `CodeReviewer-01` MCP compatibility feedback by returning standard JSON-RPC batch arrays and parse-error responses; Phase 4 remains in progress.
+- Merged `phase4-mcp-server-mode` into `main`.
+- Deleted the merged `phase4-mcp-server-mode` branch locally and on `origin`.
 
 Next-stage goal: Start editor integration planning.
