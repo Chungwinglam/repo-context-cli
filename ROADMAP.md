@@ -5,7 +5,7 @@ This file is the source of truth for project phase status. Update it whenever a 
 ## Current Status
 
 - Current phase: Phase 5 in progress
-- Last completed milestone: Phase 5 release readiness audit
+- Last completed milestone: Phase 5 maintainer release checklist
 - Private repository: `Chungwinglam/repo-context-cli`
 - Default branch: `main`
 
@@ -78,14 +78,14 @@ Candidate tasks:
 
 ## Phase 5: Release and Adoption Readiness
 
-Status: Planned
+Status: In progress
 
 Goal: Prepare the first public release path and improve the odds that new users can evaluate the tool quickly.
 
 Candidate tasks:
 
 - Run a release readiness audit for package metadata, docs, workflows, and generated artifacts. (Complete)
-- Add a maintainer release checklist for npm publish and post-release verification.
+- Add a maintainer release checklist for npm publish and post-release verification. (Complete)
 - Add GitHub issue templates and lightweight project health files.
 - Add an adoption guide showing how to introduce Repo Context CLI into an existing repository.
 
@@ -143,5 +143,6 @@ Candidate tasks:
 - Fast-forward merged `phase4-context-refresh-action` into `main`, fixed workflow test line-ending tolerance after Windows checkout, and cleaned up the merged branch locally and on `origin`; Phase 5 remains planned.
 - Started Phase 5 with `docs/release-readiness-audit.md`, covering package metadata, npm package dry-run contents, release workflow readiness, Node support verification gaps, documentation state, and remaining public-launch gates; Phase 5 is in progress.
 - Merged `phase5-release-readiness-audit` into `main` and deleted the merged branch locally and on `origin`; Phase 5 remains in progress.
+- Added a maintainer release checklist to `docs/release.md`, CI verification for Node.js 20 and 24, and release workflow tarball install smoke before `npm publish`; Phase 5 remains in progress.
 
-Next-stage goal: Add a maintainer release checklist covering npm publish, Node support policy, release smoke, and post-release verification.
+Next-stage goal: Add GitHub issue templates and lightweight project health files.

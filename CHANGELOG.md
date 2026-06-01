@@ -37,12 +37,15 @@ This project follows a simple changelog format inspired by Keep a Changelog. The
 ### CI
 
 - Added GitHub Actions CI for build, lint, and test verification on Node.js 24.
+- Added CI coverage for the documented Node.js 20 and Node.js 24 support range.
 - Added npm tarball install smoke coverage that packs the package, installs it in a fresh npm project, and runs the installed CLI binary.
 - Added a GitHub Actions context drift check for tracked generated context files on pull requests, default-branch pushes, weekly schedule, and manual dispatch.
+- Added release workflow tarball install smoke before `npm publish`.
 
 ### Documentation
 
 - Added README quickstart, safety defaults, command reference, detected-facts summary, scope notes, roadmap link, and contributing link.
 - Added project roadmap tracking phase status, completed milestones, activity log entries, and next-stage goals.
 - Added a release readiness audit covering package contents, workflows, docs, and public-launch gates.
+- Added a maintainer release checklist covering npm publish, Node support policy, release smoke, and post-release verification.
 - Added MIT license.

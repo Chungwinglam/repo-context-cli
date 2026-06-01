@@ -7,6 +7,8 @@ import { promisify } from "node:util";
 import { describe, expect, it } from "vitest";
 
 const contextRefreshWorkflow = new URL("../.github/workflows/context-refresh.yml", import.meta.url);
+const ciWorkflow = new URL("../.github/workflows/ci.yml", import.meta.url);
+const releaseWorkflow = new URL("../.github/workflows/release.yml", import.meta.url);
 const execFileAsync = promisify(execFile);
 const cliPath = join(process.cwd(), "dist", "cli.js");
 const stableGeneratedAt = "1970-01-01T00:00:00.000Z";
@@ -16,6 +18,35 @@ async function createTempRepo(): Promise<string> {
 }
 
 describe("GitHub Actions workflows", () => {
+  it("verifies the documented Node support range in CI", async () => {
+    const workflow = normalizeLineEndings(await readFile(ciWorkflow, "utf8"));
+
+    expect(workflow).toContain("strategy:\n      matrix:\n        node-version: [20, 24]");
+    expect(workflow).toContain("node-version: ${{ matrix.node-version }}");
+    expect(workflow).toContain("npm run build");
+    expect(workflow).toContain("npm run lint");
+    expect(workflow).toContain("npm test");
+  });
+
+  it("runs release smoke before npm publish", async () => {
+    const workflow = normalizeLineEndings(await readFile(releaseWorkflow, "utf8"));
+
+    expect(workflow).toContain("permissions:\n  contents: read\n  id-token: write");
+    expect(workflow).toContain("node-version: 24");
+    expect(workflow).toContain("npm pack --dry-run");
+    expect(workflow).toContain("npm pack --pack-destination ./artifacts");
+    expect(workflow).toContain('npm install "$repo_dir"/artifacts/repo-context-cli-*.tgz');
+    expect(workflow).toContain("./node_modules/.bin/repo-context pack --dry-run --for codex");
+    expectInOrder(workflow, [
+      "Verify release tag matches package version",
+      "npm pack --dry-run",
+      "Smoke installed release tarball",
+      "npm publish"
+    ]);
+
+    expect(workflow).not.toContain("NPM_TOKEN");
+  });
+
   it("keeps the context refresh workflow conservative and check-only", async () => {
     const workflow = normalizeLineEndings(await readFile(contextRefreshWorkflow, "utf8"));
 
@@ -70,4 +101,13 @@ function workflowPackArgs(): string[] {
 
 function normalizeLineEndings(value: string): string {
   return value.replace(/\r\n/g, "\n");
+}
+
+function expectInOrder(value: string, snippets: string[]): void {
+  let lastIndex = -1;
+  for (const snippet of snippets) {
+    const nextIndex = value.indexOf(snippet);
+    expect(nextIndex).toBeGreaterThan(lastIndex);
+    lastIndex = nextIndex;
+  }
 }

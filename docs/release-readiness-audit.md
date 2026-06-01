@@ -65,19 +65,19 @@ Before public release:
 
 `docs/release.md` already has a manual checklist, but Phase 5 should turn it into a stricter maintainer checklist with pre-release, release, and post-release verification sections.
 
-Recommended next task: add a dedicated release checklist section or document that records exact commands, external checks, Node support expectations, release smoke checks, and rollback/failed-release notes.
+Status: Complete. `docs/release.md` now includes pre-release, external-gate, release, post-release, and failed-release guidance.
 
 ### F2. Decide Node support verification policy
 
 `package.json` and contributor docs support Node.js 20 or newer, while CI and release workflows currently verify Node.js 24. This is acceptable for the first audit but should be made explicit before public release.
 
-Recommended action: either add a CI matrix that verifies Node.js 20 and 24, or narrow the documented runtime support to the version range actually verified by CI.
+Status: Complete. CI now verifies the test job on Node.js 20 and Node.js 24.
 
 ### F3. Add release tarball install smoke before publish
 
 CI already installs the packed tarball in a fresh npm project, but the release workflow currently runs `npm pack --dry-run` and then publishes. A release-tag-specific install smoke would make the publish path stricter.
 
-Recommended action: add a release workflow smoke step that packs to a temporary artifact directory, installs the tarball in a fresh npm project, and runs `repo-context pack --dry-run --for codex` before `npm publish`.
+Status: Complete. The release workflow now packs to `./artifacts`, installs the tarball in a fresh npm project, and runs `repo-context pack --dry-run --for codex` before `npm publish`.
 
 ### F4. Clarify the original project spec status
 
@@ -108,11 +108,15 @@ Recommended action: document a safe adoption flow using `--dry-run`, generated-f
 
 Do not publish yet.
 
-Proceed with Phase 5 hardening first:
+Completed since this audit was opened:
 
-1. Add the maintainer release checklist.
-2. Decide and enforce the Node support verification policy.
-3. Add release tarball install smoke before publish.
-4. Resolve external gates: public repository and npm trusted publisher setup.
-5. Recheck package name availability immediately before first publish.
-6. Add issue templates and adoption guidance before broad promotion.
+- Maintainer release checklist.
+- Node.js 20 and Node.js 24 CI verification.
+- Release tarball install smoke before `npm publish`.
+
+Remaining before public release:
+
+1. Resolve external gates: public repository and npm trusted publisher setup.
+2. Recheck package name availability immediately before first publish.
+3. Add issue templates and lightweight project health files.
+4. Add adoption guidance before broad promotion.

@@ -33,4 +33,15 @@ jobs:
             exit 1
           fi
       - run: npm pack --dry-run
+      - run: mkdir -p artifacts
+      - run: npm pack --pack-destination ./artifacts
+      - name: Smoke installed release tarball
+        run: |
+          set -euo pipefail
+          repo_dir="$PWD"
+          smoke_dir="$(mktemp -d)"
+          cd "$smoke_dir"
+          npm init -y
+          npm install "$repo_dir"/artifacts/repo-context-cli-*.tgz
+          ./node_modules/.bin/repo-context pack --dry-run --for codex
       - run: npm publish
