@@ -4,8 +4,8 @@ This file is the source of truth for project phase status. Update it whenever a 
 
 ## Current Status
 
-- Current phase: Phase 5 in progress
-- Last completed milestone: Phase 5 external public-release gates
+- Current phase: Phase 6 planned
+- Last completed milestone: Phase 5 trusted publishing validation
 - Public repository: `Chungwinglam/repo-context-cli`
 - Default branch: `main`
 
@@ -78,7 +78,7 @@ Candidate tasks:
 
 ## Phase 5: Release and Adoption Readiness
 
-Status: In progress
+Status: Complete
 
 Goal: Prepare the first public release path and improve the odds that new users can evaluate the tool quickly.
 
@@ -89,7 +89,20 @@ Candidate tasks:
 - Add GitHub issue templates and lightweight project health files. (Complete)
 - Add an adoption guide showing how to introduce Repo Context CLI into an existing repository. (Complete)
 - Resolve external public-release gates. (Complete: GitHub repository is public, `repo-context-cli@0.1.0` exists on npm, install smoke passed from the public registry, and npm Trusted Publishing is configured for the GitHub Release workflow.)
-- Validate npm Trusted Publishing with a GitHub Release workflow patch. (In progress: `0.1.1` release metadata is being prepared.)
+- Validate npm Trusted Publishing with a GitHub Release workflow patch. (Complete: `v0.1.1` release workflow published `repo-context-cli@0.1.1` and npm provenance was verified.)
+
+## Phase 6: Adoption Growth and Community Proof
+
+Status: Planned
+
+Goal: Improve the odds that developers can quickly understand, trust, try, and share Repo Context CLI.
+
+Candidate tasks:
+
+- Run a public README and npm package positioning audit.
+- Add a focused example gallery for common AI-agent workflows.
+- Add a short comparison guide explaining when Repo Context CLI is useful versus ad hoc prompt pasting.
+- Add a lightweight metrics and feedback plan for npm downloads, GitHub issues, and adoption signals.
 
 ## Activity Log
 
@@ -169,5 +182,9 @@ Candidate tasks:
 - Configured npm Trusted Publishing for `Chungwinglam/repo-context-cli` using GitHub Actions workflow `release.yml` with `npm publish` allowed; npm registry returned HTTP 201 for the trust creation request.
 - Fixed a local smoke-test script mistake that had briefly run `npm install repo-context-cli@0.1.0` in the repository root; the published package was unaffected, the local self-dependency change was removed, and the working tree was restored clean.
 - Prepared `repo-context-cli@0.1.1` release metadata to validate the GitHub Release workflow, npm Trusted Publishing, and provenance path without changing CLI behavior.
+- Published GitHub Release `v0.1.1` from `main`, triggering `.github/workflows/release.yml`; the release workflow completed successfully, including build, lint, tests, tag/version validation, tarball smoke, and `npm publish`.
+- Verified `repo-context-cli@0.1.1` on npm: registry metadata exposes the `repo-context` binary, includes SLSA provenance attestations, and reports 46 package files.
+- Verified public install behavior for `repo-context-cli@0.1.1` in a fresh temporary npm project; installed `repo-context --help`, installed `repo-context pack --dry-run --for codex`, and `npm audit signatures` all passed.
+- Completed Phase 5 release and adoption readiness after validating the trusted GitHub Actions publishing path end to end.
 
-Next-stage goal: Publish GitHub Release `v0.1.1`, monitor the release workflow, and verify `repo-context-cli@0.1.1` plus npm provenance from the public registry.
+Next-stage goal: Start Phase 6 with a public README and npm package positioning audit.

@@ -72,20 +72,23 @@ describe("project health files", () => {
     const release = await readProjectFile("docs/release.md");
 
     expect(roadmap).toContain("Public repository: `Chungwinglam/repo-context-cli`");
-    expect(roadmap).toContain("Last completed milestone: Phase 5 external public-release gates");
+    expect(roadmap).toContain("Current phase: Phase 6 planned");
+    expect(roadmap).toContain("Last completed milestone: Phase 5 trusted publishing validation");
     expect(roadmap).toContain("`repo-context-cli@0.1.0` exists on npm");
-    expect(roadmap).toContain("Validate npm Trusted Publishing with a GitHub Release workflow patch");
-    expect(roadmap).toContain("Next-stage goal: Publish GitHub Release `v0.1.1`");
+    expect(roadmap).toContain("Validate npm Trusted Publishing with a GitHub Release workflow patch. (Complete");
+    expect(roadmap).toContain("Next-stage goal: Start Phase 6");
     expect(audit).toContain("Status: Complete. The GitHub repository is now public");
     expect(audit).toContain("`npm view repo-context-cli version --json` returned npm `E404` again on 2026-06-01");
     expect(audit).toContain("`npm view repo-context-cli version --json` returned `0.1.0` on 2026-06-02");
     expect(audit).toContain("Status: Complete. The package now exists on npm and Trusted Publishing is configured");
     expect(audit).toContain("Do not republish `0.1.0`");
-    expect(audit).toContain("Confirm npm provenance is shown for the workflow-published version");
+    expect(audit).toContain("workflow-published `repo-context-cli@0.1.1` package is visible on npm");
+    expect(audit).toContain("1 package with a verified attestation");
     expect(release).toContain("The package must already exist on npm before `npm trust github` can configure a trusted publisher");
     expect(release).toContain("`repo-context-cli@0.1.0` was manually bootstrapped on 2026-06-02");
     expect(release).toContain("Future releases should use the GitHub Release workflow");
-    expect(release).toContain("verify provenance on `0.1.1` or the next GitHub Release workflow publish");
+    expect(release).toContain("`0.1.1` validated Trusted Publishing and npm provenance");
+    expect(release).toContain("npm audit signatures");
     expect(release).toContain("npm CLI 11.10.0 or newer");
   });
 

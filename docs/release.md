@@ -38,7 +38,7 @@ First-package bootstrap status:
 
 - `0.1.0` already exists on npm. Do not republish it.
 - Future releases should use the GitHub Release workflow.
-- Use `0.1.1` or the next patch to validate Trusted Publishing and npm provenance end to end.
+- `0.1.1` validated Trusted Publishing and npm provenance end to end through the GitHub Release workflow.
 
 On npmjs.com, configure the package trusted publisher with:
 
@@ -86,7 +86,13 @@ npm publish
 
 ## Provenance Status
 
-npm trusted publishing automatically generates provenance attestations when all npm requirements are met. The GitHub repository is public, `repo-context-cli@0.1.0` exists on npm, and the trusted publisher is configured. The manual `0.1.0` bootstrap does not prove the workflow path; verify provenance on `0.1.1` or the next GitHub Release workflow publish.
+npm trusted publishing automatically generates provenance attestations when all npm requirements are met. The GitHub repository is public, `repo-context-cli@0.1.0` exists on npm, and the trusted publisher is configured.
+
+Provenance verification status:
+
+- `v0.1.1` was published by `.github/workflows/release.yml`.
+- npm registry metadata for `repo-context-cli@0.1.1` includes SLSA provenance attestations.
+- `npm audit signatures` from a fresh install reported verified registry signatures and a verified attestation.
 
 To get npm provenance for future releases:
 
@@ -129,6 +135,7 @@ Use this checklist for every npm release.
 - Confirm the npm package page shows the new version.
 - Confirm the package README renders correctly on npm.
 - Confirm provenance is shown when npm and GitHub public repository requirements are met.
+- Run `npm audit signatures` from the fresh install to verify registry signatures and provenance attestations.
 - Install the published package in a fresh directory and run:
 
 ```bash

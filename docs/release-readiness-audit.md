@@ -13,9 +13,9 @@ Scope:
 
 Repo Context CLI completed the first public npm bootstrap release. The local package builds, the CLI help works from `dist/cli.js`, the GitHub repository is public, the release workflow has a version-tag guard, CI includes an installed-package smoke test, and `repo-context-cli@0.1.0` is visible on npm.
 
-The remaining release-path work is to exercise the GitHub Release workflow with `0.1.1` now that npm Trusted Publishing is configured.
+The GitHub Release workflow has now been exercised with `0.1.1` after npm Trusted Publishing was configured.
 
-Overall status: First public npm release complete; `0.1.1` is prepared to validate the trusted GitHub Actions path.
+Overall status: First public npm release and trusted GitHub Actions release path complete.
 
 ## Evidence
 
@@ -34,6 +34,10 @@ Overall status: First public npm release complete; `0.1.1` is prepared to valida
 - A fresh temporary install smoke passed from the public registry on 2026-06-02: `npm install repo-context-cli@0.1.0 --omit=dev`, installed `repo-context --help`, and installed `repo-context pack --dry-run --for codex`.
 - `npx npm@latest trust github repo-context-cli --file release.yml --repo Chungwinglam/repo-context-cli --allow-publish --yes` returned npm registry HTTP 201 for trust creation on 2026-06-02.
 - `repo-context-cli@0.1.1` release metadata was prepared on 2026-06-02 with no CLI behavior changes from `0.1.0`.
+- GitHub Release `v0.1.1` triggered release workflow run `26795186722`, which completed successfully on 2026-06-02.
+- The workflow-published `repo-context-cli@0.1.1` package is visible on npm and includes `dist.attestations.provenance.predicateType` set to `https://slsa.dev/provenance/v1`.
+- A fresh temporary install smoke passed from the public registry for `repo-context-cli@0.1.1`: `npm install repo-context-cli@0.1.1 --omit=dev`, installed `repo-context --help`, installed `repo-context pack --dry-run --for codex`, and `npm audit signatures`.
+- `npm audit signatures` reported 2 packages with verified registry signatures and 1 package with a verified attestation.
 
 ## Ready
 
@@ -78,12 +82,12 @@ Completion record:
 - A clean install smoke from the public registry passed in a temporary project.
 - npm Trusted Publishing was configured for `Chungwinglam/repo-context-cli` / `release.yml` with `npm publish` allowed.
 
-Before the first trusted-workflow release:
+The first trusted-workflow release is complete:
 
-- Bump to `0.1.1` or the next patch.
-- Add changelog notes for that patch.
-- Publish a GitHub Release tagged exactly as `v<package.json version>`.
-- Confirm the release workflow publishes through Trusted Publishing and npm shows provenance for the new version.
+- `v0.1.1` was published through the GitHub Release workflow.
+- `repo-context-cli@0.1.1` is visible on npm.
+- npm provenance is present in the registry metadata.
+- `npm audit signatures` verifies the registry signatures and attestation from a fresh install.
 
 ## Important Follow-Ups
 
@@ -150,7 +154,7 @@ Completed since this audit was opened:
 
 Remaining before the next release:
 
-1. Publish GitHub Release `v0.1.1` to trigger `.github/workflows/release.yml`.
-2. Confirm the workflow publishes through Trusted Publishing.
-3. Confirm `npm view repo-context-cli version --json` returns `0.1.1`.
-4. Confirm npm provenance is shown for the workflow-published version.
+1. Keep future releases on the GitHub Release workflow path.
+2. Bump to the next patch only after a product or documentation change that should ship.
+3. Keep using fresh install smoke plus `npm audit signatures` as post-release verification.
+4. Move product focus to Phase 6 adoption growth and community proof.
