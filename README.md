@@ -83,6 +83,10 @@ repo-context mcp (optional)
 
 The result is not an LLM-generated project summary. It is a deterministic context package built from repository files, so future AI-agent sessions start from the same facts instead of a fresh guess.
 
+## Example Gallery
+
+See [docs/examples.md](https://github.com/Chungwinglam/repo-context-cli/blob/main/docs/examples.md) for focused examples covering new project orientation, safe adoption in an existing repository, context refresh pull requests, and MCP or editor-assisted workflows.
+
 ## Safety Defaults
 
 - No LLM calls.

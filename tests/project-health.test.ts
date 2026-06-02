@@ -98,6 +98,25 @@ describe("project health files", () => {
     expect(optionalIntegrationsIndex).toBeGreaterThan(quickstartIndex);
   });
 
+  it("documents a focused example gallery for common AI-agent workflows", async () => {
+    const examples = await readProjectFile("docs/examples.md");
+    const readme = await readProjectFile("README.md");
+    const roadmap = await readProjectFile("ROADMAP.md");
+
+    expect(examples).toContain("# Example Gallery");
+    expect(examples).toContain("New project orientation");
+    expect(examples).toContain("Safe adoption in an existing repository");
+    expect(examples).toContain("Context refresh pull request");
+    expect(examples).toContain("MCP and editor-assisted workflows");
+    expect(examples).toContain("npx repo-context-cli pack --dry-run --for codex");
+    expect(examples).toContain("No LLM calls, no source edits, and no automatic editor setting changes");
+    expect(examples).toContain("For a no-write session, start only the MCP server.");
+    expect(examples).toContain("When you want editor guides, generate them explicitly with `pack --editor-config`.");
+    expect(readme).toContain("docs/examples.md");
+    expect(roadmap).toContain("Add a focused example gallery for common AI-agent workflows. (Complete)");
+    expect(roadmap).toContain("Next-stage goal: Add a short comparison guide");
+  });
+
   it("tracks external public-release gate status", async () => {
     const roadmap = await readProjectFile("ROADMAP.md");
     const audit = await readProjectFile("docs/release-readiness-audit.md");
@@ -105,12 +124,13 @@ describe("project health files", () => {
 
     expect(roadmap).toContain("Public repository: `Chungwinglam/repo-context-cli`");
     expect(roadmap).toContain("Current phase: Phase 6 in progress");
-    expect(roadmap).toContain("Last completed milestone: Phase 6 README and public metadata positioning pass");
+    expect(roadmap).toContain("Last completed milestone: Phase 6 focused example gallery");
     expect(roadmap).toContain("`repo-context-cli@0.1.0` exists on npm");
     expect(roadmap).toContain("Validate npm Trusted Publishing with a GitHub Release workflow patch. (Complete");
     expect(roadmap).toContain("Run a public README and npm package positioning audit. (Complete)");
     expect(roadmap).toContain("Improve README first-screen positioning and public package/repository metadata. (Complete)");
-    expect(roadmap).toContain("Next-stage goal: Add a focused example gallery");
+    expect(roadmap).toContain("Add a focused example gallery for common AI-agent workflows. (Complete)");
+    expect(roadmap).toContain("Next-stage goal: Add a short comparison guide");
     expect(audit).toContain("Status: Complete. The GitHub repository is now public");
     expect(audit).toContain("`npm view repo-context-cli version --json` returned npm `E404` again on 2026-06-01");
     expect(audit).toContain("`npm view repo-context-cli version --json` returned `0.1.0` on 2026-06-02");

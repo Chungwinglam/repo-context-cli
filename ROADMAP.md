@@ -5,7 +5,7 @@ This file is the source of truth for project phase status. Update it whenever a 
 ## Current Status
 
 - Current phase: Phase 6 in progress
-- Last completed milestone: Phase 6 README and public metadata positioning pass
+- Last completed milestone: Phase 6 focused example gallery
 - Public repository: `Chungwinglam/repo-context-cli`
 - Default branch: `main`
 
@@ -101,7 +101,7 @@ Candidate tasks:
 
 - Run a public README and npm package positioning audit. (Complete)
 - Improve README first-screen positioning and public package/repository metadata. (Complete)
-- Add a focused example gallery for common AI-agent workflows.
+- Add a focused example gallery for common AI-agent workflows. (Complete)
 - Add a short comparison guide explaining when Repo Context CLI is useful versus ad hoc prompt pasting.
 - Add a lightweight metrics and feedback plan for npm downloads, GitHub issues, and adoption signals.
 
@@ -191,5 +191,6 @@ Candidate tasks:
 - Merged `phase6-positioning-audit` into `main` and deleted the merged branch locally and on `origin`; Phase 6 remains in progress.
 - Improved README first-screen positioning around deterministic context, dry-run evaluation, and safety/trust signals; added npm search keywords; and set the GitHub repository description and homepage metadata.
 - Merged `phase6-readme-metadata-positioning` into `main` and deleted the merged branch locally and on `origin`; Phase 6 remains in progress.
+- Added `docs/examples.md` with focused examples for new project orientation, safe existing-repository adoption, context refresh pull requests, and MCP/editor-assisted workflows; Phase 6 remains in progress.
 
-Next-stage goal: Add a focused example gallery for common AI-agent workflows.
+Next-stage goal: Add a short comparison guide explaining when Repo Context CLI is useful versus ad hoc prompt pasting.
