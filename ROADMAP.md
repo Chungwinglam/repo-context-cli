@@ -187,5 +187,6 @@ Candidate tasks:
 - Verified public install behavior for `repo-context-cli@0.1.1` in a fresh temporary npm project; installed `repo-context --help`, installed `repo-context pack --dry-run --for codex`, and `npm audit signatures` all passed.
 - Completed Phase 5 release and adoption readiness after validating the trusted GitHub Actions publishing path end to end.
 - Started Phase 6 with `docs/positioning-audit.md`, covering GitHub repository metadata, npm metadata, README first-screen positioning, trust signals, positioning gaps, and next public adoption moves.
+- Merged `phase6-positioning-audit` into `main` and deleted the merged branch locally and on `origin`; Phase 6 remains in progress.
 
 Next-stage goal: Improve README first-screen positioning and public package/repository metadata based on the positioning audit.
