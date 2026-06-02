@@ -1,7 +1,7 @@
 {
   "name": "repo-context-cli",
   "version": "0.1.1",
-  "description": "Generate reliable repository context files for AI coding agents.",
+  "description": "Generate deterministic repository context for AI coding agents.",
   "homepage": "https://github.com/Chungwinglam/repo-context-cli#readme",
   "repository": {
     "type": "git",
@@ -36,7 +36,12 @@
     "claude",
     "cursor",
     "cli",
-    "repository-context"
+    "repository-context",
+    "ai-agents",
+    "context",
+    "developer-tools",
+    "mcp",
+    "repository"
   ],
   "license": "MIT",
   "devDependencies": {

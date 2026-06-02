@@ -80,6 +80,24 @@ describe("project health files", () => {
     expect(positioningAudit).toContain("Update the README first screen and public package/repository metadata");
   });
 
+  it("keeps the README first screen focused on the public offer", async () => {
+    const readme = await readProjectFile("README.md");
+
+    expect(readme).toContain("Generate deterministic repository context for AI coding agents.");
+    expect(readme).toContain("AI coding agents lose time when each session starts from pasted notes");
+    expect(readme).toContain("Start with a dry run");
+    expect(readme).toContain("No LLM calls, no source edits, safe overwrite behavior");
+
+    const quickstartIndex = readme.indexOf("## Quickstart");
+    const optionalIntegrationsIndex = readme.indexOf("## Optional Integrations");
+    const safetyIndex = readme.indexOf("## Safety Defaults");
+
+    expect(quickstartIndex).toBeGreaterThan(-1);
+    expect(safetyIndex).toBeGreaterThan(-1);
+    expect(optionalIntegrationsIndex).toBeGreaterThan(safetyIndex);
+    expect(optionalIntegrationsIndex).toBeGreaterThan(quickstartIndex);
+  });
+
   it("tracks external public-release gate status", async () => {
     const roadmap = await readProjectFile("ROADMAP.md");
     const audit = await readProjectFile("docs/release-readiness-audit.md");
@@ -87,11 +105,12 @@ describe("project health files", () => {
 
     expect(roadmap).toContain("Public repository: `Chungwinglam/repo-context-cli`");
     expect(roadmap).toContain("Current phase: Phase 6 in progress");
-    expect(roadmap).toContain("Last completed milestone: Phase 6 public positioning audit");
+    expect(roadmap).toContain("Last completed milestone: Phase 6 README and public metadata positioning pass");
     expect(roadmap).toContain("`repo-context-cli@0.1.0` exists on npm");
     expect(roadmap).toContain("Validate npm Trusted Publishing with a GitHub Release workflow patch. (Complete");
     expect(roadmap).toContain("Run a public README and npm package positioning audit. (Complete)");
-    expect(roadmap).toContain("Next-stage goal: Improve README first-screen positioning");
+    expect(roadmap).toContain("Improve README first-screen positioning and public package/repository metadata. (Complete)");
+    expect(roadmap).toContain("Next-stage goal: Add a focused example gallery");
     expect(audit).toContain("Status: Complete. The GitHub repository is now public");
     expect(audit).toContain("`npm view repo-context-cli version --json` returned npm `E404` again on 2026-06-01");
     expect(audit).toContain("`npm view repo-context-cli version --json` returned `0.1.0` on 2026-06-02");
@@ -110,12 +129,18 @@ describe("project health files", () => {
   it("keeps npm patch release metadata publish-ready", async () => {
     const packageJson = JSON.parse(await readProjectFile("package.json")) as {
       version?: string;
+      description?: string;
+      keywords?: string[];
       bin?: Record<string, string>;
     };
     const changelog = await readProjectFile("CHANGELOG.md");
     const audit = await readProjectFile("docs/release-readiness-audit.md");
 
     expect(packageJson.version).toBe("0.1.1");
+    expect(packageJson.description).toBe("Generate deterministic repository context for AI coding agents.");
+    expect(packageJson.keywords).toEqual(
+      expect.arrayContaining(["ai-agents", "context", "developer-tools", "mcp", "repository"]),
+    );
     expect(packageJson.bin?.["repo-context"]).toBe("dist/cli.js");
     expect(changelog).toContain("The current package version is `0.1.1`");
     expect(changelog).toContain("## 0.1.1 - 2026-06-02");

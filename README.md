@@ -1,13 +1,17 @@
 # Repo Context CLI
 
-Generate reliable repository context files for AI coding agents.
+Generate deterministic repository context for AI coding agents.
 
-`repo-context` scans a local repository and writes a compact context package that helps Codex, Claude Code, Cursor, and similar tools answer the first questions correctly: what the project is, where the important files are, how to run it, and what rules an agent should follow before editing.
+AI coding agents lose time when each session starts from pasted notes, stale directory trees, or guessed setup commands. Repo Context CLI scans a local repository and turns project facts into reusable context files for Codex, Claude Code, Cursor, and similar tools.
+
+It is built for real repositories: No LLM calls, no source edits, safe overwrite behavior for generated files, secret-like paths are excluded, and public npm releases use GitHub Actions trusted publishing with provenance.
 
 ## Quickstart
 
+Start with a dry run:
+
 ```bash
-npx repo-context-cli pack --dry-run
+npx repo-context-cli pack --dry-run --for codex
 npx repo-context-cli pack --for codex
 ```
 
@@ -20,34 +24,6 @@ TESTING.md
 .repo-context/
   index.json
 ```
-
-Optional HTML report:
-
-```bash
-npx repo-context-cli pack --html-report
-```
-
-This also writes `.repo-context/report.html` by default, or `<output>/report.html` when `--output` is set. The report is a static single-file document with embedded CSS and no JavaScript.
-
-Optional editor config guides:
-
-```bash
-npx repo-context-cli pack --editor-config
-```
-
-This also writes static guide files under `.repo-context/editors/` by default, or `<output>/editors/` when `--output` is set. The guides help Cursor, VS Code, and generic AI-editor workflows consume the generated context files; they do not modify editor settings automatically.
-
-Optional MCP server:
-
-```bash
-npx repo-context-cli mcp
-```
-
-This starts a read-only stdio MCP server with one `get_repo_context` tool. The tool returns the same redacted repository context as a dry run and does not write generated files.
-
-GitHub context refresh check:
-
-This repository includes `.github/workflows/context-refresh.yml` as a conservative check-only workflow. It runs on pull requests, pushes to the default branch, a weekly schedule, and manual dispatch. The workflow builds the local CLI, runs `node dist/cli.js pack --for codex --html-report --editor-config --generated-at 1970-01-01T00:00:00.000Z` without `--force`, then fails only when tracked context files have drifted from the generated output. The fixed `--generated-at` value keeps tracked generated files stable across repeated checks. The workflow does not commit or push changes.
 
 ## Demo
 
@@ -124,6 +100,36 @@ The result is not an LLM-generated project summary. It is a deterministic contex
 - MCP server mode is stdio-only and read-only; `get_repo_context` always uses dry-run context generation and does not expose `--force`.
 - The GitHub context refresh workflow is check-only, uses read-only repository contents permission, and does not run `--force`, commit, or push.
 - Unknown commands and directory purposes are reported as unknown instead of invented.
+
+## Optional Integrations
+
+HTML report:
+
+```bash
+npx repo-context-cli pack --html-report
+```
+
+This also writes `.repo-context/report.html` by default, or `<output>/report.html` when `--output` is set. The report is a static single-file document with embedded CSS and no JavaScript.
+
+Editor config guides:
+
+```bash
+npx repo-context-cli pack --editor-config
+```
+
+This also writes static guide files under `.repo-context/editors/` by default, or `<output>/editors/` when `--output` is set. The guides help Cursor, VS Code, and generic AI-editor workflows consume the generated context files; they do not modify editor settings automatically.
+
+MCP server:
+
+```bash
+npx repo-context-cli mcp
+```
+
+This starts a read-only stdio MCP server with one `get_repo_context` tool. The tool returns the same redacted repository context as a dry run and does not write generated files.
+
+GitHub context refresh check:
+
+This repository includes `.github/workflows/context-refresh.yml` as a conservative check-only workflow. It runs on pull requests, pushes to the default branch, a weekly schedule, and manual dispatch. The workflow builds the local CLI, runs `node dist/cli.js pack --for codex --html-report --editor-config --generated-at 1970-01-01T00:00:00.000Z` without `--force`, then fails only when tracked context files have drifted from the generated output. The fixed `--generated-at` value keeps tracked generated files stable across repeated checks. The workflow does not commit or push changes.
 
 ## Commands
 
