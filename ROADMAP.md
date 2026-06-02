@@ -194,5 +194,6 @@ Candidate tasks:
 - Added `docs/examples.md` with focused examples for new project orientation, safe existing-repository adoption, context refresh pull requests, and MCP/editor-assisted workflows; Phase 6 remains in progress.
 - Merged `phase6-example-gallery` into `main` and deleted the merged branch locally and on `origin`; Phase 6 remains in progress.
 - Added `docs/comparison.md` explaining when Repo Context CLI is useful versus manual prompt pasting, README-only onboarding, and ad hoc directory-tree dumps; Phase 6 remains in progress.
+- Merged `phase6-comparison-guide` into `main` and deleted the merged branch locally and on `origin`; Phase 6 remains in progress.
 
 Next-stage goal: Add a lightweight metrics and feedback plan for npm downloads, GitHub issues, and adoption signals.
