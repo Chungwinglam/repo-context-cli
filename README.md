@@ -1,5 +1,7 @@
 # Repo Context CLI
 
+[English](README.md) | [简体中文](README.zh-CN.md) | [日本語](README.ja.md) | [한국어](README.ko.md)
+
 Generate deterministic repository context for AI coding agents.
 
 AI coding agents lose time when each session starts from pasted notes, stale directory trees, or guessed setup commands. Repo Context CLI scans a local repository and turns project facts into reusable context files for Codex, Claude Code, Cursor, and similar tools.
@@ -183,6 +185,10 @@ The first release focuses on JavaScript and TypeScript repositories while still 
 ## Project Roadmap
 
 See [ROADMAP.md](ROADMAP.md) for current phase status, next-stage goals, and the rule that every completed small task must update the roadmap.
+
+## Project Closeout
+
+See [docs/project-closeout.md](https://github.com/Chungwinglam/repo-context-cli/blob/main/docs/project-closeout.md) for the current public launch baseline, completed phases, non-blocking follow-ups, and Phase 7 maintenance scope.
 
 ## Adoption Guide
 

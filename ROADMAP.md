@@ -4,8 +4,9 @@ This file is the source of truth for project phase status. Update it whenever a 
 
 ## Current Status
 
-- Current phase: Phase 6 in progress
-- Last completed milestone: Phase 6 metrics and feedback plan
+- Current phase: Phase 7 planned
+- Project status: Public launch baseline complete
+- Last completed milestone: Project closeout and localized README introductions
 - Public repository: `Chungwinglam/repo-context-cli`
 - Default branch: `main`
 
@@ -93,7 +94,7 @@ Candidate tasks:
 
 ## Phase 6: Adoption Growth and Community Proof
 
-Status: In progress
+Status: Complete
 
 Goal: Improve the odds that developers can quickly understand, trust, try, and share Repo Context CLI.
 
@@ -104,6 +105,21 @@ Candidate tasks:
 - Add a focused example gallery for common AI-agent workflows. (Complete)
 - Add a short comparison guide explaining when Repo Context CLI is useful versus ad hoc prompt pasting. (Complete)
 - Add a lightweight metrics and feedback plan for npm downloads, GitHub issues, and adoption signals. (Complete)
+- Close Phase 6 with an adoption-growth readiness review and define Phase 7 scope. (Complete)
+
+## Phase 7: Maintenance and Adoption Operations
+
+Status: Planned
+
+Goal: Maintain the public launch baseline, learn from real adoption signals, and expand scope only when repeated user feedback justifies it.
+
+Candidate tasks:
+
+- Monitor public adoption signals using `docs/metrics.md`.
+- Triage first external issues and support questions.
+- Keep localized README introductions aligned with major positioning changes.
+- Convert repeated bugs into focused fixtures and regression tests.
+- Decide the next product expansion only after feedback shows a clear pattern.
 
 ## Activity Log
 
@@ -196,5 +212,6 @@ Candidate tasks:
 - Added `docs/comparison.md` explaining when Repo Context CLI is useful versus manual prompt pasting, README-only onboarding, and ad hoc directory-tree dumps; Phase 6 remains in progress.
 - Merged `phase6-comparison-guide` into `main` and deleted the merged branch locally and on `origin`; Phase 6 remains in progress.
 - Added `docs/metrics.md` with a lightweight no-telemetry metrics and feedback plan for npm downloads, GitHub issues, and adoption signals; Phase 6 remains in progress pending closeout review.
+- Added `docs/project-closeout.md` plus Chinese, Japanese, and Korean README introductions; Phase 6 is complete and Phase 7 is planned for maintenance and adoption operations.
 
-Next-stage goal: Close Phase 6 with an adoption-growth readiness review and define Phase 7 scope.
+Next-stage goal: Monitor public adoption signals and triage first external feedback before expanding scope.

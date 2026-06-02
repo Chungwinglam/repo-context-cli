@@ -150,7 +150,53 @@ describe("project health files", () => {
     expect(metrics).toContain("Do not collect repository contents");
     expect(readme).toContain("docs/metrics.md");
     expect(roadmap).toContain("Add a lightweight metrics and feedback plan for npm downloads, GitHub issues, and adoption signals. (Complete)");
-    expect(roadmap).toContain("Next-stage goal: Close Phase 6 with an adoption-growth readiness review and define Phase 7 scope.");
+  });
+
+  it("documents project closeout and localized README introductions", async () => {
+    const closeout = await readProjectFile("docs/project-closeout.md");
+    const readme = await readProjectFile("README.md");
+    const chineseReadme = await readProjectFile("README.zh-CN.md");
+    const japaneseReadme = await readProjectFile("README.ja.md");
+    const koreanReadme = await readProjectFile("README.ko.md");
+    const roadmap = await readProjectFile("ROADMAP.md");
+
+    expect(closeout).toContain("# Project Closeout");
+    expect(closeout).toContain("Public launch baseline: Complete");
+    expect(closeout).toContain("Current npm version: `0.1.1`");
+    expect(closeout).toContain("Phase 6 adoption growth and community proof is complete");
+    expect(closeout).toContain("4500 GitHub stars is an adoption goal, not a completed outcome");
+    expect(closeout).toContain("Non-blocking follow-ups");
+    expect(closeout).toContain("Monitor public adoption signals");
+
+    expect(readme).toContain("[简体中文](README.zh-CN.md)");
+    expect(readme).toContain("[日本語](README.ja.md)");
+    expect(readme).toContain("[한국어](README.ko.md)");
+    expect(readme).toContain("docs/project-closeout.md");
+
+    expect(chineseReadme).toContain("# Repo Context CLI");
+    expect(chineseReadme).toContain("为 AI 编码代理生成确定性的仓库上下文");
+    expect(chineseReadme).toContain("npx repo-context-cli pack --dry-run --for codex");
+    expect(chineseReadme).toContain("无 LLM 调用");
+    expect(chineseReadme).toContain("不会编辑业务源码");
+
+    expect(japaneseReadme).toContain("# Repo Context CLI");
+    expect(japaneseReadme).toContain("AI コーディングエージェント向け");
+    expect(japaneseReadme).toContain("npx repo-context-cli pack --dry-run --for codex");
+    expect(japaneseReadme).toContain("LLM 呼び出しはありません");
+    expect(japaneseReadme).toContain("業務ソースコードは編集しません");
+
+    expect(koreanReadme).toContain("# Repo Context CLI");
+    expect(koreanReadme).toContain("AI 코딩 에이전트를 위한");
+    expect(koreanReadme).toContain("npx repo-context-cli pack --dry-run --for codex");
+    expect(koreanReadme).toContain("LLM 호출 없음");
+    expect(koreanReadme).toContain("업무 소스 코드를 수정하지 않습니다");
+
+    expect(roadmap).toContain("Current phase: Phase 7 planned");
+    expect(roadmap).toContain("Project status: Public launch baseline complete");
+    expect(roadmap).toContain("Last completed milestone: Project closeout and localized README introductions");
+    expect(roadmap).toMatch(/## Phase 6: Adoption Growth and Community Proof\s+Status: Complete/);
+    expect(roadmap).toMatch(/## Phase 7: Maintenance and Adoption Operations\s+Status: Planned/);
+    expect(roadmap).toContain("Next-stage goal: Monitor public adoption signals and triage first external feedback before expanding scope.");
   });
 
   it("tracks external public-release gate status", async () => {
@@ -159,8 +205,8 @@ describe("project health files", () => {
     const release = await readProjectFile("docs/release.md");
 
     expect(roadmap).toContain("Public repository: `Chungwinglam/repo-context-cli`");
-    expect(roadmap).toContain("Current phase: Phase 6 in progress");
-    expect(roadmap).toContain("Last completed milestone: Phase 6 metrics and feedback plan");
+    expect(roadmap).toContain("Current phase: Phase 7 planned");
+    expect(roadmap).toContain("Last completed milestone: Project closeout and localized README introductions");
     expect(roadmap).toContain("`repo-context-cli@0.1.0` exists on npm");
     expect(roadmap).toContain("Validate npm Trusted Publishing with a GitHub Release workflow patch. (Complete");
     expect(roadmap).toContain("Run a public README and npm package positioning audit. (Complete)");
@@ -168,7 +214,8 @@ describe("project health files", () => {
     expect(roadmap).toContain("Add a focused example gallery for common AI-agent workflows. (Complete)");
     expect(roadmap).toContain("Add a short comparison guide explaining when Repo Context CLI is useful versus ad hoc prompt pasting. (Complete)");
     expect(roadmap).toContain("Add a lightweight metrics and feedback plan for npm downloads, GitHub issues, and adoption signals. (Complete)");
-    expect(roadmap).toContain("Next-stage goal: Close Phase 6 with an adoption-growth readiness review and define Phase 7 scope.");
+    expect(roadmap).toContain("Close Phase 6 with an adoption-growth readiness review and define Phase 7 scope. (Complete)");
+    expect(roadmap).toContain("Next-stage goal: Monitor public adoption signals and triage first external feedback before expanding scope.");
     expect(audit).toContain("Status: Complete. The GitHub repository is now public");
     expect(audit).toContain("`npm view repo-context-cli version --json` returned npm `E404` again on 2026-06-01");
     expect(audit).toContain("`npm view repo-context-cli version --json` returned `0.1.0` on 2026-06-02");
