@@ -66,17 +66,32 @@ describe("project health files", () => {
     expect(audit).toContain("Status: Complete. `docs/adoption.md`");
   });
 
+  it("tracks public positioning audit for adoption growth", async () => {
+    const positioningAudit = await readProjectFile("docs/positioning-audit.md");
+
+    expect(positioningAudit).toContain("# Public Positioning Audit");
+    expect(positioningAudit).toContain("GitHub repository description: empty at audit time");
+    expect(positioningAudit).toContain("npm latest version: `0.1.1`");
+    expect(positioningAudit).toContain("includes npm provenance attestations");
+    expect(positioningAudit).toContain("README first screen is accurate but not yet conversion-focused");
+    expect(positioningAudit).toContain("Optional features appear before the core evaluation path");
+    expect(positioningAudit).toContain("Recommended keyword additions");
+    expect(positioningAudit).toContain("Improve README first-screen positioning");
+    expect(positioningAudit).toContain("Update the README first screen and public package/repository metadata");
+  });
+
   it("tracks external public-release gate status", async () => {
     const roadmap = await readProjectFile("ROADMAP.md");
     const audit = await readProjectFile("docs/release-readiness-audit.md");
     const release = await readProjectFile("docs/release.md");
 
     expect(roadmap).toContain("Public repository: `Chungwinglam/repo-context-cli`");
-    expect(roadmap).toContain("Current phase: Phase 6 planned");
-    expect(roadmap).toContain("Last completed milestone: Phase 5 trusted publishing validation");
+    expect(roadmap).toContain("Current phase: Phase 6 in progress");
+    expect(roadmap).toContain("Last completed milestone: Phase 6 public positioning audit");
     expect(roadmap).toContain("`repo-context-cli@0.1.0` exists on npm");
     expect(roadmap).toContain("Validate npm Trusted Publishing with a GitHub Release workflow patch. (Complete");
-    expect(roadmap).toContain("Next-stage goal: Start Phase 6");
+    expect(roadmap).toContain("Run a public README and npm package positioning audit. (Complete)");
+    expect(roadmap).toContain("Next-stage goal: Improve README first-screen positioning");
     expect(audit).toContain("Status: Complete. The GitHub repository is now public");
     expect(audit).toContain("`npm view repo-context-cli version --json` returned npm `E404` again on 2026-06-01");
     expect(audit).toContain("`npm view repo-context-cli version --json` returned `0.1.0` on 2026-06-02");

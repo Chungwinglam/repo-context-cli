@@ -4,8 +4,8 @@ This file is the source of truth for project phase status. Update it whenever a 
 
 ## Current Status
 
-- Current phase: Phase 6 planned
-- Last completed milestone: Phase 5 trusted publishing validation
+- Current phase: Phase 6 in progress
+- Last completed milestone: Phase 6 public positioning audit
 - Public repository: `Chungwinglam/repo-context-cli`
 - Default branch: `main`
 
@@ -93,13 +93,13 @@ Candidate tasks:
 
 ## Phase 6: Adoption Growth and Community Proof
 
-Status: Planned
+Status: In progress
 
 Goal: Improve the odds that developers can quickly understand, trust, try, and share Repo Context CLI.
 
 Candidate tasks:
 
-- Run a public README and npm package positioning audit.
+- Run a public README and npm package positioning audit. (Complete)
 - Add a focused example gallery for common AI-agent workflows.
 - Add a short comparison guide explaining when Repo Context CLI is useful versus ad hoc prompt pasting.
 - Add a lightweight metrics and feedback plan for npm downloads, GitHub issues, and adoption signals.
@@ -186,5 +186,6 @@ Candidate tasks:
 - Verified `repo-context-cli@0.1.1` on npm: registry metadata exposes the `repo-context` binary, includes SLSA provenance attestations, and reports 46 package files.
 - Verified public install behavior for `repo-context-cli@0.1.1` in a fresh temporary npm project; installed `repo-context --help`, installed `repo-context pack --dry-run --for codex`, and `npm audit signatures` all passed.
 - Completed Phase 5 release and adoption readiness after validating the trusted GitHub Actions publishing path end to end.
+- Started Phase 6 with `docs/positioning-audit.md`, covering GitHub repository metadata, npm metadata, README first-screen positioning, trust signals, positioning gaps, and next public adoption moves.
 
-Next-stage goal: Start Phase 6 with a public README and npm package positioning audit.
+Next-stage goal: Improve README first-screen positioning and public package/repository metadata based on the positioning audit.
