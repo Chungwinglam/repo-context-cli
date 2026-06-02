@@ -26,19 +26,19 @@ If the tag and package version do not match, the workflow exits before `npm publ
 
 Configure npm Trusted Publishing for the package before publishing from GitHub Actions.
 
-Current npm CLI constraints:
+Current npm CLI constraints and status:
 
 - The package must already exist on npm before `npm trust github` can configure a trusted publisher.
 - The `npm trust` command requires npm CLI 11.10.0 or newer.
 - The local npm CLI on 2026-06-01 was 11.9.0 and did not include `npm trust`.
-- `npm view repo-context-cli version --json` returned `E404` on 2026-06-01, so the package was not visible on the public registry at that time.
+- `repo-context-cli@0.1.0` was manually bootstrapped on 2026-06-02.
+- Trusted Publishing was configured on 2026-06-02 with `npx npm@latest trust github repo-context-cli --file release.yml --repo Chungwinglam/repo-context-cli --allow-publish --yes`.
 
-First-package bootstrap rule:
+First-package bootstrap status:
 
-- Bootstrap `0.1.0` with a manual npm publish only if the package still does not exist and npm still requires an existing package before trusted publisher setup.
-- Run the full release checklist locally before that bootstrap publish.
-- After the package exists, configure Trusted Publishing and use the GitHub Release workflow for `0.1.1` or the next patch.
-- Do not create the `v0.1.0` GitHub Release expecting Trusted Publishing to work before the trusted publisher is configured.
+- `0.1.0` already exists on npm. Do not republish it.
+- Future releases should use the GitHub Release workflow.
+- Use `0.1.1` or the next patch to validate Trusted Publishing and npm provenance end to end.
 
 On npmjs.com, configure the package trusted publisher with:
 
@@ -48,11 +48,11 @@ On npmjs.com, configure the package trusted publisher with:
 - Workflow filename: `release.yml`
 - Allowed actions: `npm publish`
 
-If configuring through the npm CLI after the package exists, use npm 11.10.0 or newer:
+If configuring or checking through the npm CLI, use npm 11.10.0 or newer:
 
 ```bash
-npm trust github repo-context-cli --file release.yml --repo Chungwinglam/repo-context-cli --allow-publish
-npm trust list repo-context-cli
+npx npm@latest trust github repo-context-cli --file release.yml --repo Chungwinglam/repo-context-cli --allow-publish
+npx npm@latest trust list repo-context-cli
 ```
 
 The workflow grants:
@@ -86,7 +86,7 @@ npm publish
 
 ## Provenance Status
 
-npm trusted publishing automatically generates provenance attestations when all npm requirements are met. The GitHub repository is now public, but provenance still requires a public npm package and a configured trusted publisher.
+npm trusted publishing automatically generates provenance attestations when all npm requirements are met. The GitHub repository is public, `repo-context-cli@0.1.0` exists on npm, and the trusted publisher is configured. The manual `0.1.0` bootstrap does not prove the workflow path; verify provenance on `0.1.1` or the next GitHub Release workflow publish.
 
 To get npm provenance for future releases:
 

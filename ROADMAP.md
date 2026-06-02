@@ -5,7 +5,7 @@ This file is the source of truth for project phase status. Update it whenever a 
 ## Current Status
 
 - Current phase: Phase 5 in progress
-- Last completed milestone: Phase 5 0.1.0 bootstrap prep
+- Last completed milestone: Phase 5 external public-release gates
 - Public repository: `Chungwinglam/repo-context-cli`
 - Default branch: `main`
 
@@ -88,7 +88,7 @@ Candidate tasks:
 - Add a maintainer release checklist for npm publish and post-release verification. (Complete)
 - Add GitHub issue templates and lightweight project health files. (Complete)
 - Add an adoption guide showing how to introduce Repo Context CLI into an existing repository. (Complete)
-- Resolve external public-release gates. (In progress: GitHub repository is public, package name was rechecked, and 0.1.0 release metadata is prepared; manual npm publish is blocked by npm 2FA/token requirements, and npm Trusted Publishing remains blocked until the package exists on npm.)
+- Resolve external public-release gates. (Complete: GitHub repository is public, `repo-context-cli@0.1.0` exists on npm, install smoke passed from the public registry, and npm Trusted Publishing is configured for the GitHub Release workflow.)
 
 ## Activity Log
 
@@ -159,4 +159,13 @@ Candidate tasks:
 - Retried with a corrected temporary-npmrc helper: `npm whoami` succeeded as `ryanlin23`, but `npm publish --access public` returned npm `E403` because publishing requires two-factor authentication or a granular access token with bypass 2FA enabled.
 - Paused the npm bootstrap publish without changing package contents. The repository remains clean on `main`; resume by publishing with a fresh npm 2FA OTP from the logged-in session or a correctly configured granular automation token, then verify `repo-context-cli@0.1.0` on npm.
 
-Next-stage goal: Resume the manual npm bootstrap publish for `0.1.0` with a valid 2FA OTP or bypass-2FA granular token, then configure Trusted Publishing for the GitHub Release workflow.
+### 2026-06-02
+
+- Confirmed npm account 2FA was enabled in `auth-and-writes` mode and completed the manual `repo-context-cli@0.1.0` bootstrap publish.
+- Verified the public npm package with `npm view repo-context-cli version --json`, which returned `0.1.0`.
+- Verified installed-package behavior from the public registry in a fresh temporary npm project: `npm install repo-context-cli@0.1.0 --omit=dev`, installed `repo-context --help`, and installed `repo-context pack --dry-run --for codex` all succeeded.
+- Confirmed the published package metadata is clean: `repo-context-cli@0.1.0` depends on `ignore` only and exposes the `repo-context` binary from `dist/cli.js`.
+- Configured npm Trusted Publishing for `Chungwinglam/repo-context-cli` using GitHub Actions workflow `release.yml` with `npm publish` allowed; npm registry returned HTTP 201 for the trust creation request.
+- Fixed a local smoke-test script mistake that had briefly run `npm install repo-context-cli@0.1.0` in the repository root; the published package was unaffected, the local self-dependency change was removed, and the working tree was restored clean.
+
+Next-stage goal: Prepare a `0.1.1` patch release through the GitHub Release workflow to validate Trusted Publishing and npm provenance end to end.

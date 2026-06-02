@@ -72,14 +72,19 @@ describe("project health files", () => {
     const release = await readProjectFile("docs/release.md");
 
     expect(roadmap).toContain("Public repository: `Chungwinglam/repo-context-cli`");
+    expect(roadmap).toContain("Last completed milestone: Phase 5 external public-release gates");
+    expect(roadmap).toContain("`repo-context-cli@0.1.0` exists on npm");
+    expect(roadmap).toContain("Next-stage goal: Prepare a `0.1.1` patch release");
     expect(audit).toContain("Status: Complete. The GitHub repository is now public");
     expect(audit).toContain("`npm view repo-context-cli version --json` returned npm `E404` again on 2026-06-01");
-    expect(audit).toContain("Blocked until the package exists on npm");
-    expect(audit).toContain("Bootstrap publish `0.1.0` manually only if npm still requires an existing package");
-    expect(audit).toContain("Use the GitHub Release workflow for `0.1.1` or the next patch after Trusted Publishing is configured");
+    expect(audit).toContain("`npm view repo-context-cli version --json` returned `0.1.0` on 2026-06-02");
+    expect(audit).toContain("Status: Complete. The package now exists on npm and Trusted Publishing is configured");
+    expect(audit).toContain("Do not republish `0.1.0`");
+    expect(audit).toContain("Confirm npm provenance is shown for the workflow-published version");
     expect(release).toContain("The package must already exist on npm before `npm trust github` can configure a trusted publisher");
-    expect(release).toContain("Bootstrap `0.1.0` with a manual npm publish only if the package still does not exist");
-    expect(release).toContain("Do not create the `v0.1.0` GitHub Release expecting Trusted Publishing to work before the trusted publisher is configured");
+    expect(release).toContain("`repo-context-cli@0.1.0` was manually bootstrapped on 2026-06-02");
+    expect(release).toContain("Future releases should use the GitHub Release workflow");
+    expect(release).toContain("verify provenance on `0.1.1` or the next GitHub Release workflow publish");
     expect(release).toContain("npm CLI 11.10.0 or newer");
   });
 

@@ -11,11 +11,11 @@ Scope:
 
 ## Summary
 
-Repo Context CLI is close to first-release ready from a repository and package-contents perspective. The local package builds, the CLI help works from `dist/cli.js`, the GitHub repository is public, the release workflow has a version-tag guard, CI includes an installed-package smoke test, and `npm pack --dry-run` lists the expected package contents.
+Repo Context CLI completed the first public npm bootstrap release. The local package builds, the CLI help works from `dist/cli.js`, the GitHub repository is public, the release workflow has a version-tag guard, CI includes an installed-package smoke test, and `repo-context-cli@0.1.0` is visible on npm.
 
-The project is not yet fully release-ready because npm-side release gates remain: the package is not yet visible on npm, npm Trusted Publishing is not configured, and the trusted-publisher CLI path requires an existing package record.
+The remaining release-path work is to exercise the GitHub Release workflow with `0.1.1` or the next patch now that npm Trusted Publishing is configured.
 
-Overall status: Release candidate after external release gates.
+Overall status: First public npm release complete; next release should validate the trusted GitHub Actions path.
 
 ## Evidence
 
@@ -28,6 +28,11 @@ Overall status: Release candidate after external release gates.
 - `npm view repo-context-cli version --json` returned npm `E404` again on 2026-06-01 after the repository was made public.
 - `gh repo view Chungwinglam/repo-context-cli --json visibility` returned `PUBLIC` on 2026-06-01.
 - The README demo SVG raw URL returned HTTP 200 on 2026-06-01.
+- `npm view repo-context-cli version --json` returned `0.1.0` on 2026-06-02 after the manual bootstrap publish.
+- `npm view repo-context-cli@0.1.0 version bin repository dist --json` confirmed the published `repo-context` binary, repository URL, tarball integrity, 46-file package, and 149875-byte unpacked size.
+- `npm view repo-context-cli@0.1.0 dependencies main directories author --json` confirmed the published package depends on `ignore` only and did not include the local smoke-test self-dependency mistake.
+- A fresh temporary install smoke passed from the public registry on 2026-06-02: `npm install repo-context-cli@0.1.0 --omit=dev`, installed `repo-context --help`, and installed `repo-context pack --dry-run --for codex`.
+- `npx npm@latest trust github repo-context-cli --file release.yml --repo Chungwinglam/repo-context-cli --allow-publish --yes` returned npm registry HTTP 201 for trust creation on 2026-06-02.
 
 ## Ready
 
@@ -51,11 +56,11 @@ Before public release, keep `package.json#repository.url` matched to `https://gi
 
 ### B2. npm Trusted Publishing setup must be completed outside the repo
 
-The workflow is ready for trusted publishing, but npm-side trusted publisher configuration cannot be completed from the repository alone.
+Status: Complete. The package now exists on npm and Trusted Publishing is configured for GitHub Actions workflow `release.yml` with `npm publish` allowed.
 
-Blocked until the package exists on npm. The official `npm trust` CLI path requires npm CLI 11.10.0 or newer and an existing package on the npm registry. On 2026-06-01, the local npm CLI was 11.9.0 and did not include `npm trust`, while `npm view repo-context-cli version --json` returned `E404`.
+The official `npm trust` CLI path requires npm CLI 11.10.0 or newer and an existing package on the npm registry. The local npm CLI was 11.9.0, so setup used `npx npm@latest`, which resolved to npm 11.16.0. The trust creation request returned npm registry HTTP 201 on 2026-06-02.
 
-Bootstrap publish `0.1.0` manually only if npm still requires an existing package before Trusted Publishing can be configured. Do not trigger the `v0.1.0` GitHub Release expecting Trusted Publishing to work while the package is still absent from npm. After the package exists and Trusted Publishing is configured, use the GitHub Release workflow for `0.1.1` or the next patch after Trusted Publishing is configured.
+The `0.1.0` release was manually bootstrapped because npm Trusted Publishing required the package to exist first. Do not republish `0.1.0`. Use the GitHub Release workflow for `0.1.1` or the next patch.
 
 Manual bootstrap attempt record:
 
@@ -64,15 +69,20 @@ Manual bootstrap attempt record:
 - A corrected temporary-npmrc helper reached `npm publish --access public`, but npm returned `E403`: publishing requires two-factor authentication or a granular access token with bypass 2FA enabled.
 - `npm view repo-context-cli version --json` still returned `E404` after the failed publish attempts, confirming `repo-context-cli@0.1.0` was not created on npm.
 
-Resume path: publish manually from the clean `main` branch using the active npm login plus a fresh 2FA OTP, or use a granular npm token explicitly configured to bypass 2FA for publishing. After publish, verify `npm view repo-context-cli version --json` returns `0.1.0` before configuring Trusted Publishing.
+Completion record:
 
-Before public release:
+- On 2026-06-02, npm account 2FA was confirmed in `auth-and-writes` mode.
+- `repo-context-cli@0.1.0` was published manually from `main`.
+- `npm view repo-context-cli version --json` returned `0.1.0`.
+- A clean install smoke from the public registry passed in a temporary project.
+- npm Trusted Publishing was configured for `Chungwinglam/repo-context-cli` / `release.yml` with `npm publish` allowed.
 
-- Complete the npm package existence step for `repo-context-cli`.
-- Configure npm Trusted Publishing for `Chungwinglam/repo-context-cli`.
-- Use workflow filename `release.yml`.
-- Allow `npm publish`.
-- Confirm the package name is still available immediately before the first package creation or publish step.
+Before the first trusted-workflow release:
+
+- Bump to `0.1.1` or the next patch.
+- Add changelog notes for that patch.
+- Publish a GitHub Release tagged exactly as `v<package.json version>`.
+- Confirm the release workflow publishes through Trusted Publishing and npm shows provenance for the new version.
 
 ## Important Follow-Ups
 
@@ -123,7 +133,7 @@ Status: Complete. `docs/adoption.md` now documents a safe branch-based rollout u
 
 ## Release Readiness Decision
 
-Do not publish yet.
+Do not republish `0.1.0`.
 
 Completed since this audit was opened:
 
@@ -133,10 +143,13 @@ Completed since this audit was opened:
 - Adoption guide for existing repositories.
 - Public GitHub repository gate.
 - npm package name recheck after making the repository public.
+- Manual npm bootstrap publish of `repo-context-cli@0.1.0`.
+- Public registry install smoke for `repo-context-cli@0.1.0`.
+- npm Trusted Publishing configuration for GitHub Actions workflow `release.yml`.
 
-Remaining before public release:
+Remaining before the next release:
 
-1. Resume and complete the npm bootstrap path: `repo-context-cli` still does not exist after the 2026-06-01 failed publish attempts, so manually publish `0.1.0` with a valid npm 2FA OTP or bypass-2FA granular token instead of triggering `v0.1.0` through the unconfigured release workflow.
-2. Configure npm Trusted Publishing for GitHub Actions workflow `release.yml` with `npm publish` allowed.
-3. Confirm `npm trust list repo-context-cli` or npm package settings show the trusted publisher.
-4. Use the GitHub Release workflow for `0.1.1` or the next patch after Trusted Publishing is configured.
+1. Prepare `0.1.1` or the next patch release metadata.
+2. Publish a GitHub Release to trigger `.github/workflows/release.yml`.
+3. Confirm the workflow publishes through Trusted Publishing.
+4. Confirm npm provenance is shown for the workflow-published version.
