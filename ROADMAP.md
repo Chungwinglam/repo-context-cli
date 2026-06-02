@@ -192,5 +192,6 @@ Candidate tasks:
 - Improved README first-screen positioning around deterministic context, dry-run evaluation, and safety/trust signals; added npm search keywords; and set the GitHub repository description and homepage metadata.
 - Merged `phase6-readme-metadata-positioning` into `main` and deleted the merged branch locally and on `origin`; Phase 6 remains in progress.
 - Added `docs/examples.md` with focused examples for new project orientation, safe existing-repository adoption, context refresh pull requests, and MCP/editor-assisted workflows; Phase 6 remains in progress.
+- Merged `phase6-example-gallery` into `main` and deleted the merged branch locally and on `origin`; Phase 6 remains in progress.
 
 Next-stage goal: Add a short comparison guide explaining when Repo Context CLI is useful versus ad hoc prompt pasting.
