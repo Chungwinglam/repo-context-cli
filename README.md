@@ -87,6 +87,10 @@ The result is not an LLM-generated project summary. It is a deterministic contex
 
 See [docs/examples.md](https://github.com/Chungwinglam/repo-context-cli/blob/main/docs/examples.md) for focused examples covering new project orientation, safe adoption in an existing repository, context refresh pull requests, and MCP or editor-assisted workflows.
 
+## Comparison Guide
+
+See [docs/comparison.md](https://github.com/Chungwinglam/repo-context-cli/blob/main/docs/comparison.md) for when Repo Context CLI is useful versus manual prompt pasting, README-only onboarding, and ad hoc directory-tree dumps.
+
 ## Safety Defaults
 
 - No LLM calls.

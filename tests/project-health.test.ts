@@ -114,7 +114,24 @@ describe("project health files", () => {
     expect(examples).toContain("When you want editor guides, generate them explicitly with `pack --editor-config`.");
     expect(readme).toContain("docs/examples.md");
     expect(roadmap).toContain("Add a focused example gallery for common AI-agent workflows. (Complete)");
-    expect(roadmap).toContain("Next-stage goal: Add a short comparison guide");
+  });
+
+  it("documents when Repo Context CLI is useful versus prompt pasting", async () => {
+    const comparison = await readProjectFile("docs/comparison.md");
+    const readme = await readProjectFile("README.md");
+    const roadmap = await readProjectFile("ROADMAP.md");
+
+    expect(comparison).toContain("# Comparison Guide");
+    expect(comparison).toContain("Manual prompt pasting");
+    expect(comparison).toContain("README-only onboarding");
+    expect(comparison).toContain("Ad hoc directory-tree dumps");
+    expect(comparison).toContain("Use Repo Context CLI when");
+    expect(comparison).toContain("Do not use Repo Context CLI as a replacement for reading source code");
+    expect(comparison).toContain("npx repo-context-cli pack --dry-run --for codex");
+    expect(comparison).toContain("No LLM calls, no source edits, and safe generated-file overwrite behavior");
+    expect(readme).toContain("docs/comparison.md");
+    expect(roadmap).toContain("Add a short comparison guide explaining when Repo Context CLI is useful versus ad hoc prompt pasting. (Complete)");
+    expect(roadmap).toContain("Next-stage goal: Add a lightweight metrics and feedback plan");
   });
 
   it("tracks external public-release gate status", async () => {
@@ -124,13 +141,14 @@ describe("project health files", () => {
 
     expect(roadmap).toContain("Public repository: `Chungwinglam/repo-context-cli`");
     expect(roadmap).toContain("Current phase: Phase 6 in progress");
-    expect(roadmap).toContain("Last completed milestone: Phase 6 focused example gallery");
+    expect(roadmap).toContain("Last completed milestone: Phase 6 comparison guide");
     expect(roadmap).toContain("`repo-context-cli@0.1.0` exists on npm");
     expect(roadmap).toContain("Validate npm Trusted Publishing with a GitHub Release workflow patch. (Complete");
     expect(roadmap).toContain("Run a public README and npm package positioning audit. (Complete)");
     expect(roadmap).toContain("Improve README first-screen positioning and public package/repository metadata. (Complete)");
     expect(roadmap).toContain("Add a focused example gallery for common AI-agent workflows. (Complete)");
-    expect(roadmap).toContain("Next-stage goal: Add a short comparison guide");
+    expect(roadmap).toContain("Add a short comparison guide explaining when Repo Context CLI is useful versus ad hoc prompt pasting. (Complete)");
+    expect(roadmap).toContain("Next-stage goal: Add a lightweight metrics and feedback plan");
     expect(audit).toContain("Status: Complete. The GitHub repository is now public");
     expect(audit).toContain("`npm view repo-context-cli version --json` returned npm `E404` again on 2026-06-01");
     expect(audit).toContain("`npm view repo-context-cli version --json` returned `0.1.0` on 2026-06-02");
