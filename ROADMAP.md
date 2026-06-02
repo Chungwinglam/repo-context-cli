@@ -213,5 +213,6 @@ Candidate tasks:
 - Merged `phase6-comparison-guide` into `main` and deleted the merged branch locally and on `origin`; Phase 6 remains in progress.
 - Added `docs/metrics.md` with a lightweight no-telemetry metrics and feedback plan for npm downloads, GitHub issues, and adoption signals; Phase 6 remains in progress pending closeout review.
 - Added `docs/project-closeout.md` plus Chinese, Japanese, and Korean README introductions; Phase 6 is complete and Phase 7 is planned for maintenance and adoption operations.
+- Merged `project-closeout-localized-readmes` into `main` and deleted the merged branch locally and on `origin`; Phase 7 remains planned.
 
 Next-stage goal: Monitor public adoption signals and triage first external feedback before expanding scope.
