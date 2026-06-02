@@ -131,7 +131,26 @@ describe("project health files", () => {
     expect(comparison).toContain("No LLM calls, no source edits, and safe generated-file overwrite behavior");
     expect(readme).toContain("docs/comparison.md");
     expect(roadmap).toContain("Add a short comparison guide explaining when Repo Context CLI is useful versus ad hoc prompt pasting. (Complete)");
-    expect(roadmap).toContain("Next-stage goal: Add a lightweight metrics and feedback plan");
+  });
+
+  it("documents lightweight metrics and feedback loops for adoption growth", async () => {
+    const metrics = await readProjectFile("docs/metrics.md");
+    const readme = await readProjectFile("README.md");
+    const roadmap = await readProjectFile("ROADMAP.md");
+
+    expect(metrics).toContain("# Metrics and Feedback Plan");
+    expect(metrics).toContain("No telemetry");
+    expect(metrics).toContain("npm downloads");
+    expect(metrics).toContain("GitHub issues");
+    expect(metrics).toContain("adoption signals");
+    expect(metrics).toContain("Weekly snapshot");
+    expect(metrics).toContain("manual review");
+    expect(metrics).toContain("Download counts are directional");
+    expect(metrics).toContain("Repeated confusion");
+    expect(metrics).toContain("Do not collect repository contents");
+    expect(readme).toContain("docs/metrics.md");
+    expect(roadmap).toContain("Add a lightweight metrics and feedback plan for npm downloads, GitHub issues, and adoption signals. (Complete)");
+    expect(roadmap).toContain("Next-stage goal: Close Phase 6 with an adoption-growth readiness review and define Phase 7 scope.");
   });
 
   it("tracks external public-release gate status", async () => {
@@ -141,14 +160,15 @@ describe("project health files", () => {
 
     expect(roadmap).toContain("Public repository: `Chungwinglam/repo-context-cli`");
     expect(roadmap).toContain("Current phase: Phase 6 in progress");
-    expect(roadmap).toContain("Last completed milestone: Phase 6 comparison guide");
+    expect(roadmap).toContain("Last completed milestone: Phase 6 metrics and feedback plan");
     expect(roadmap).toContain("`repo-context-cli@0.1.0` exists on npm");
     expect(roadmap).toContain("Validate npm Trusted Publishing with a GitHub Release workflow patch. (Complete");
     expect(roadmap).toContain("Run a public README and npm package positioning audit. (Complete)");
     expect(roadmap).toContain("Improve README first-screen positioning and public package/repository metadata. (Complete)");
     expect(roadmap).toContain("Add a focused example gallery for common AI-agent workflows. (Complete)");
     expect(roadmap).toContain("Add a short comparison guide explaining when Repo Context CLI is useful versus ad hoc prompt pasting. (Complete)");
-    expect(roadmap).toContain("Next-stage goal: Add a lightweight metrics and feedback plan");
+    expect(roadmap).toContain("Add a lightweight metrics and feedback plan for npm downloads, GitHub issues, and adoption signals. (Complete)");
+    expect(roadmap).toContain("Next-stage goal: Close Phase 6 with an adoption-growth readiness review and define Phase 7 scope.");
     expect(audit).toContain("Status: Complete. The GitHub repository is now public");
     expect(audit).toContain("`npm view repo-context-cli version --json` returned npm `E404` again on 2026-06-01");
     expect(audit).toContain("`npm view repo-context-cli version --json` returned `0.1.0` on 2026-06-02");

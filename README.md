@@ -91,6 +91,10 @@ See [docs/examples.md](https://github.com/Chungwinglam/repo-context-cli/blob/mai
 
 See [docs/comparison.md](https://github.com/Chungwinglam/repo-context-cli/blob/main/docs/comparison.md) for when Repo Context CLI is useful versus manual prompt pasting, README-only onboarding, and ad hoc directory-tree dumps.
 
+## Metrics and Feedback
+
+See [docs/metrics.md](https://github.com/Chungwinglam/repo-context-cli/blob/main/docs/metrics.md) for the lightweight public-signal review plan covering npm downloads, GitHub issues, adoption signals, and the no-telemetry boundary.
+
 ## Safety Defaults
 
 - No LLM calls.

@@ -5,7 +5,7 @@ This file is the source of truth for project phase status. Update it whenever a 
 ## Current Status
 
 - Current phase: Phase 6 in progress
-- Last completed milestone: Phase 6 comparison guide
+- Last completed milestone: Phase 6 metrics and feedback plan
 - Public repository: `Chungwinglam/repo-context-cli`
 - Default branch: `main`
 
@@ -103,7 +103,7 @@ Candidate tasks:
 - Improve README first-screen positioning and public package/repository metadata. (Complete)
 - Add a focused example gallery for common AI-agent workflows. (Complete)
 - Add a short comparison guide explaining when Repo Context CLI is useful versus ad hoc prompt pasting. (Complete)
-- Add a lightweight metrics and feedback plan for npm downloads, GitHub issues, and adoption signals.
+- Add a lightweight metrics and feedback plan for npm downloads, GitHub issues, and adoption signals. (Complete)
 
 ## Activity Log
 
@@ -195,5 +195,6 @@ Candidate tasks:
 - Merged `phase6-example-gallery` into `main` and deleted the merged branch locally and on `origin`; Phase 6 remains in progress.
 - Added `docs/comparison.md` explaining when Repo Context CLI is useful versus manual prompt pasting, README-only onboarding, and ad hoc directory-tree dumps; Phase 6 remains in progress.
 - Merged `phase6-comparison-guide` into `main` and deleted the merged branch locally and on `origin`; Phase 6 remains in progress.
+- Added `docs/metrics.md` with a lightweight no-telemetry metrics and feedback plan for npm downloads, GitHub issues, and adoption signals; Phase 6 remains in progress pending closeout review.
 
-Next-stage goal: Add a lightweight metrics and feedback plan for npm downloads, GitHub issues, and adoption signals.
+Next-stage goal: Close Phase 6 with an adoption-growth readiness review and define Phase 7 scope.
