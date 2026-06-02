@@ -2,7 +2,15 @@
 
 All notable changes to Repo Context CLI are recorded in this file.
 
-This project follows a simple changelog format inspired by Keep a Changelog. The current package version is `0.1.0`.
+This project follows a simple changelog format inspired by Keep a Changelog. The current package version is `0.1.1`.
+
+## 0.1.1 - 2026-06-02
+
+### Release
+
+- Validated the GitHub Release workflow path for npm Trusted Publishing.
+- Prepared the first workflow-published patch after the manual `0.1.0` bootstrap release.
+- Kept CLI behavior unchanged from `0.1.0`; this patch exists to verify the trusted publisher and npm provenance path end to end.
 
 ## 0.1.0 - 2026-06-01
 

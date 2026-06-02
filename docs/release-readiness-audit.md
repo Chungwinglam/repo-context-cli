@@ -13,9 +13,9 @@ Scope:
 
 Repo Context CLI completed the first public npm bootstrap release. The local package builds, the CLI help works from `dist/cli.js`, the GitHub repository is public, the release workflow has a version-tag guard, CI includes an installed-package smoke test, and `repo-context-cli@0.1.0` is visible on npm.
 
-The remaining release-path work is to exercise the GitHub Release workflow with `0.1.1` or the next patch now that npm Trusted Publishing is configured.
+The remaining release-path work is to exercise the GitHub Release workflow with `0.1.1` now that npm Trusted Publishing is configured.
 
-Overall status: First public npm release complete; next release should validate the trusted GitHub Actions path.
+Overall status: First public npm release complete; `0.1.1` is prepared to validate the trusted GitHub Actions path.
 
 ## Evidence
 
@@ -33,6 +33,7 @@ Overall status: First public npm release complete; next release should validate 
 - `npm view repo-context-cli@0.1.0 dependencies main directories author --json` confirmed the published package depends on `ignore` only and did not include the local smoke-test self-dependency mistake.
 - A fresh temporary install smoke passed from the public registry on 2026-06-02: `npm install repo-context-cli@0.1.0 --omit=dev`, installed `repo-context --help`, and installed `repo-context pack --dry-run --for codex`.
 - `npx npm@latest trust github repo-context-cli --file release.yml --repo Chungwinglam/repo-context-cli --allow-publish --yes` returned npm registry HTTP 201 for trust creation on 2026-06-02.
+- `repo-context-cli@0.1.1` release metadata was prepared on 2026-06-02 with no CLI behavior changes from `0.1.0`.
 
 ## Ready
 
@@ -149,7 +150,7 @@ Completed since this audit was opened:
 
 Remaining before the next release:
 
-1. Prepare `0.1.1` or the next patch release metadata.
-2. Publish a GitHub Release to trigger `.github/workflows/release.yml`.
-3. Confirm the workflow publishes through Trusted Publishing.
+1. Publish GitHub Release `v0.1.1` to trigger `.github/workflows/release.yml`.
+2. Confirm the workflow publishes through Trusted Publishing.
+3. Confirm `npm view repo-context-cli version --json` returns `0.1.1`.
 4. Confirm npm provenance is shown for the workflow-published version.

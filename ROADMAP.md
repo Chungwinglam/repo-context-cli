@@ -89,6 +89,7 @@ Candidate tasks:
 - Add GitHub issue templates and lightweight project health files. (Complete)
 - Add an adoption guide showing how to introduce Repo Context CLI into an existing repository. (Complete)
 - Resolve external public-release gates. (Complete: GitHub repository is public, `repo-context-cli@0.1.0` exists on npm, install smoke passed from the public registry, and npm Trusted Publishing is configured for the GitHub Release workflow.)
+- Validate npm Trusted Publishing with a GitHub Release workflow patch. (In progress: `0.1.1` release metadata is being prepared.)
 
 ## Activity Log
 
@@ -167,5 +168,6 @@ Candidate tasks:
 - Confirmed the published package metadata is clean: `repo-context-cli@0.1.0` depends on `ignore` only and exposes the `repo-context` binary from `dist/cli.js`.
 - Configured npm Trusted Publishing for `Chungwinglam/repo-context-cli` using GitHub Actions workflow `release.yml` with `npm publish` allowed; npm registry returned HTTP 201 for the trust creation request.
 - Fixed a local smoke-test script mistake that had briefly run `npm install repo-context-cli@0.1.0` in the repository root; the published package was unaffected, the local self-dependency change was removed, and the working tree was restored clean.
+- Prepared `repo-context-cli@0.1.1` release metadata to validate the GitHub Release workflow, npm Trusted Publishing, and provenance path without changing CLI behavior.
 
-Next-stage goal: Prepare a `0.1.1` patch release through the GitHub Release workflow to validate Trusted Publishing and npm provenance end to end.
+Next-stage goal: Publish GitHub Release `v0.1.1`, monitor the release workflow, and verify `repo-context-cli@0.1.1` plus npm provenance from the public registry.

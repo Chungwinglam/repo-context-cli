@@ -74,7 +74,8 @@ describe("project health files", () => {
     expect(roadmap).toContain("Public repository: `Chungwinglam/repo-context-cli`");
     expect(roadmap).toContain("Last completed milestone: Phase 5 external public-release gates");
     expect(roadmap).toContain("`repo-context-cli@0.1.0` exists on npm");
-    expect(roadmap).toContain("Next-stage goal: Prepare a `0.1.1` patch release");
+    expect(roadmap).toContain("Validate npm Trusted Publishing with a GitHub Release workflow patch");
+    expect(roadmap).toContain("Next-stage goal: Publish GitHub Release `v0.1.1`");
     expect(audit).toContain("Status: Complete. The GitHub repository is now public");
     expect(audit).toContain("`npm view repo-context-cli version --json` returned npm `E404` again on 2026-06-01");
     expect(audit).toContain("`npm view repo-context-cli version --json` returned `0.1.0` on 2026-06-02");
@@ -88,17 +89,23 @@ describe("project health files", () => {
     expect(release).toContain("npm CLI 11.10.0 or newer");
   });
 
-  it("keeps npm bootstrap release metadata publish-ready", async () => {
+  it("keeps npm patch release metadata publish-ready", async () => {
     const packageJson = JSON.parse(await readProjectFile("package.json")) as {
+      version?: string;
       bin?: Record<string, string>;
     };
     const changelog = await readProjectFile("CHANGELOG.md");
     const audit = await readProjectFile("docs/release-readiness-audit.md");
 
+    expect(packageJson.version).toBe("0.1.1");
     expect(packageJson.bin?.["repo-context"]).toBe("dist/cli.js");
+    expect(changelog).toContain("The current package version is `0.1.1`");
+    expect(changelog).toContain("## 0.1.1 - 2026-06-02");
+    expect(changelog).toContain("Kept CLI behavior unchanged from `0.1.0`");
     expect(changelog).toContain("## 0.1.0 - 2026-06-01");
     expect(changelog).not.toContain("## 0.1.0 - Unreleased");
     expect(changelog).not.toContain("entry remains unreleased");
+    expect(audit).toContain("`repo-context-cli@0.1.1` release metadata was prepared");
     expect(audit).toContain("The changelog contains dated `0.1.0` release notes");
   });
 });

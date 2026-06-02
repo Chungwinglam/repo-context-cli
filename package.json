@@ -1,6 +1,6 @@
 {
   "name": "repo-context-cli",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Generate reliable repository context files for AI coding agents.",
   "homepage": "https://github.com/Chungwinglam/repo-context-cli#readme",
   "repository": {
